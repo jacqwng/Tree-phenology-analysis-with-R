@@ -1,0 +1,308 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Tree phenology analysis with R},
+  pdfauthor={Jacqueline Wingen},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Tree phenology analysis with R}
+\author{Jacqueline Wingen}
+\date{2024-10-18}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\chapter{Introduction}\label{introduction}
+
+This course provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the \href{https://www.uni-bonn.de/en}{University of Bonn}, the material is accessible to anyone interested.
+
+The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the \texttt{chillR} package for R. This tool has been continuously developed since 2013 by \href{https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Eike Lüdeling}, head of the \href{https://inresgb-lehre.iaas.uni-bonn.de/}{HortiBonn research group} at the \href{https://www.inres.uni-bonn.de/de}{Institute of Crop Science and Resource Conservation (INRES)} at the \href{https://www.uni-bonn.de/en}{University of Bonn}, to support this type of analysis.
+
+\section{Learning goals}\label{learning-goals}
+
+This course will offer the following skills and experiences:
+
+\begin{itemize}
+\tightlist
+\item
+  Knowledge about phenology
+\item
+  Knowledge about tree dormancy
+\item
+  Understanding of climate change impact projection methods
+\item
+  Appreciation for the importance of risks and uncertainty in climate change projection
+\item
+  Understanding of how to use some staple tools of R code development
+\item
+  Ability to use \texttt{chillR} functions for climate change impact projection
+\item
+  Ability to use \texttt{chillR} functions for tree phenology analysis
+\item
+  Understanding and ability to use the PhenoFlex dormancy analysis framework
+\end{itemize}
+
+\chapter{The tools}\label{the-tools}
+
+This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the \texttt{chillR} package. It is recommended to document everything learned in a learning logbook. To engage in these practical components effectively, various tools are required. Since chillR is an R package, using R, preferably through the RStudio interface, will be necessary.
+
+Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using git and GitHub, which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using RMarkdown. While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
+
+\chapter{Tree dormancy}\label{tree-dormancy}
+
+\section{Learning goals}\label{learning-goals-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Learn about dormancy in temperate fruit trees
+\item
+  Be able to identify the phenological stages of a fruit tree and understand phenology data sets
+\item
+  Describe and compare the two methodologies (empirical and statistical) to identify the chilling and forcing periods of a certain cultivar
+\end{itemize}
+
+\section{Introduction to dormancy}\label{introduction-to-dormancy}
+
+Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage.
+
+\section{Dormancy physiology}\label{dormancy-physiology}
+
+\section{Experimental and statistical determination of the chilling and forcing periods}\label{experimental-and-statistical-determination-of-the-chilling-and-forcing-periods}
+
+Dormancy presents two phases during which temperatures have opposite effects on flowering. High chill accumulation during endodormancy advances flowering dates, but similarly cool temperatures during ecodormancy may cause flowering delays. The challenge is to distinguish between these two phases, even though the tree buds appear to be in the same developmental stage throughout. The next video \emph{Dormancy determination} determains whether a tree is dormant or not during winter.
+
+\section{Phenology record and BBCH scale}\label{phenology-record-and-bbch-scale}
+
+Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate.
+
+This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes. The following video \emph{Phenology in temperate fruit trees} will cover what these numbers signify. It's essential to understand these codes to link them to visual signs, like trees covered in blossoms, trees with yellowing leaves, or trees bearing ripe, sweet fruits.
+
+\section{Excercises on tree dormancy}\label{excercises-on-tree-dormancy}
+
+\textbf{1. Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.}
+
+As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use
+
+\textbf{2. Which are the advantages (2) of the BBCH scale compared with earlier scales?}
+
+\textbf{3. Classify the following phenological stages of sweet cherry according to the BBCH scale:}
+
+To classify the phenological stages of the top three images the study by \href{https://www.sciencedirect.com/science/article/pii/S0304423815300169?casa_token=DX15FKw3dgEAAAAA:GzG1yE-_GC380iS0f2fcZS3hLtr1J_9XJamThXlfkXX9Q6PoJPA6Nxm8fOTTjhXqweBfHptHQzQ\#tbl0005}{Fadón et al.~2015} was used:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{left image:} stage 55
+
+  \begin{itemize}
+  \tightlist
+  \item
+    principle growth stage 5: reproductive development or inflorescence emergence
+  \item
+    single flower buds visible (still closed) borne on short stalks, green scales slightly open
+  \end{itemize}
+\item
+  \textbf{middle image:} stage 65
+
+  \begin{itemize}
+  \tightlist
+  \item
+    principle growth stage 6: flowering
+  \item
+    full flowering: at least 50\% of flowers open, first petals falling
+  \end{itemize}
+\item
+  \textbf{right image:} stage 89
+
+  \begin{itemize}
+  \tightlist
+  \item
+    principle growth stage 8: ripening or maturity
+  \item
+    fruit ripe for harvesting
+  \end{itemize}
+\end{itemize}
+
+\chapter{Climate change and impact projection}\label{climate-change-and-impact-projection}
+
+Before using \texttt{chillR}, there's a brief overview of climate change, because the upcoming work will mainly focus on predicting how global warming might affect phenology-related metrics.
+
+Climate change refers to long-term changes in temperatures and weather patterns. While these changes can occur naturally --- such as fluctuations in solar activity --- since the 19th century, climate change has primarily been driven by human activities, particularly the burning of fossil fuels like coal, oil, and natural gas. (\href{https://unric.org/de/klimawandel/}{United Nations Regional Information Centre})
+
+\section{The drivers of climate change}\label{the-drivers-of-climate-change}
+
+To understand what's happening to our planet, it's important to know the main causes of climate change. This helps us spot false claims that things like the sun, cities, or natural changes in the climate are the main reasons for global warming. The truth is simple: human-made greenhouse gas emissions are heating up our planet, and the only way to stop this is to greatly reduce these emissions.
+
+The video below, titled \emph{Climate Change 1 - Drivers of Climate Change}, is the first in a series of four videos on the topic of climate change presented by Eike Lüdeling. It provides a comprehensive overview of the primary drivers of global climate change.
+
+\section{What's already known}\label{whats-already-known}
+
+The next video, \emph{Climate Change 2 - Recent Warming}, explores climatic changes that have already occurred or for which there is substantial evidence. It demonstrates that the planet has experienced significant warming for several decades, almost globally.
+
+\section{Future scenarios}\label{future-scenarios}
+
+When it comes to climate change, the most severe impacts are still ahead. This is largely due to the significantly higher rate of greenhouse gas emissions observed over the past few decades, with no signs of a slowdown in the near future. As a result, the human-induced `forcing' effect on our climate has reached unprecedented levels, making it likely that future changes will occur even more rapidly than those we have already witnessed. The next video \emph{Climate Change 3 - Future scenarios} introduces the methods that climate scientists employ to forecast future conditions and presents climate scenarios developed by these scientists, which researchers in other fields can use to project the impacts of climate change on ecological and agricultural systems.
+
+\section{Impact projections approaches}\label{impact-projections-approaches}
+
+Having robust climate scenarios is essential, but they only take us partway toward reliable assessments of climate change impacts. A potentially greater challenge lies in translating these climate scenarios into biological consequences. To achieve this, we need impact models or other methods to derive the impacts of climate change. The last video \emph{Climate change 4 - impact projection approaches} introduces various methods for projecting climate impacts.
+
+\section{Exercises on climate change}\label{exercises-on-climate-change}
+
+\textbf{1.) List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.}
+
+The main drivers of climate change on a decade-to-century scale include:
+
+\begin{itemize}
+\item
+  \textbf{Greenhouse Gases (GHGs):} GHGs like carbon dioxide (CO₂), methane (CH₄), and nitrous oxide (N₂O) trap heat in the atmosphere, leading to the greenhouse effect, which raises Earth's temperature. The increase in these gases is primarily due to human activities, such as burning fossil fuels, industrial processes, and deforestation
+\item
+  \textbf{Aerosols:} Particles in the atmosphere that can cool the climate by reflecting sunlight. They come from both natural sources (e.g.~sea salt, dust, volcanic eruptions, fires) and human activities (e.g.power plants, cars, fires and cook stove). They are major climate driver in industrial centers (e.g.~China)
+\item
+  \textbf{Sun:} Solar radiation heats the Earth, with minor fluctuations occurring over time due to cycles in solar activity, such as sunspots. Although these variations contribute only a small portion to the current climate changes, they play a significant role in driving climate change over geological timescales
+\item
+  \textbf{Ozone:} Ozone in the stratosphere protects Earth from UV-B radiation, while tropospheric ozone acts as a greenhouse gas and contributes to warming
+\item
+  \textbf{Surface albedo:} The reflectivity of the Earth's surface affects how much solar energy is absorbed. Light surfaces (like ice) reflect more energy, while dark surfaces (like forests or oceans) absorb more, influencing the planet's heat balance. Changes in surface reflectivity, such as melting ice and snow, decrease the albedo effect, leading to more heat absorption and further warming
+\end{itemize}
+
+The currently most important driver of climate change is greenhouse gases, particularly CO₂. The mechanism through which CO₂ affects the climate involves the greenhouse effect: CO₂ molecules in the atmosphere absorb long-wave radiation emitted from the Earth's surface and re-radiate it in all directions, including back toward the surface. This process traps heat and increases global temperatures, driving many of the changes we observe in climate patterns.
+
+\textbf{2.) Explain briefly what is special about temperature dynamics of recent decades, and why we have good reasons to be concerned.}
+
+In recent decades, global temperatures have been rising at a faster rate than at any other time in human history. This trend is evident from the fact that the hottest years on record have all occurred within the last few decades. One striking example is the extreme heat in Siberia in the spring of 2020, where temperatures were up to 8°C above the recent average. This trend is particularly concerning because it is mainly driven by human activities, especially the emission of greenhouse gases. Unlike previous climate changes, which took place slowly over long periods, today's fast rise in temperatures increases the risk of triggering dangerous effects, like melting permafrost and losing ice cover, which could make global warming even worse. Even a small increase of 1.5°C could seriously upset the balance of our climate, showing how important it is to take action against these human-caused changes.
+
+\textbf{3.) What does the abbreviation `RCP' stand for, how are RCPs defined, and what is their role in projecting future climates?}
+
+RCP stands for Representative Concentration Pathways, which are essential scenarios used in climate modeling to project potential future greenhouse gas emissions and their impacts on the climate. RCPs are defined by the level of radiative forcing --- measured in watts per square meter (W/m²) --- that is expected by the end of the 21st century. Each pathway corresponds to a specific amount of greenhouse gas concentrations, which can significantly influence global temperatures. The role of RCPs is to serve as inputs for climate models, helping to produce future climate scenarios, which are essential for understanding the potential impacts of climate change and planning appropriate mitigation and adaptation strategies.
+
+\textbf{4.) Briefly describe the 4 climate impact projection methods described in the fourth video.}
+
+The four climate impact projection methods described in the fourth video are:
+
+\begin{itemize}
+\item
+  \textbf{Statistical models:} These models establish relationships between climate parameters and impact measures, such as crop yield. They use historical data to explain past trends and project future climate impacts. Their primary limitation is that the statistical relationships may not remain valid under future climate conditions, and they may overlook important factors
+\item
+  \textbf{Species Distribution Modeling:} Also known as ecological niche modeling, this method predicts the future distribution of species by relating current presence or absence data to climatic parameters. However, these models may assume species are in equilibrium with the climate, which is often not the case
+\item
+  \textbf{Process based models:} These models aim to represent all major system processes using equations, capturing the scientific knowledge of processes like crop growth, phenology or hydrology. However, they are limited by the lack of complete understanding of complex systems, and often require extensive parameterization or assumptions
+\item
+  \textbf{Climate Analogue models:} This method identifies current locations with climates similar to those expected in the future at another site, offering real-world examples that can guide adaptation strategies. However, they may be limited by differences in non-climatic factors and lack of suitable data, making it difficult to draw clear conditions
+\end{itemize}
+
+\chapter{Winter chill projections}\label{winter-chill-projections}
+
+\textbf{Learning goals:}
+
+\begin{itemize}
+\tightlist
+\item
+  Be aware of past studies that have projected climate change impacts on winter chill
+\item
+  Get a rough idea of how such studies are done
+\item
+  Get curious about how to do such studies
+\end{itemize}
+
+\section{Winter chill projections}\label{winter-chill-projections-1}
+
+This lesson gives an overview about how winter chill can be modeled. More specifically, it introduces various studies that have been conducted on this topic. These studies are explored to illustrate how the methodological components fit together. If everything goes as planned, most of the analyses behind these studies should be achievable by the end of this class.
+
+\subsection{Winter chill in Oman}\label{winter-chill-in-oman}
+
+As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
+
+\chapter{Manual chill}\label{manual-chill}
+
+\section{Learning goals}\label{learning-goals-2}
+
+\chapter{Chill}\label{chill}
+
+\section{Learning goals}\label{learning-goals-3}
+
+\chapter{Making hourly temperatures}\label{making-hourly-temperatures}
+
+\section{Learning goals}\label{learning-goals-4}
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

@@ -1,0 +1,61 @@
+# Tree dormancy
+
+## Learning goals
+
+-   Learn about dormancy in temperate fruit trees
+-   Be able to identify the phenological stages of a fruit tree and understand phenology data sets
+-   Describe and compare the two methodologies (empirical and statistical) to identify the chilling and forcing periods of a certain cultivar
+
+## Introduction to dormancy
+
+Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/qh9AZDmOm3o")
+```
+
+## Dormancy physiology
+
+```{r,echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/HriLSz77QEQ")
+```
+
+## Experimental and statistical determination of the chilling and forcing periods
+
+Dormancy presents two phases during which temperatures have opposite effects on flowering. High chill accumulation during endodormancy advances flowering dates, but similarly cool temperatures during ecodormancy may cause flowering delays. The challenge is to distinguish between these two phases, even though the tree buds appear to be in the same developmental stage throughout. The next video *Dormancy determination* determains whether a tree is dormant or not during winter.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/hMM27ktlzBM")
+```
+
+## Phenology record and BBCH scale
+
+Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate.
+
+This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes. The following video *Phenology in temperate fruit trees* will cover what these numbers signify. It's essential to understand these codes to link them to visual signs, like trees covered in blossoms, trees with yellowing leaves, or trees bearing ripe, sweet fruits.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/Ssoe6Ahv88Y")
+```
+
+## Excercises on tree dormancy
+
+**1. Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.**
+
+As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use
+
+**2. Which are the advantages (2) of the BBCH scale compared with earlier scales?**
+
+**3. Classify the following phenological stages of sweet cherry according to the BBCH scale:**
+
+To classify the phenological stages of the top three images the study by [Fadón et al. 2015](https://www.sciencedirect.com/science/article/pii/S0304423815300169?casa_token=DX15FKw3dgEAAAAA:GzG1yE-_GC380iS0f2fcZS3hLtr1J_9XJamThXlfkXX9Q6PoJPA6Nxm8fOTTjhXqweBfHptHQzQ#tbl0005) was used:
+
+-   **left image:** stage 55
+    -   principle growth stage 5: reproductive development or inflorescence emergence
+    -   single flower buds visible (still closed) borne on short stalks, green scales slightly open
+-   **middle image:** stage 65
+    -   principle growth stage 6: flowering
+    -   full flowering: at least 50% of flowers open, first petals falling
+-   **right image:** stage 89
+    -   principle growth stage 8: ripening or maturity
+    -   fruit ripe for harvesting
