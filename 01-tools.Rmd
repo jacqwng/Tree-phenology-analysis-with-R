@@ -1,5 +1,34 @@
 # The tools
 
-This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the `chillR` package. It is recommended to document everything learned in a learning logbook. To engage in these practical components effectively, various tools are required. Since chillR is an R package, using R, preferably through the RStudio interface, will be necessary.
+![](images/chillR_hexSticker.png)
 
-Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using git and GitHub, which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using RMarkdown. While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
+This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the `chillR` package. It is recommended to document everything learned in a `learning logbook`. To engage in these practical components effectively, various tools are required. Since `chillR` is an R package, using [R](https://www.r-project.org/), preferably through the [RStudio](https://posit.co/download/rstudio-desktop/) interface, will be necessary.
+
+Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using [Git](https://git-scm.com/) and [GitHub](https://github.com/), which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using [RMarkdown](https://rmarkdown.rstudio.com/). While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
+
+[Dr. Cory Whitney](https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-cory-whitney/), a researcher at HortiBonn, has volunteered to create tutorial videos to provide an introduction to these tools.
+
+## R and RStudio
+
+The first video demonstrates how to install and run [R](https://www.r-project.org/) and [RStudio](https://posit.co/download/rstudio-desktop/):
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/WT3tKlzCZgo")
+```
+
+## Git and Github
+
+The next section explores the programming version control environment [Git](https://git-scm.com/) and the interface [GitHub](https://github.com/), which is used to access these features: 
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/S98XJTyIVaY")
+```
+
+## Rmarkdown
+
+Next, R Markdown will be examined, a powerful tool that enables the creation of sophisticated reports, websites, and more from R code. An example is currently being viewed, as this website was produced using R Markdown 
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/hh4wyP8tvkI")
+```
+

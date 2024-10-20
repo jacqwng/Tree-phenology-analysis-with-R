@@ -1,3 +1,23 @@
 # Manual chill 
 
 ## Learning goals 
+
+* Learn about some basic R operations we need for calculating Chilling Hours
+* Be able to calculate Chilling Hours
+* Understand what an R function is
+* Be able to write your own basic function
+
+## Computing Chilling Hours from hourly temperature data
+
+Basic chill models, like the Chilling Hours Model, are straightforward and can be calculated manually, especially with familiarity in programming languages such as R or spreadsheet software. This example will explore how to understand the functions in the `chillR` package by calculating chill hours.
+
+One challenge commonly faced when calculating Chilling Hours is the necessity for hourly temperature data. Unfortunately, this data is often not readily available, leading to complications. For this exercise, the focus will be on data that has already been recorded on an hourly basis. Later, methods to estimate hourly temperature data from daily records, which `chillR` provides tools for, will be discussed.
+
+```{r}
+#install.packages("chillR")
+library(chillR)
+library(knitr)
+library(pander)
+library(kableExtra)
+```
+

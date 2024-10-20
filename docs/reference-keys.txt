@@ -1,6 +1,9 @@
 introduction
 learning-goals
 the-tools
+r-and-rstudio
+git-and-github
+rmarkdown
 tree-dormancy
 learning-goals-1
 introduction-to-dormancy
@@ -15,11 +18,13 @@ future-scenarios
 impact-projections-approaches
 exercises-on-climate-change
 winter-chill-projections
+learning-goals-2
 winter-chill-projections-1
 winter-chill-in-oman
 manual-chill
-learning-goals-2
-chill
 learning-goals-3
-making-hourly-temperatures
+computing-chilling-hours-from-hourly-temperature-data
+chill
 learning-goals-4
+making-hourly-temperatures
+learning-goals-5

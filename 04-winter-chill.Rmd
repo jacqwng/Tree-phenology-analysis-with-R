@@ -1,6 +1,8 @@
 # Winter chill projections
 
-**Learning goals:**
+![](images/winter.jpg){width="750"}
+
+## Learning goals
 
 -   Be aware of past studies that have projected climate change impacts on winter chill
 -   Get a rough idea of how such studies are done
@@ -13,5 +15,3 @@ This lesson gives an overview about how winter chill can be modeled. More specif
 ### Winter chill in Oman
 
 As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
-
-

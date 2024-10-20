@@ -1,5 +1,7 @@
 # Tree dormancy
 
+This chapter is presented by [Dr. Erica Fadón](https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ), a researcher at [HortiBonn from 2018 to 2021](https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-erica-fadon-adrian/). It delves into the intriguing subject of dormancy in temperate fruit trees, an area still rich with mysteries awaiting exploration. A pivotal question for those studying dormancy is, "How do trees determine the right time to flower?" While it might seem obvious that the answer is spring, the truth is far more intricate. This chapter will deepen your understanding of dormancy and provide you with essential skills in using chillR to predict flowering times, even in light of the challenges posed by global warming.
+
 ## Learning goals
 
 -   Learn about dormancy in temperate fruit trees
@@ -8,7 +10,22 @@
 
 ## Introduction to dormancy
 
-Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage.
+Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage. Dormancy is divided into four phases:
+
+* **Dormancy Establishment:** triggered by photoperiod and temperature
+Triggered by environmental signals like day length (photoperiod) and temperature, initiating the plant's preparation for the dormant state.
+
+* **Endo-Dormancy:**
+Controlled by the plant’s internal factors, where growth remains suppressed even under favorable conditions. This phase continues until the plant has experienced enough chilling, although growth does not resume immediately.
+
+* **Eco-Dormancy:**
+The plant is acclimated to its environment, showing no visible growth changes but remaining in a light dormant state. Warmer temperatures are the main factor driving this phase.
+
+* **Growth Resumption:**
+Visible changes typically occur in late winter or early spring as plants quickly lose their acclimation and begin to grow. During this phase, they become more sensitive to frost, with warm temperatures promoting active growth.
+
+
+Plant dormancy is regulated by a range of physiological processes:
 
 ```{r, echo=FALSE}
 knitr::include_url("https://www.youtube.com/embed/qh9AZDmOm3o")

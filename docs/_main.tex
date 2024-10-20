@@ -3,7 +3,7 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-]{book}
+]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
 \ifPDFTeX
@@ -36,6 +36,47 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
@@ -64,6 +105,20 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
 \usepackage{booktabs}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -80,22 +135,22 @@
 
 \title{Tree phenology analysis with R}
 \author{Jacqueline Wingen}
-\date{2024-10-18}
+\date{20 Oktober 2024}
 
 \begin{document}
 \maketitle
 
 {
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{2}
 \tableofcontents
 }
-\chapter{Introduction}\label{introduction}
+\section{Introduction}\label{introduction}
 
 This course provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the \href{https://www.uni-bonn.de/en}{University of Bonn}, the material is accessible to anyone interested.
 
 The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the \texttt{chillR} package for R. This tool has been continuously developed since 2013 by \href{https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Eike Lüdeling}, head of the \href{https://inresgb-lehre.iaas.uni-bonn.de/}{HortiBonn research group} at the \href{https://www.inres.uni-bonn.de/de}{Institute of Crop Science and Resource Conservation (INRES)} at the \href{https://www.uni-bonn.de/en}{University of Bonn}, to support this type of analysis.
 
-\section{Learning goals}\label{learning-goals}
+\subsection{Learning goals}\label{learning-goals}
 
 This course will offer the following skills and experiences:
 
@@ -119,15 +174,33 @@ This course will offer the following skills and experiences:
   Understanding and ability to use the PhenoFlex dormancy analysis framework
 \end{itemize}
 
-\chapter{The tools}\label{the-tools}
+\section{The tools}\label{the-tools}
 
-This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the \texttt{chillR} package. It is recommended to document everything learned in a learning logbook. To engage in these practical components effectively, various tools are required. Since chillR is an R package, using R, preferably through the RStudio interface, will be necessary.
+\includegraphics{images/chillR_hexSticker.png}
 
-Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using git and GitHub, which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using RMarkdown. While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
+This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the \texttt{chillR} package. It is recommended to document everything learned in a \texttt{learning\ logbook}. To engage in these practical components effectively, various tools are required. Since \texttt{chillR} is an R package, using \href{https://www.r-project.org/}{R}, preferably through the \href{https://posit.co/download/rstudio-desktop/}{RStudio} interface, will be necessary.
 
-\chapter{Tree dormancy}\label{tree-dormancy}
+Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using \href{https://git-scm.com/}{Git} and \href{https://github.com/}{GitHub}, which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using \href{https://rmarkdown.rstudio.com/}{RMarkdown}. While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
 
-\section{Learning goals}\label{learning-goals-1}
+\href{https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-cory-whitney/}{Dr.~Cory Whitney}, a researcher at HortiBonn, has volunteered to create tutorial videos to provide an introduction to these tools.
+
+\subsection{R and RStudio}\label{r-and-rstudio}
+
+The first video demonstrates how to install and run \href{https://www.r-project.org/}{R} and \href{https://posit.co/download/rstudio-desktop/}{RStudio}:
+
+\subsection{Git and Github}\label{git-and-github}
+
+The next section explores the programming version control environment \href{https://git-scm.com/}{Git} and the interface \href{https://github.com/}{GitHub}, which is used to access these features:
+
+\subsection{Rmarkdown}\label{rmarkdown}
+
+Next, R Markdown will be examined, a powerful tool that enables the creation of sophisticated reports, websites, and more from R code. An example is currently being viewed, as this website was produced using R Markdown
+
+\section{Tree dormancy}\label{tree-dormancy}
+
+This chapter is presented by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón}, a researcher at \href{https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-erica-fadon-adrian/}{HortiBonn from 2018 to 2021}. It delves into the intriguing subject of dormancy in temperate fruit trees, an area still rich with mysteries awaiting exploration. A pivotal question for those studying dormancy is, ``How do trees determine the right time to flower?'' While it might seem obvious that the answer is spring, the truth is far more intricate. This chapter will deepen your understanding of dormancy and provide you with essential skills in using chillR to predict flowering times, even in light of the challenges posed by global warming.
+
+\subsection{Learning goals}\label{learning-goals-1}
 
 \begin{itemize}
 \tightlist
@@ -139,23 +212,35 @@ Although it is possible to run RStudio on a local computer and save files direct
   Describe and compare the two methodologies (empirical and statistical) to identify the chilling and forcing periods of a certain cultivar
 \end{itemize}
 
-\section{Introduction to dormancy}\label{introduction-to-dormancy}
+\subsection{Introduction to dormancy}\label{introduction-to-dormancy}
 
-Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage.
+Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage. Dormancy isndived into four phases:
 
-\section{Dormancy physiology}\label{dormancy-physiology}
+\begin{itemize}
+\tightlist
+\item
+  dormancy establishment
+\item
+  endo-dormancy
+\item
+  eco-dormancy
+\item
+  growth resumption
+\end{itemize}
 
-\section{Experimental and statistical determination of the chilling and forcing periods}\label{experimental-and-statistical-determination-of-the-chilling-and-forcing-periods}
+\subsection{Dormancy physiology}\label{dormancy-physiology}
+
+\subsection{Experimental and statistical determination of the chilling and forcing periods}\label{experimental-and-statistical-determination-of-the-chilling-and-forcing-periods}
 
 Dormancy presents two phases during which temperatures have opposite effects on flowering. High chill accumulation during endodormancy advances flowering dates, but similarly cool temperatures during ecodormancy may cause flowering delays. The challenge is to distinguish between these two phases, even though the tree buds appear to be in the same developmental stage throughout. The next video \emph{Dormancy determination} determains whether a tree is dormant or not during winter.
 
-\section{Phenology record and BBCH scale}\label{phenology-record-and-bbch-scale}
+\subsection{Phenology record and BBCH scale}\label{phenology-record-and-bbch-scale}
 
 Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate.
 
 This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes. The following video \emph{Phenology in temperate fruit trees} will cover what these numbers signify. It's essential to understand these codes to link them to visual signs, like trees covered in blossoms, trees with yellowing leaves, or trees bearing ripe, sweet fruits.
 
-\section{Excercises on tree dormancy}\label{excercises-on-tree-dormancy}
+\subsection{Excercises on tree dormancy}\label{excercises-on-tree-dormancy}
 
 \textbf{1. Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.}
 
@@ -201,31 +286,31 @@ To classify the phenological stages of the top three images the study by \href{h
   \end{itemize}
 \end{itemize}
 
-\chapter{Climate change and impact projection}\label{climate-change-and-impact-projection}
+\section{Climate change and impact projection}\label{climate-change-and-impact-projection}
 
 Before using \texttt{chillR}, there's a brief overview of climate change, because the upcoming work will mainly focus on predicting how global warming might affect phenology-related metrics.
 
 Climate change refers to long-term changes in temperatures and weather patterns. While these changes can occur naturally --- such as fluctuations in solar activity --- since the 19th century, climate change has primarily been driven by human activities, particularly the burning of fossil fuels like coal, oil, and natural gas. (\href{https://unric.org/de/klimawandel/}{United Nations Regional Information Centre})
 
-\section{The drivers of climate change}\label{the-drivers-of-climate-change}
+\subsection{The drivers of climate change}\label{the-drivers-of-climate-change}
 
 To understand what's happening to our planet, it's important to know the main causes of climate change. This helps us spot false claims that things like the sun, cities, or natural changes in the climate are the main reasons for global warming. The truth is simple: human-made greenhouse gas emissions are heating up our planet, and the only way to stop this is to greatly reduce these emissions.
 
 The video below, titled \emph{Climate Change 1 - Drivers of Climate Change}, is the first in a series of four videos on the topic of climate change presented by Eike Lüdeling. It provides a comprehensive overview of the primary drivers of global climate change.
 
-\section{What's already known}\label{whats-already-known}
+\subsection{What's already known}\label{whats-already-known}
 
 The next video, \emph{Climate Change 2 - Recent Warming}, explores climatic changes that have already occurred or for which there is substantial evidence. It demonstrates that the planet has experienced significant warming for several decades, almost globally.
 
-\section{Future scenarios}\label{future-scenarios}
+\subsection{Future scenarios}\label{future-scenarios}
 
 When it comes to climate change, the most severe impacts are still ahead. This is largely due to the significantly higher rate of greenhouse gas emissions observed over the past few decades, with no signs of a slowdown in the near future. As a result, the human-induced `forcing' effect on our climate has reached unprecedented levels, making it likely that future changes will occur even more rapidly than those we have already witnessed. The next video \emph{Climate Change 3 - Future scenarios} introduces the methods that climate scientists employ to forecast future conditions and presents climate scenarios developed by these scientists, which researchers in other fields can use to project the impacts of climate change on ecological and agricultural systems.
 
-\section{Impact projections approaches}\label{impact-projections-approaches}
+\subsection{Impact projections approaches}\label{impact-projections-approaches}
 
 Having robust climate scenarios is essential, but they only take us partway toward reliable assessments of climate change impacts. A potentially greater challenge lies in translating these climate scenarios into biological consequences. To achieve this, we need impact models or other methods to derive the impacts of climate change. The last video \emph{Climate change 4 - impact projection approaches} introduces various methods for projecting climate impacts.
 
-\section{Exercises on climate change}\label{exercises-on-climate-change}
+\subsection{Exercises on climate change}\label{exercises-on-climate-change}
 
 \textbf{1.) List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.}
 
@@ -269,9 +354,11 @@ The four climate impact projection methods described in the fourth video are:
   \textbf{Climate Analogue models:} This method identifies current locations with climates similar to those expected in the future at another site, offering real-world examples that can guide adaptation strategies. However, they may be limited by differences in non-climatic factors and lack of suitable data, making it difficult to draw clear conditions
 \end{itemize}
 
-\chapter{Winter chill projections}\label{winter-chill-projections}
+\section{Winter chill projections}\label{winter-chill-projections}
 
-\textbf{Learning goals:}
+\includegraphics[width=7.8125in,height=\textheight]{images/winter.jpg}
+
+\subsection{Learning goals}\label{learning-goals-2}
 
 \begin{itemize}
 \tightlist
@@ -283,25 +370,53 @@ The four climate impact projection methods described in the fourth video are:
   Get curious about how to do such studies
 \end{itemize}
 
-\section{Winter chill projections}\label{winter-chill-projections-1}
+\subsection{Winter chill projections}\label{winter-chill-projections-1}
 
 This lesson gives an overview about how winter chill can be modeled. More specifically, it introduces various studies that have been conducted on this topic. These studies are explored to illustrate how the methodological components fit together. If everything goes as planned, most of the analyses behind these studies should be achievable by the end of this class.
 
-\subsection{Winter chill in Oman}\label{winter-chill-in-oman}
+\subsubsection{Winter chill in Oman}\label{winter-chill-in-oman}
 
 As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
 
-\chapter{Manual chill}\label{manual-chill}
+\section{Manual chill}\label{manual-chill}
 
-\section{Learning goals}\label{learning-goals-2}
+\subsection{Learning goals}\label{learning-goals-3}
 
-\chapter{Chill}\label{chill}
+\begin{itemize}
+\tightlist
+\item
+  Learn about some basic R operations we need for calculating Chilling Hours
+\item
+  Be able to calculate Chilling Hours
+\item
+  Understand what an R function is
+\item
+  Be able to write your own basic function
+\end{itemize}
 
-\section{Learning goals}\label{learning-goals-3}
+\subsection{Computing Chilling Hours from hourly temperature data}\label{computing-chilling-hours-from-hourly-temperature-data}
 
-\chapter{Making hourly temperatures}\label{making-hourly-temperatures}
+Basic chill models, like the Chilling Hours Model, are straightforward and can be calculated manually, especially with familiarity in programming languages such as R or spreadsheet software. This example will explore how to understand the functions in the \texttt{chillR} package by calculating chill hours.
 
-\section{Learning goals}\label{learning-goals-4}
+One challenge commonly faced when calculating Chilling Hours is the necessity for hourly temperature data. Unfortunately, this data is often not readily available, leading to complications. For this exercise, the focus will be on data that has already been recorded on an hourly basis. Later, methods to estimate hourly temperature data from daily records, which \texttt{chillR} provides tools for, will be discussed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("chillR")}
+\FunctionTok{library}\NormalTok{(chillR)}
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{library}\NormalTok{(pander)}
+\FunctionTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Chill}\label{chill}
+
+\subsection{Learning goals}\label{learning-goals-4}
+
+\section{Making hourly temperatures}\label{making-hourly-temperatures}
+
+\subsection{Learning goals}\label{learning-goals-5}
 
   \bibliography{book.bib,packages.bib}
 

@@ -2,9 +2,12 @@ p.caption {
   color: #777;
   margin-top: 20px;
 }
-h1, h2, h3, p, body, ul, ol {
-  font-family: "Times New Roman";
+body, p, h1, h2, h3, ul, ol {
+  font-family: "Arial";
   font-size: 17px;
+}
+p {
+    margin-bottom: 30px; 
 }
 p code {
   white-space: inherit;
@@ -12,7 +15,15 @@ p code {
 pre {
   word-break: normal;
   word-wrap: normal;
+  background-color: #bbdefb; /* Helles Blau für Codeblöcke */
+  border-radius: 5px;
 }
 pre code {
   white-space: inherit;
+}
+body {
+    text-align: justify;
+}
+h1, h2, h3 {
+  text-align: "left";
 }
