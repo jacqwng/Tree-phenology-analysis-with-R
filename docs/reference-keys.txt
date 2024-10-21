@@ -8,7 +8,7 @@ tree-dormancy
 learning-goals-1
 introduction-to-dormancy
 dormancy-physiology
-experimental-and-statistical-determination-of-the-chilling-and-forcing-periods
+experimental-and-statistical-determination-of-chilling-and-forcing-periods
 phenology-record-and-bbch-scale
 excercises-on-tree-dormancy
 climate-change-and-impact-projection
@@ -24,6 +24,7 @@ winter-chill-in-oman
 manual-chill
 learning-goals-3
 computing-chilling-hours-from-hourly-temperature-data
+exercises-on-basic-chill-modeling
 chill
 learning-goals-4
 making-hourly-temperatures

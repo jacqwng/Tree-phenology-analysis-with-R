@@ -1,13 +1,16 @@
 p.caption {
   color: #777;
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-family: "Times New Roman";
 }
-body, p, h1, h2, h3, ul, ol {
+body, p, h1, h2, h3, ul, ol, table {
   font-family: "Times New Roman";
   font-size: 17px;
 }
 p {
-    margin-bottom: 30px; 
+    margin-bottom: 40px; 
 }
 p code {
   white-space: inherit;
@@ -35,4 +38,19 @@ h2 {
 }
 h3 {
     font-size: 20px; /* Größe für h3 */
+}
+/* Abstand zwischen den einzelnen Listenelementen */
+ul li, ol li {
+    margin-bottom: 2.5px; /* Abstand nach unten */
+}
+
+/* Abstand zwischen der Liste und den umgebenden Elementen */
+ul, ol {
+    margin-top: 10px; /* Abstand vor der Liste */
+    margin-bottom: 10px; /* Abstand nach der Liste */
+}
+/* Abstand oberhalb und unterhalb der Tabelle */
+table {
+    margin-top: 20px;  /* Abstand oberhalb der Tabelle */
+    margin-bottom: 30px;  /* Abstand unterhalb der Tabelle */
 }

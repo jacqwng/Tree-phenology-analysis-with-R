@@ -1941,7 +1941,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
-<style type="text/css">p.caption {color: #777;margin-top: 20px;}body, p, h1, h2, h3, ul, ol {font-family: "Times New Roman";font-size: 17px;}p {margin-bottom: 30px; }p code {white-space: inherit;}pre {word-break: normal;word-wrap: normal;background-color: #bbdefb; border-radius: 5px;}pre code {white-space: inherit;}body {text-align: justify;}h1, h2, h3 {text-align: "left";}h1 {font-size: 30px; }h2 {font-size: 24px; }h3 {font-size: 20px; }</style>
+<style type="text/css">p.caption {color: #777;margin-top: 10px;margin-bottom: 20px;font-size: 14px;font-family: "Times New Roman";}body, p, h1, h2, h3, ul, ol, table {font-family: "Times New Roman";font-size: 17px;}p {margin-bottom: 40px; }p code {white-space: inherit;}pre {word-break: normal;word-wrap: normal;background-color: #bbdefb; border-radius: 5px;}pre code {white-space: inherit;}body {text-align: justify;}h1, h2, h3 {text-align: "left";}h1 {font-size: 30px; }h2 {font-size: 24px; }h3 {font-size: 20px; }ul li, ol li {margin-bottom: 2.5px; }ul, ol {margin-top: 10px; margin-bottom: 10px; }table {margin-top: 20px; margin-bottom: 30px; }</style>
 </head>
 
 <body>
@@ -1972,7 +1972,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <li class="chapter" data-level="3.1" data-path="tree-dormancy.html"><a href="tree-dormancy.html#learning-goals-1"><i class="fa fa-check"></i><b>3.1</b> Learning goals</a></li>
 <li class="chapter" data-level="3.2" data-path="tree-dormancy.html"><a href="tree-dormancy.html#introduction-to-dormancy"><i class="fa fa-check"></i><b>3.2</b> Introduction to dormancy</a></li>
 <li class="chapter" data-level="3.3" data-path="tree-dormancy.html"><a href="tree-dormancy.html#dormancy-physiology"><i class="fa fa-check"></i><b>3.3</b> Dormancy physiology</a></li>
-<li class="chapter" data-level="3.4" data-path="tree-dormancy.html"><a href="tree-dormancy.html#experimental-and-statistical-determination-of-the-chilling-and-forcing-periods"><i class="fa fa-check"></i><b>3.4</b> Experimental and statistical determination of the chilling and forcing periods</a></li>
+<li class="chapter" data-level="3.4" data-path="tree-dormancy.html"><a href="tree-dormancy.html#experimental-and-statistical-determination-of-chilling-and-forcing-periods"><i class="fa fa-check"></i><b>3.4</b> Experimental and statistical determination of chilling and forcing periods</a></li>
 <li class="chapter" data-level="3.5" data-path="tree-dormancy.html"><a href="tree-dormancy.html#phenology-record-and-bbch-scale"><i class="fa fa-check"></i><b>3.5</b> Phenology record and BBCH scale</a></li>
 <li class="chapter" data-level="3.6" data-path="tree-dormancy.html"><a href="tree-dormancy.html#excercises-on-tree-dormancy"><i class="fa fa-check"></i><b>3.6</b> Excercises on tree dormancy</a></li>
 </ul></li>
@@ -1996,6 +1996,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <ul>
 <li class="chapter" data-level="6.1" data-path="manual-chill.html"><a href="manual-chill.html#learning-goals-3"><i class="fa fa-check"></i><b>6.1</b> Learning goals</a></li>
 <li class="chapter" data-level="6.2" data-path="manual-chill.html"><a href="manual-chill.html#computing-chilling-hours-from-hourly-temperature-data"><i class="fa fa-check"></i><b>6.2</b> Computing Chilling Hours from hourly temperature data</a></li>
+<li class="chapter" data-level="6.3" data-path="manual-chill.html"><a href="manual-chill.html#exercises-on-basic-chill-modeling"><i class="fa fa-check"></i><b>6.3</b> Exercises on basic chill modeling</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chill.html"><a href="chill.html"><i class="fa fa-check"></i><b>7</b> Chill</a>
 <ul>
@@ -2045,6 +2046,14 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <span id="cb1-3"><a href="manual-chill.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-4"><a href="manual-chill.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(pander)</span>
 <span id="cb1-5"><a href="manual-chill.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code></pre></div>
+</div>
+<div id="exercises-on-basic-chill-modeling" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Exercises on basic chill modeling<a href="manual-chill.html#exercises-on-basic-chill-modeling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Write a basic function that calculates warm hours (&gt;25°C)</li>
+<li>Apply this function to the Winters_hours_gaps dataset</li>
+<li>Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates</li>
+</ol>
 
 </div>
 </div>

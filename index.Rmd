@@ -19,7 +19,9 @@ github-repo: rstudio/bookdown-demo
 
 # Introduction
 
-This course provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the [University of Bonn](https://www.uni-bonn.de/en), the material is accessible to anyone interested.
+![](images/chillR_hexSticker.png)
+
+This course/book provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the [University of Bonn](https://www.uni-bonn.de/en), the material is accessible to anyone interested.
 
 The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the `chillR` package for R. This tool has been continuously developed since 2013 by [Eike Lüdeling](https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/), head of the [HortiBonn research group](https://inresgb-lehre.iaas.uni-bonn.de/) at the [Institute of Crop Science and Resource Conservation (INRES)](https://www.inres.uni-bonn.de/de) at the [University of Bonn](https://www.uni-bonn.de/en), to support this type of analysis.
 

@@ -21,3 +21,8 @@ library(pander)
 library(kableExtra)
 ```
 
+## Exercises on basic chill modeling 
+
+1. Write a basic function that calculates warm hours (>25°C)
+2. Apply this function to the Winters_hours_gaps dataset
+3. Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates
