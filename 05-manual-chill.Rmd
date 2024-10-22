@@ -1,11 +1,11 @@
-# Manual chill 
+# Manual chill
 
-## Learning goals 
+## Learning goals
 
-* Learn about some basic R operations we need for calculating Chilling Hours
-* Be able to calculate Chilling Hours
-* Understand what an R function is
-* Be able to write your own basic function
+-   Learn about some basic R operations we need for calculating Chilling Hours
+-   Be able to calculate Chilling Hours
+-   Understand what an R function is
+-   Be able to write your own basic function
 
 ## Computing Chilling Hours from hourly temperature data
 
@@ -21,8 +21,8 @@ library(pander)
 library(kableExtra)
 ```
 
-## Exercises on basic chill modeling 
+## Exercises on basic chill modeling
 
-1. Write a basic function that calculates warm hours (>25°C)
-2. Apply this function to the Winters_hours_gaps dataset
-3. Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates
+1.  Write a basic function that calculates warm hours (\>25°C)
+2.  Apply this function to the Winters_hours_gaps dataset
+3.  Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates

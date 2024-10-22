@@ -21,6 +21,7 @@ winter-chill-projections
 learning-goals-2
 winter-chill-projections-1
 winter-chill-in-oman
+exercises-on-past-chill-projections
 manual-chill
 learning-goals-3
 computing-chilling-hours-from-hourly-temperature-data

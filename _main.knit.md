@@ -1,0 +1,151 @@
+---
+title: "Tree phenology analysis with R"
+author: "Jacqueline Wingen"
+date:  "22 Oktober 2024"
+site: bookdown::bookdown_site
+bibliography: [book.bib, packages.bib]
+output:
+  bookdown::gitbook:
+    number_sections: true
+    fig_caption: true
+    self_contained: true
+description: 
+  'This is my learning logbook for the module Tree phenology analysis with R'
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+---
+
+# Introduction
+
+![](images/chillR_hexSticker.png)
+
+This course/book provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the [University of Bonn](https://www.uni-bonn.de/en), the material is accessible to anyone interested.
+
+The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the `chillR` package for R. This tool has been continuously developed since 2013 by [Eike Lüdeling](https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/), head of the [HortiBonn research group](https://inresgb-lehre.iaas.uni-bonn.de/) at the [Institute of Crop Science and Resource Conservation (INRES)](https://www.inres.uni-bonn.de/de) at the [University of Bonn](https://www.uni-bonn.de/en), to support this type of analysis.
+
+## Learning goals
+
+This course will offer the following skills and experiences:
+
+-   Knowledge about phenology
+-   Knowledge about tree dormancy
+-   Understanding of climate change impact projection methods
+-   Appreciation for the importance of risks and uncertainty in climate change projection
+-   Understanding of how to use some staple tools of R code development
+-   Ability to use `chillR` functions for climate change impact projection
+-   Ability to use `chillR` functions for tree phenology analysis
+-   Understanding and ability to use the PhenoFlex dormancy analysis framework
+
+<!--chapter:end:index.Rmd-->
+
+
+# The tools
+
+Placeholder
+
+
+## R and RStudio
+## Git and Github
+## Rmarkdown
+
+<!--chapter:end:01-tools.Rmd-->
+
+
+# Tree dormancy
+
+Placeholder
+
+
+## Learning goals
+## Introduction to dormancy
+## Dormancy physiology
+## Experimental and statistical determination of chilling and forcing periods
+## Phenology record and BBCH scale
+## Excercises on tree dormancy
+
+<!--chapter:end:02-tree-dormancy.Rmd-->
+
+
+# Climate change and impact projection
+
+Placeholder
+
+
+## The drivers of climate change
+## What's already known
+## Future scenarios
+## Impact projections approaches
+## Exercises on climate change
+
+<!--chapter:end:03-climate.Rmd-->
+
+# Winter chill projections
+
+![](images/winter.jpg){width="750"}
+
+## Learning goals
+
+-   Be aware of past studies that have projected climate change impacts on winter chill
+-   Get a rough idea of how such studies are done
+-   Get curious about how to do such studies
+
+## Winter chill projections
+
+This lesson gives an overview about how winter chill can be modeled. More specifically, it introduces various studies that have been conducted on this topic. These studies are explored to illustrate how the methodological components fit together. If everything goes as planned, most of the analyses behind these studies should be achievable by the end of this class.
+
+### Winter chill in Oman
+
+As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
+
+## Exercises on past chill projections
+
+1.  Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.
+
+2.  Outline, in your understanding, the basic steps that are necessary to make such projections.
+
+<!--chapter:end:04-winter-chill.Rmd-->
+
+# Manual chill
+
+## Learning goals
+
+-   Learn about some basic R operations we need for calculating Chilling Hours
+-   Be able to calculate Chilling Hours
+-   Understand what an R function is
+-   Be able to write your own basic function
+
+## Computing Chilling Hours from hourly temperature data
+
+Basic chill models, like the Chilling Hours Model, are straightforward and can be calculated manually, especially with familiarity in programming languages such as R or spreadsheet software. This example will explore how to understand the functions in the `chillR` package by calculating chill hours.
+
+One challenge commonly faced when calculating Chilling Hours is the necessity for hourly temperature data. Unfortunately, this data is often not readily available, leading to complications. For this exercise, the focus will be on data that has already been recorded on an hourly basis. Later, methods to estimate hourly temperature data from daily records, which `chillR` provides tools for, will be discussed.
+
+
+``` r
+#install.packages("chillR")
+library(chillR)
+library(knitr)
+library(pander)
+library(kableExtra)
+```
+
+## Exercises on basic chill modeling
+
+1.  Write a basic function that calculates warm hours (\>25°C)
+2.  Apply this function to the Winters_hours_gaps dataset
+3.  Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates
+
+<!--chapter:end:05-manual-chill.Rmd-->
+
+# Chill 
+
+## Learning goals
+
+<!--chapter:end:06-chill.Rmd-->
+
+# Making hourly temperatures 
+
+## Learning goals 
+
+<!--chapter:end:07-temp.Rmd-->
+

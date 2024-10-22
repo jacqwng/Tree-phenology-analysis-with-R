@@ -135,7 +135,7 @@
 
 \title{Tree phenology analysis with R}
 \author{Jacqueline Wingen}
-\date{20 Oktober 2024}
+\date{22 Oktober 2024}
 
 \begin{document}
 \maketitle
@@ -146,7 +146,9 @@
 }
 \section{Introduction}\label{introduction}
 
-This course provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the \href{https://www.uni-bonn.de/en}{University of Bonn}, the material is accessible to anyone interested.
+\includegraphics{images/chillR_hexSticker.png}
+
+This course/book provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the \href{https://www.uni-bonn.de/en}{University of Bonn}, the material is accessible to anyone interested.
 
 The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the \texttt{chillR} package for R. This tool has been continuously developed since 2013 by \href{https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Eike Lüdeling}, head of the \href{https://inresgb-lehre.iaas.uni-bonn.de/}{HortiBonn research group} at the \href{https://www.inres.uni-bonn.de/de}{Institute of Crop Science and Resource Conservation (INRES)} at the \href{https://www.uni-bonn.de/en}{University of Bonn}, to support this type of analysis.
 
@@ -176,8 +178,6 @@ This course will offer the following skills and experiences:
 
 \section{The tools}\label{the-tools}
 
-\includegraphics{images/chillR_hexSticker.png}
-
 This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the \texttt{chillR} package. It is recommended to document everything learned in a \texttt{learning\ logbook}. To engage in these practical components effectively, various tools are required. Since \texttt{chillR} is an R package, using \href{https://www.r-project.org/}{R}, preferably through the \href{https://posit.co/download/rstudio-desktop/}{RStudio} interface, will be necessary.
 
 Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using \href{https://git-scm.com/}{Git} and \href{https://github.com/}{GitHub}, which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using \href{https://rmarkdown.rstudio.com/}{RMarkdown}. While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
@@ -186,19 +186,21 @@ Although it is possible to run RStudio on a local computer and save files direct
 
 \subsection{R and RStudio}\label{r-and-rstudio}
 
-The first video demonstrates how to install and run \href{https://www.r-project.org/}{R} and \href{https://posit.co/download/rstudio-desktop/}{RStudio}:
+The first video \emph{Using R and RStudio} demonstrates how to install and run \href{https://www.r-project.org/}{R} and \href{https://posit.co/download/rstudio-desktop/}{RStudio}:
 
 \subsection{Git and Github}\label{git-and-github}
 
-The next section explores the programming version control environment \href{https://git-scm.com/}{Git} and the interface \href{https://github.com/}{GitHub}, which is used to access these features:
+The next video Using \emph{Git and Github} explores the programming version control environment \href{https://git-scm.com/}{Git} and the interface \href{https://github.com/}{GitHub}, which is used to access these features:
 
 \subsection{Rmarkdown}\label{rmarkdown}
 
-Next, R Markdown will be examined, a powerful tool that enables the creation of sophisticated reports, websites, and more from R code. An example is currently being viewed, as this website was produced using R Markdown
+In the last video \emph{Using R Mardown}, R Markdown will be examined, a powerful tool that enables the creation of sophisticated reports, websites, and more from R code. An example is currently being viewed, as this website was produced using R Markdown
 
 \section{Tree dormancy}\label{tree-dormancy}
 
-This chapter is presented by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón}, a researcher at \href{https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-erica-fadon-adrian/}{HortiBonn from 2018 to 2021}. It delves into the intriguing subject of dormancy in temperate fruit trees, an area still rich with mysteries awaiting exploration. A pivotal question for those studying dormancy is, ``How do trees determine the right time to flower?'' While it might seem obvious that the answer is spring, the truth is far more intricate. This chapter will deepen your understanding of dormancy and provide you with essential skills in using chillR to predict flowering times, even in light of the challenges posed by global warming.
+This chapter is presented by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón}, a researcher at \href{https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-erica-fadon-adrian/}{HortiBonn from 2018 to 2021}, who explores dormancy in temperate fruit trees. This topic remains complex and has many unanswered questions. A central question for researchers is, ``How do trees know when to flower?'' Although it seems clear that trees bloom in spring, the reality is more complicated. This chapter provides a better understanding of dormancy and demonstrates how to use the \texttt{chillR} tool to predict flowering times, even in the face of challenges posed by global warming.
+
+\includegraphics{images/dormant-grown-apple-tree-that-need-pruning-field-australia_866797-3589.jpg}
 
 \subsection{Learning goals}\label{learning-goals-1}
 
@@ -214,89 +216,148 @@ This chapter is presented by \href{https://scholar.google.de/citations?hl=de&use
 
 \subsection{Introduction to dormancy}\label{introduction-to-dormancy}
 
-Tree dormancy is a state of reduced activity that occurs when environmental conditions become unfavorable, particularly during winter. This state serves as a survival strategy to protect trees from extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or halt their growth processes to conserve energy and prevent damage. Dormancy isndived into four phases:
+Tree dormancy is a state of reduced activity that occurs when environmental conditions are unfavorable, especially during winter. This state acts as a survival strategy, helping trees withstand extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or stop their growth to conserve energy and avoid damage. Dormancy is a continuous process divided into three phases:
 
 \begin{itemize}
 \tightlist
 \item
-  dormancy establishment
+  \textbf{Dormancy Establishment}
 \item
-  endo-dormancy
+  \textbf{Endo-Dormancy}
 \item
-  eco-dormancy
-\item
-  growth resumption
+  \textbf{Eco-Dormancy}
 \end{itemize}
+
+Dormancy establishment is the process where temperate trees transition from active growth in summer to a dormant state in autumn. This shift is mainly triggered by shorter daylight hours and decreasing temperatures, causing buds to form, growth to stop, and leaves to fall. The importance of these factors varies by species, with some trees responding more to day length and others to temperature.
+
+Endo-dormancy is a phase of dormancy controlled by the plant's internal factors, where growth is suppressed even under favorable conditions. It requires a period of cold exposure (chilling) to release the buds from this state, preventing premature growth during temporary warm spells in winter. Low temperatures are the main trigger for breaking endo-dormancy, while the role of light (photoperiod) is still uncertain.
+
+Eco-dormancy is the phase after endo-dormancy, where buds have regained their ability to grow but remain inactive due to unfavorable environmental conditions, mainly low temperatures. During this phase, growth is on hold until warmer temperatures trigger it. Heat accumulation is needed to resume growth. Eco-dormancy ends when enough heat has been accumulated, leading to visible growth changes, typically in late winter or early spring.
+
+The below video \emph{Introduction to dormancy} by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón} gives the basic knowledge of this dormancy phases and processes that regulate dormancy.
 
 \subsection{Dormancy physiology}\label{dormancy-physiology}
 
-\subsection{Experimental and statistical determination of the chilling and forcing periods}\label{experimental-and-statistical-determination-of-the-chilling-and-forcing-periods}
-
-Dormancy presents two phases during which temperatures have opposite effects on flowering. High chill accumulation during endodormancy advances flowering dates, but similarly cool temperatures during ecodormancy may cause flowering delays. The challenge is to distinguish between these two phases, even though the tree buds appear to be in the same developmental stage throughout. The next video \emph{Dormancy determination} determains whether a tree is dormant or not during winter.
-
-\subsection{Phenology record and BBCH scale}\label{phenology-record-and-bbch-scale}
-
-Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate.
-
-This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes. The following video \emph{Phenology in temperate fruit trees} will cover what these numbers signify. It's essential to understand these codes to link them to visual signs, like trees covered in blossoms, trees with yellowing leaves, or trees bearing ripe, sweet fruits.
-
-\subsection{Excercises on tree dormancy}\label{excercises-on-tree-dormancy}
-
-\textbf{1. Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.}
-
-As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use
-
-\textbf{2. Which are the advantages (2) of the BBCH scale compared with earlier scales?}
-
-\textbf{3. Classify the following phenological stages of sweet cherry according to the BBCH scale:}
-
-To classify the phenological stages of the top three images the study by \href{https://www.sciencedirect.com/science/article/pii/S0304423815300169?casa_token=DX15FKw3dgEAAAAA:GzG1yE-_GC380iS0f2fcZS3hLtr1J_9XJamThXlfkXX9Q6PoJPA6Nxm8fOTTjhXqweBfHptHQzQ\#tbl0005}{Fadón et al.~2015} was used:
+Dormancy as a whole is the result of complex interactions between numerous physiological processes that occur in different parts of the tree, such as buds, twigs, meristems, and vascular tissues. We divide these processes into four main themes:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{left image:} stage 55
-
-  \begin{itemize}
-  \tightlist
-  \item
-    principle growth stage 5: reproductive development or inflorescence emergence
-  \item
-    single flower buds visible (still closed) borne on short stalks, green scales slightly open
-  \end{itemize}
+  \textbf{Transport:} occurs at both the whole-plant and cellular levels
 \item
-  \textbf{middle image:} stage 65
-
-  \begin{itemize}
-  \tightlist
-  \item
-    principle growth stage 6: flowering
-  \item
-    full flowering: at least 50\% of flowers open, first petals falling
-  \end{itemize}
+  \textbf{Phytohormone Dynamics:} behavior and levels of plant hormones during dormancy
 \item
-  \textbf{right image:} stage 89
+  \textbf{Genetic and Epigenetic Regulation:} how genetic factors and their modifications influence dormancy
+\item
+  \textbf{Dynamics of Nonstructural Carbohydrates:} changes in carbohydrate levels that affect dormancy
+\end{itemize}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    principle growth stage 8: ripening or maturity
-  \item
-    fruit ripe for harvesting
-  \end{itemize}
+The following figure from the study \href{https://www.mdpi.com/2073-4395/10/2/241\#}{\emph{``A conceptual framework for Winter Dormancy in Deciduous Trees''}} by Fadón et al.~(2015) presents a conceptual framework of winter dormancy in deciduous trees and summarizes the three dormancy phases along with their respective physiological processes.
+
+\includegraphics{images/agronomy-10-00241-g003.png}
+
+All the processes depicted are explained in detail in the video below, \emph{Dormancy Physiology} by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón}.
+
+\subsection{Experimental and statistical determination of chilling and forcing periods}\label{experimental-and-statistical-determination-of-chilling-and-forcing-periods}
+
+Dormancy consists of two phases where temperatures have opposite effects on flowering. During endodormancy, higher chill accumulation leads to earlier flowering, whereas similar cool temperatures during ecodormancy can delay flowering. The challenge lies in differentiating between these two phases, as the tree buds appear to be in the same developmental stage throughout. To address this, there are two methods available:
+
+\begin{itemize}
+\item
+  \textbf{Experimental method:} collecting buds periodically during winter, exposing them to favorable growth conditions, and evaluating bud break to determine when dormancy is overcome
+\item
+  \textbf{Statistical method:} uses long-term phenological data and temperature records to estimate the dates of chilling fulfillment and heat accumulation through partial least squares (PLS) regression analysis
+\end{itemize}
+
+The video \emph{Dormancy determination} covers the experimental and statistical methods to determine the chilling and forcing periods for temperate fruit trees to overcome dormancy and initiate growth. It explains the concept of dormancy, its phases (endodormancy and ecodormancy), and the temperature requirements for breaking dormancy.
+
+\subsection{Phenology record and BBCH scale}\label{phenology-record-and-bbch-scale}
+
+Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate. This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes.
+
+To describe these growth stages systematically, the BBCH scale is employed. This internationally standardized system outlines the growth and developmental phases of plants. The BBCH scale consists of ten main stages, known as principal growth stages, which are numbered from 0 to 9. Each of these main stages is further divided into substages, enabling a more detailed description of a plant's development.
+
+Principal growth stages:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & Germination / sprouting / bud development \\
+1 & Leaf development (main shoot) \\
+2 & Formation of side shoots / tillering \\
+3 & Stem elongation or rosette growth / shoot development (main shoot) \\
+4 & Development of harvestable vegetative plant parts or vegetatively propagated organs / booting (main shoot) \\
+5 & Inflorescence emergence \\
+6 & Flowering (main shoot) \\
+7 & Development of fruit \\
+8 & Ripening or maturity of fruit and seed \\
+9 & Senescence, beginning of dormancy \\
+\end{longtable}
+
+For a comprehensive overview of phenology and the BBCH scale, the video \emph{Phenology} by \href{https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ}{Dr.~Erica Fadón} is recommended. In this video, Dr.~Fadón explains the concept of phenology and how the BBCH scale uses numerical codes to represent the different developmental stages of trees, from budding and flowering to fruit ripening and leaf fall.
+
+\subsection{Excercises on tree dormancy}\label{excercises-on-tree-dormancy}
+
+\emph{1.) Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.}
+
+As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use the experimental method to determine the chilling and forcing periods. Here's my justification:
+
+\begin{itemize}
+\item
+  \textbf{Direct measurement of bud response:} The experimental method allows me to directly observe when buds break under controlled temperature conditions. By regularly collecting buds during winter and placing them in ideal growth conditions, I can determine exactly when dormancy ends. This practical approach gives me quick and useful information about the specific cultivar
+\item
+  \textbf{Specific to the cultivar:} Each cultivar has its own unique chilling and forcing needs. The experimental method looks at the specific traits of the new cultivar, making sure the results are relevant and applicable to that variety
+\item
+  \textbf{Immediate results for breeding decisions:} The experimental method provides quick evaluations of bud break, allowing me to make faster decisions about breeding and managing the new cultivar
+\end{itemize}
+
+\emph{2.) Which are the advantages (2) of the BBCH scale compared with earlier scales?}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Standardization:} The BBCH scale provides a standardized framework for describing plant growth stages, enabling consistent communication and comparisons across studies
+\item
+  \textbf{Detailed Staging}: It offers a more granular categorization of developmental stages using a two-digit system, allowing for a better understanding of plant development and environmental impacts.
+\end{itemize}
+
+\emph{3.) Classify the following phenological stages of sweet cherry according to the BBCH scale:}
+
+\includegraphics{images/pheno_stages.png}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{left image:} BBCH stage 55 (single flower buds visible (still closed), green scales slightly open)
+\item
+  \textbf{middle image:} BBCH stage 65 (full flowering: at least 50\% of flowers open, first petals falling)
+\item
+  \textbf{right image:} BBCH stage 89 (fruit ripe for harvesting)
 \end{itemize}
 
 \section{Climate change and impact projection}\label{climate-change-and-impact-projection}
 
 Before using \texttt{chillR}, there's a brief overview of climate change, because the upcoming work will mainly focus on predicting how global warming might affect phenology-related metrics.
 
-Climate change refers to long-term changes in temperatures and weather patterns. While these changes can occur naturally --- such as fluctuations in solar activity --- since the 19th century, climate change has primarily been driven by human activities, particularly the burning of fossil fuels like coal, oil, and natural gas. (\href{https://unric.org/de/klimawandel/}{United Nations Regional Information Centre})
+Climate change refers to long-term changes in temperatures and weather patterns. While these changes can occur naturally --- such as fluctuations in solar activity --- since the 19th century, climate change has primarily been driven by human activities, particularly the burning of fossil fuels like coal, oil, and natural gas.
+
+\includegraphics{images/polar-bear-01.jpg}
 
 \subsection{The drivers of climate change}\label{the-drivers-of-climate-change}
 
 To understand what's happening to our planet, it's important to know the main causes of climate change. This helps us spot false claims that things like the sun, cities, or natural changes in the climate are the main reasons for global warming. The truth is simple: human-made greenhouse gas emissions are heating up our planet, and the only way to stop this is to greatly reduce these emissions.
 
-The video below, titled \emph{Climate Change 1 - Drivers of Climate Change}, is the first in a series of four videos on the topic of climate change presented by Eike Lüdeling. It provides a comprehensive overview of the primary drivers of global climate change.
+The video below, titled \emph{Climate Change 1 - Drivers of Climate Change}, is the first in a series of four videos on the topic of climate change presented by \href{https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Eike Lüdeling}. It provides a comprehensive overview of the primary drivers of global climate change, such as greenhouse gases, aerosols, solar radiation, ozone, and others.
 
 \subsection{What's already known}\label{whats-already-known}
 
@@ -312,7 +373,7 @@ Having robust climate scenarios is essential, but they only take us partway towa
 
 \subsection{Exercises on climate change}\label{exercises-on-climate-change}
 
-\textbf{1.) List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.}
+\emph{1.) List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.}
 
 The main drivers of climate change on a decade-to-century scale include:
 
@@ -331,15 +392,15 @@ The main drivers of climate change on a decade-to-century scale include:
 
 The currently most important driver of climate change is greenhouse gases, particularly CO₂. The mechanism through which CO₂ affects the climate involves the greenhouse effect: CO₂ molecules in the atmosphere absorb long-wave radiation emitted from the Earth's surface and re-radiate it in all directions, including back toward the surface. This process traps heat and increases global temperatures, driving many of the changes we observe in climate patterns.
 
-\textbf{2.) Explain briefly what is special about temperature dynamics of recent decades, and why we have good reasons to be concerned.}
+\emph{2.) Explain briefly what is special about temperature dynamics of recent decades, and why we have good reasons to be concerned.}
 
 In recent decades, global temperatures have been rising at a faster rate than at any other time in human history. This trend is evident from the fact that the hottest years on record have all occurred within the last few decades. One striking example is the extreme heat in Siberia in the spring of 2020, where temperatures were up to 8°C above the recent average. This trend is particularly concerning because it is mainly driven by human activities, especially the emission of greenhouse gases. Unlike previous climate changes, which took place slowly over long periods, today's fast rise in temperatures increases the risk of triggering dangerous effects, like melting permafrost and losing ice cover, which could make global warming even worse. Even a small increase of 1.5°C could seriously upset the balance of our climate, showing how important it is to take action against these human-caused changes.
 
-\textbf{3.) What does the abbreviation `RCP' stand for, how are RCPs defined, and what is their role in projecting future climates?}
+\emph{3.) What does the abbreviation `RCP' stand for, how are RCPs defined, and what is their role in projecting future climates?}
 
 RCP stands for Representative Concentration Pathways, which are essential scenarios used in climate modeling to project potential future greenhouse gas emissions and their impacts on the climate. RCPs are defined by the level of radiative forcing --- measured in watts per square meter (W/m²) --- that is expected by the end of the 21st century. Each pathway corresponds to a specific amount of greenhouse gas concentrations, which can significantly influence global temperatures. The role of RCPs is to serve as inputs for climate models, helping to produce future climate scenarios, which are essential for understanding the potential impacts of climate change and planning appropriate mitigation and adaptation strategies.
 
-\textbf{4.) Briefly describe the 4 climate impact projection methods described in the fourth video.}
+\emph{4.) Briefly describe the 4 climate impact projection methods described in the fourth video.}
 
 The four climate impact projection methods described in the fourth video are:
 
@@ -378,6 +439,16 @@ This lesson gives an overview about how winter chill can be modeled. More specif
 
 As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
 
+\subsection{Exercises on past chill projections}\label{exercises-on-past-chill-projections}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.
+\item
+  Outline, in your understanding, the basic steps that are necessary to make such projections.
+\end{enumerate}
+
 \section{Manual chill}\label{manual-chill}
 
 \subsection{Learning goals}\label{learning-goals-3}
@@ -409,6 +480,19 @@ One challenge commonly faced when calculating Chilling Hours is the necessity fo
 \FunctionTok{library}\NormalTok{(kableExtra)}
 \end{Highlighting}
 \end{Shaded}
+
+\subsection{Exercises on basic chill modeling}\label{exercises-on-basic-chill-modeling}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Write a basic function that calculates warm hours (\textgreater25°C)
+\item
+  Apply this function to the Winters\_hours\_gaps dataset
+\item
+  Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates
+\end{enumerate}
 
 \section{Chill}\label{chill}
 

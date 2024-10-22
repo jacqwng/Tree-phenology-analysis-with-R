@@ -72,7 +72,7 @@ To describe these growth stages systematically, the BBCH scale is employed. This
 Principal growth stages:
 
 | Stage | Description |
-|---------------------|---------------------------------------------------|
+|----|----|
 | 0 | Germination / sprouting / bud development |
 | 1 | Leaf development (main shoot) |
 | 2 | Formation of side shoots / tillering |
@@ -92,7 +92,7 @@ knitr::include_url("https://www.youtube.com/embed/Ssoe6Ahv88Y")
 
 ## Excercises on tree dormancy
 
-*1. Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.*
+*1.) Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.*
 
 As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use the experimental method to determine the chilling and forcing periods. Here's my justification:
 
@@ -102,12 +102,12 @@ As a breeder aiming to calculate the temperature requirements for the chilling a
 
 -   **Immediate results for breeding decisions:** The experimental method provides quick evaluations of bud break, allowing me to make faster decisions about breeding and managing the new cultivar
 
-*2. Which are the advantages (2) of the BBCH scale compared with earlier scales?*
+*2.) Which are the advantages (2) of the BBCH scale compared with earlier scales?*
 
 -   **Standardization:** The BBCH scale provides a standardized framework for describing plant growth stages, enabling consistent communication and comparisons across studies
 -   **Detailed Staging**: It offers a more granular categorization of developmental stages using a two-digit system, allowing for a better understanding of plant development and environmental impacts.
 
-*3. Classify the following phenological stages of sweet cherry according to the BBCH scale:*
+*3.) Classify the following phenological stages of sweet cherry according to the BBCH scale:*
 
 ![](images/pheno_stages.png)
 
