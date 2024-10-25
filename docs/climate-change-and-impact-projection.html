@@ -1872,6 +1872,230 @@ a.anchor-section::before {content: '#';font-size: 80%;}
 
 
 
+
+
+
+
+
+
+
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
+
+
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { line-height: 1.25; }
@@ -1941,7 +2165,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
-<style type="text/css">p.caption {color: #777;margin-top: 10px;margin-bottom: 20px;font-size: 14px;font-family: "Times New Roman";}body, p, h1, h2, h3, ul, ol, table {font-family: "Times New Roman";font-size: 17px;}p {margin-bottom: 40px; }p code {white-space: inherit;}pre {word-break: normal;word-wrap: normal;background-color: #bbdefb; border-radius: 5px;}pre code {white-space: inherit;}body {text-align: justify;}h1, h2, h3 {text-align: "left";}h1 {font-size: 30px; }h2 {font-size: 24px; }h3 {font-size: 20px; }ul li, ol li {margin-bottom: 2.5px; }ul, ol {margin-top: 10px; margin-bottom: 10px; }table {margin-top: 20px; margin-bottom: 30px; }</style>
+<style type="text/css">p.caption {color: #777;margin-top: 10px;margin-bottom: 20px;font-size: 14px;font-family: "Times New Roman";}body, p, h1, h2, h3, ul, ol, table {font-family: "Times New Roman";font-size: 17px;}p {margin-bottom: 40px; }p code {white-space: inherit;}pre {word-break: normal;word-wrap: normal;background-color: #bbdefb; border-radius: 5px;}pre code {white-space: inherit;}body {text-align: justify;}h1, h2, h3 {text-align: "left";}h1 {font-size: 30px; }h2 {font-size: 24px; }h3 {font-size: 20px; }ul li, ol li {margin-bottom: 2.5px; }ul, ol {margin-top: 10px; margin-bottom: 10px; }table {margin-top: 20px; margin-bottom: 30px; }.table-responsive {overflow-x: auto;-webkit-overflow-scrolling: touch;}</style>
 </head>
 
 <body>
@@ -1996,12 +2220,25 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <li class="chapter" data-level="6" data-path="manual-chill.html"><a href="manual-chill.html"><i class="fa fa-check"></i><b>6</b> Manual chill</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="manual-chill.html"><a href="manual-chill.html#learning-goals-3"><i class="fa fa-check"></i><b>6.1</b> Learning goals</a></li>
-<li class="chapter" data-level="6.2" data-path="manual-chill.html"><a href="manual-chill.html#computing-chilling-hours-from-hourly-temperature-data"><i class="fa fa-check"></i><b>6.2</b> Computing Chilling Hours from hourly temperature data</a></li>
+<li class="chapter" data-level="6.2" data-path="manual-chill.html"><a href="manual-chill.html#chilling-hours-calculation-using-chillr"><i class="fa fa-check"></i><b>6.2</b> Chilling hours calculation using chillR</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="manual-chill.html"><a href="manual-chill.html#data-requirements-and-challenges"><i class="fa fa-check"></i><b>6.2.1</b> <strong>Data Requirements and Challenges</strong></a></li>
+<li class="chapter" data-level="6.2.2" data-path="manual-chill.html"><a href="manual-chill.html#loading-and-preparing-data"><i class="fa fa-check"></i><b>6.2.2</b> Loading and Preparing Data</a></li>
+<li class="chapter" data-level="6.2.3" data-path="manual-chill.html"><a href="manual-chill.html#manual-calculation-of-chilling-hours"><i class="fa fa-check"></i><b>6.2.3</b> <strong>Manual Calculation of Chilling Hours</strong></a></li>
+<li class="chapter" data-level="6.2.4" data-path="manual-chill.html"><a href="manual-chill.html#automation-with-functions"><i class="fa fa-check"></i><b>6.2.4</b> Automation with Functions</a></li>
+<li class="chapter" data-level="6.2.5" data-path="manual-chill.html"><a href="manual-chill.html#application-example"><i class="fa fa-check"></i><b>6.2.5</b> Application Example</a></li>
+</ul></li>
 <li class="chapter" data-level="6.3" data-path="manual-chill.html"><a href="manual-chill.html#exercises-on-basic-chill-modeling"><i class="fa fa-check"></i><b>6.3</b> Exercises on basic chill modeling</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chill.html"><a href="chill.html"><i class="fa fa-check"></i><b>7</b> Chill</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="chill.html"><a href="chill.html#learning-goals-4"><i class="fa fa-check"></i><b>7.1</b> Learning goals</a></li>
+<li class="chapter" data-level="7.2" data-path="chill.html"><a href="chill.html#chilling_hours-function"><i class="fa fa-check"></i><b>7.2</b> <code>Chilling_Hours()</code> function</a></li>
+<li class="chapter" data-level="7.3" data-path="chill.html"><a href="chill.html#utah-model"><i class="fa fa-check"></i><b>7.3</b> Utah Model</a></li>
+<li class="chapter" data-level="7.4" data-path="chill.html"><a href="chill.html#creating-custom-chill-models-with-step_model"><i class="fa fa-check"></i><b>7.4</b> Creating Custom Chill Models with <code>step_model()</code></a></li>
+<li class="chapter" data-level="7.5" data-path="chill.html"><a href="chill.html#dynamic-model"><i class="fa fa-check"></i><b>7.5</b> Dynamic model</a></li>
+<li class="chapter" data-level="7.6" data-path="chill.html"><a href="chill.html#chilling-and-tempresponse-functions"><i class="fa fa-check"></i><b>7.6</b> <code>Chilling</code> and <code>tempResponse</code> functions</a></li>
+<li class="chapter" data-level="7.7" data-path="chill.html"><a href="chill.html#exercises-von-chill-models"><i class="fa fa-check"></i><b>7.7</b> Exercises von chill models</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html"><i class="fa fa-check"></i><b>8</b> Making hourly temperatures</a>
 <ul>
@@ -3048,6 +3285,15 @@ jQuery.fn.highlight = function (words, options) {
     x.parentElement.classList.remove('hasAnchor')
   })
 })
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
 </script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
