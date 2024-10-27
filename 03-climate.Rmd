@@ -40,9 +40,9 @@ Having robust climate scenarios is essential, but they only take us partway towa
 knitr::include_url("https://www.youtube.com/embed/3Q8HF4E7rkM")
 ```
 
-## Exercises on climate change
+## `Exercises` on climate change
 
-*1.) List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.*
+1.  *List the main drivers of climate change at the decade to century scale, and briefly explain the mechanism through which the currently most important driver affects our climate.*
 
 The main drivers of climate change on a decade-to-century scale include:
 
@@ -58,15 +58,15 @@ The main drivers of climate change on a decade-to-century scale include:
 
 The currently most important driver of climate change is greenhouse gases, particularly CO₂. The mechanism through which CO₂ affects the climate involves the greenhouse effect: CO₂ molecules in the atmosphere absorb long-wave radiation emitted from the Earth's surface and re-radiate it in all directions, including back toward the surface. This process traps heat and increases global temperatures, driving many of the changes we observe in climate patterns.
 
-*2.) Explain briefly what is special about temperature dynamics of recent decades, and why we have good reasons to be concerned.*
+2.  *Explain briefly what is special about temperature dynamics of recent decades, and why we have good reasons to be concerned.*
 
 In recent decades, global temperatures have been rising at a faster rate than at any other time in human history. This trend is evident from the fact that the hottest years on record have all occurred within the last few decades. One striking example is the extreme heat in Siberia in the spring of 2020, where temperatures were up to 8°C above the recent average. This trend is particularly concerning because it is mainly driven by human activities, especially the emission of greenhouse gases. Unlike previous climate changes, which took place slowly over long periods, today’s fast rise in temperatures increases the risk of triggering dangerous effects, like melting permafrost and losing ice cover, which could make global warming even worse. Even a small increase of 1.5°C could seriously upset the balance of our climate, showing how important it is to take action against these human-caused changes.
 
-*3.) What does the abbreviation ‘RCP’ stand for, how are RCPs defined, and what is their role in projecting future climates?*
+3.  *What does the abbreviation ‘RCP’ stand for, how are RCPs defined, and what is their role in projecting future climates?*
 
 RCP stands for Representative Concentration Pathways, which are essential scenarios used in climate modeling to project potential future greenhouse gas emissions and their impacts on the climate. RCPs are defined by the level of radiative forcing — measured in watts per square meter (W/m²) — that is expected by the end of the 21st century. Each pathway corresponds to a specific amount of greenhouse gas concentrations, which can significantly influence global temperatures. The role of RCPs is to serve as inputs for climate models, helping to produce future climate scenarios, which are essential for understanding the potential impacts of climate change and planning appropriate mitigation and adaptation strategies.
 
-*4.) Briefly describe the 4 climate impact projection methods described in the fourth video.*
+4.  *Briefly describe the 4 climate impact projection methods described in the fourth video.*
 
 The four climate impact projection methods described in the fourth video are:
 

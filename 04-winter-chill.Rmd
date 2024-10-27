@@ -16,8 +16,8 @@ This lesson gives an overview about how winter chill can be modeled. More specif
 
 As a student at the University of Kassel, there was an opportunity to participate in research projects centered on mountain oases in the Sultanate of Oman. These systems later became the focus of a PhD project, where the interest in winter chill first emerged. Initially, the study plan was different, aiming to calculate nutrient budgets for the oases, which required measuring the yields of the various fruit trees in these regions. The following provides an impression of the oasis orchards:
 
-## Exercises on past chill projections
+## `Exercises` on past chill projections
 
-1.  Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.
+1.  *Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.*
 
-2.  Outline, in your understanding, the basic steps that are necessary to make such projections.
+2.  *Outline, in your understanding, the basic steps that are necessary to make such projections.*

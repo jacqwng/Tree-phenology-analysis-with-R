@@ -25,7 +25,7 @@ exercises-on-past-chill-projections
 manual-chill
 learning-goals-3
 chilling-hours-calculation-using-chillr
-data-requirements-and-challenges
+data-requirements
 loading-and-preparing-data
 manual-calculation-of-chilling-hours
 automation-with-functions
@@ -38,6 +38,6 @@ utah-model
 creating-custom-chill-models-with-step_model
 dynamic-model
 chilling-and-tempresponse-functions
-exercises-von-chill-models
+exercises-on-chill-models
 making-hourly-temperatures
 learning-goals-5

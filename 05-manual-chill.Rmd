@@ -1,5 +1,7 @@
 # Manual chill
 
+This chapter explains how to calculate Chilling Hours using R and the `chillR` package. Chilling Hours measure the number of hours where temperatures are between 0°C and 7.2°C, which is important for certain plants to meet their cold requirements during dormancy and grow properly.
+
 ## Learning goals
 
 -   Learn about some basic R operations we need for calculating Chilling Hours
@@ -9,11 +11,9 @@
 
 ## Chilling hours calculation using chillR
 
-This entry explains how to calculate Chilling Hours using R and the `chillR` package. Chilling Hours measure the number of hours where temperatures are between 0°C and 7.2°C, which is important for certain plants to meet their cold requirements during dormancy and grow properly.
-
 Basic models like the Chilling Hours Model are simple and can be calculated manually, especially if familiar with R or spreadsheet software. This example will show how to understand and use the functions in the `chillR` package to calculate these chill hours.
 
-### **Data Requirements and Challenges**
+### **Data Requirements**
 
 The Chilling Hours Model is relatively simple but requires hourly temperature data. A common challenge is the unavailability of such data, though approximations can be made from daily records using `chillR` tools. For this example, a sample dataset, `Winters_hours_gaps`, provided within `chillR`, was used. It contains hourly temperature data recorded in 2008 from a walnut orchard in Winters, California, and is structured with columns for year, month, day, hour, and temperature.
 
@@ -63,7 +63,7 @@ hourtemps[, "Chilling_Hour"] <- hourtemps$Temp >= 0 & hourtemps$Temp <= 7.2
 kable(hourtemps[1:10, ], align = rep("c", ncol(hourtemps))) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover"), 
-    position = "right", 
+    position = "center", 
     font_size = 15,   
     full_width = TRUE,
   )
@@ -163,9 +163,9 @@ sum_CH(hourtemps, startYEARMODAHO =2008040100,
                   endYEARMODAHO = 2008101100)
 ```
 
-## Exercises on basic chill modeling
+## `Exercises` on basic chill modeling
 
-1.  *Write a basic function that calculates warm hours (\>25°C)*
+1.  *Write a basic function that calculates warm hours (\>25°C).*
 
 ```{r}
 WH <- function(data)

@@ -1,3 +1,58 @@
+/* Allgemeine Schriftarten und -größen */
+body, p, h1, h2, h3, ul, ol, table {
+  font-family: "Times New Roman";
+  font-size: 17px;
+  text-align: justify;
+}
+
+/* Absatzstil */
+p {
+  margin-bottom: 40px;
+}
+
+/* Absatz mit Code */
+p code, pre code {
+  white-space: inherit;
+}
+
+/* Codeblock-Stil */
+pre {
+  word-break: normal;
+  word-wrap: normal;
+  background-color: #bbdefb; /* Helles Blau für Codeblöcke */
+  border-radius: 5px;
+}
+
+/* Überschriftstile */
+h1 {
+  font-size: 30px;
+  text-align: left;
+}
+h2 {
+  font-size: 24px;
+  text-align: left;
+}
+h3 {
+  font-size: 20px;
+  text-align: left;
+}
+
+/* Tabellenstile */
+table {
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+/* Abstand und Stil für Listen */
+ul, ol {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+ul li, ol li {
+  margin-bottom: 2.5px;
+}
+
+/* Bildunterschriftenstil */
 p.caption {
   color: #777;
   margin-top: 10px;
@@ -5,52 +60,4 @@ p.caption {
   font-size: 14px;
   font-family: "Times New Roman";
 }
-body, p, h1, h2, h3, ul, ol, table {
-  font-family: "Times New Roman";
-  font-size: 17px;
-}
-p {
-    margin-bottom: 40px; 
-}
-p code {
-  white-space: inherit;
-}
-pre {
-  word-break: normal;
-  word-wrap: normal;
-  background-color: #bbdefb; /* Helles Blau für Codeblöcke */
-  border-radius: 5px;
-}
-pre code {
-  white-space: inherit;
-}
-body {
-    text-align: justify;
-}
-h1, h2, h3 {
-  text-align: "left";
-}
-h1 {
-    font-size: 30px; /* Größe für h1 */
-}
-h2 {
-    font-size: 24px; /* Größe für h2 */
-}
-h3 {
-    font-size: 20px; /* Größe für h3 */
-}
-/* Abstand zwischen den einzelnen Listenelementen */
-ul li, ol li {
-    margin-bottom: 2.5px; /* Abstand nach unten */
-}
 
-/* Abstand zwischen der Liste und den umgebenden Elementen */
-ul, ol {
-    margin-top: 10px; /* Abstand vor der Liste */
-    margin-bottom: 10px; /* Abstand nach der Liste */
-}
-/* Abstand oberhalb und unterhalb der Tabelle */
-table {
-    margin-top: 20px;  /* Abstand oberhalb der Tabelle */
-    margin-bottom: 30px;  /* Abstand unterhalb der Tabelle */
-}
