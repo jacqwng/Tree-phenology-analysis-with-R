@@ -72,7 +72,7 @@ To describe these growth stages systematically, the BBCH scale is employed. This
 Principal growth stages:
 
 | Stage | Description |
-|----|----|
+|------------------------------------|------------------------------------|
 | 0 | Germination / sprouting / bud development |
 | 1 | Leaf development (main shoot) |
 | 2 | Formation of side shoots / tillering |

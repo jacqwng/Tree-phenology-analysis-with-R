@@ -1,7 +1,7 @@
 ---
 title: "Tree phenology analysis with R"
 author: "Jacqueline Wingen"
-date:  "`r format(Sys.Date(), '%d %B %Y')`"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 output:
@@ -9,10 +9,9 @@ output:
     number_sections: true
     fig_caption: true
     self_contained: true
-description: 
-  'This is my learning logbook for the module Tree phenology analysis with R'
+description: "This is my learning logbook for the module Tree phenology analysis with R"
 link-citations: yes
-github-repo: rstudio/bookdown-demo
+github-repo: "rstudio/bookdown-demo"
 ---
 
 # Introduction
@@ -21,7 +20,7 @@ Hi, my name is Jacqueline. I'm a master's student in crop sciences at the [Unive
 
 ![](images/chillR_hexSticker.png)
 
-The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the `chillR` package for R. This tool has been continuously developed since 2013 by [Eike Lüdeling](https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/), head of the [HortiBonn research group](https://inresgb-lehre.iaas.uni-bonn.de/) at the [Institute of Crop Science and Resource Conservation (INRES)](https://www.inres.uni-bonn.de/de) at the [University of Bonn](https://www.uni-bonn.de/en), to support this type of analysis.
+The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the `chillR` package for R. This tool has been continuously developed since 2013 by [Prof. Dr. Eike Lüdeling](https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/), head of the [HortiBonn research group](https://inresgb-lehre.iaas.uni-bonn.de/) at the [Institute of Crop Science and Resource Conservation (INRES)](https://www.inres.uni-bonn.de/de) at the [University of Bonn](https://www.uni-bonn.de/en), to support this type of analysis.
 
 ## Learning goals
 
