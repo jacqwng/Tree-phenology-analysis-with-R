@@ -4,15 +4,18 @@ author: "Jacqueline Wingen"
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
+description: "This is my learning logbook for the module Tree phenology analysis with R"
+link-citations: yes
+github-repo: "rstudio/bookdown-demo"
 output:
   bookdown::gitbook:
     number_sections: true
     fig_caption: true
     self_contained: true
-description: "This is my learning logbook for the module Tree phenology analysis with R"
-link-citations: yes
-github-repo: "rstudio/bookdown-demo"
+    output_dir: "docs"  
 ---
+
+
 
 # Introduction
 
@@ -34,3 +37,5 @@ This course will offer the following skills and experiences:
 -   Ability to use `chillR` functions for climate change impact projection
 -   Ability to use `chillR` functions for tree phenology analysis
 -   Understanding and ability to use the PhenoFlex dormancy analysis framework
+
+

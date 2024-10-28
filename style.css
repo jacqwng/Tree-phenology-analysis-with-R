@@ -67,3 +67,16 @@ ul li, ol li {
 code.language-shell {
     margin-bottom: 30px; /* Erhöhter Abstand */
 }
+/* Stil für das Bild */
+figure {
+    margin: 20px 0; /* Abstand um das Bild, oben und unten 20px */
+}
+
+/* Stil für die Bildunterschrift */
+figcaption {
+    font-size: 14px; /* Schriftgröße in Pixeln */
+    color: #555; /* Schriftfarbe */
+    text-align: center; /* Zentrierte Ausrichtung */
+    font-style: italic; /* Kursivschrift für die Bildunterschrift */
+    margin-top: 5px; /* Abstand zwischen Bild und Bildunterschrift */
+}

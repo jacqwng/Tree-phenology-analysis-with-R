@@ -70,11 +70,11 @@ Dynamic_Model(Winters_hours_gaps$Temp)[1:100]
 The `chillR` package offers several functions for analyzing hourly temperature data, including wrapper functions that enable the computation of chill between specific start and end dates. The `chilling()` function automatically calculates various basic metrics, including Chilling Hours, Utah Model, Dynamic Model, and Growing Degree Hours. It is important to use the `make_JDay()` function to add Julian dates (which count the days of the year) to the dataset, ensuring proper functionality.
 
 ```{r}
-output <- chilling(make_JDay(Winters_hours_gaps), Start_JDay = 90, End_JDay = 100)
+chill_output <- chilling(make_JDay(Winters_hours_gaps), Start_JDay = 90, End_JDay = 100)
 ```
 
 ```{r, echo = FALSE}
-kable(output, align = rep("c", ncol(Winters_hours_gaps))) %>%
+kable(chill_output, align = rep("c", ncol(Winters_hours_gaps))) %>%
   kable_styling("striped",
                 position = "center",
                 font_size = 15,
@@ -85,14 +85,14 @@ kable(output, align = rep("c", ncol(Winters_hours_gaps))) %>%
 However, there may be instances where not all metrics are desired, or there is a need for different metrics altogether. In such cases, the `tempResponse` function can be employed. This function is similar to `chilling()` but offers the flexibility to take a list of specific temperature models to be computed as input.
 
 ```{r}
-output <- tempResponse(make_JDay(Winters_hours_gaps), 
+chill_output <- tempResponse(make_JDay(Winters_hours_gaps), 
                        Start_JDay = 90, 
                        End_JDay = 100, 
                        models = list(Chill_Portions = Dynamic_Model, GDH = GDH))
 ```
 
 ```{r, echo = FALSE}
-kable(output, align = rep("c", ncol(output))) %>%
+kable(chill_output, align = rep("c", ncol(chill_output))) %>%
   kable_styling("striped", 
                 position = "center", 
                 font_size = 15, 
