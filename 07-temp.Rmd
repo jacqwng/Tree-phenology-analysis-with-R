@@ -44,7 +44,7 @@ ggplot(KA_hours[20:100, ], aes(DATE, Temp)) +
   geom_line(lwd = 1.5) +
   xlab("Date") +
   ylab("Temperature (°C)") +
-  theme_bw(base_size = 20)
+  theme_bw(base_size = 15)
 ```
 
 While assuming a triangular temperature pattern may serve as a rough approximation, it is not entirely realistic. The rate of temperature increase in the morning differs from the rate of decrease in the evening. Additionally, the timing of the lowest daily temperature varies significantly throughout the year, particularly outside of equatorial regions. Therefore, it is important to take these variations into account.
@@ -78,7 +78,7 @@ ggplot(Days_df, aes(JDay, value)) +
   geom_line(lwd = 1.5) +
   facet_grid(cols = vars(name)) +
   ylab("Time of Day / Daylength (Hours)") +
-  theme_bw(base_size = 20)
+  theme_bw(base_size = 15)
 ```
 
 In this context, JDay refers to the Julian Date, which represents the Day of the Year. For example, January 1st is JDay 1, while December 31st is JDay 365 in regular years and JDay 366 in leap years. The `ggplot2` package is used for creating attractive plots, and the ideal input for it is a data frame. Therefore, the outputs from the `daylength()` function were first converted into a data frame. Additionally, the three time series - Sunrise, Sunset, and Daylength - were organized into a stacked format using the `pivot_longer` command from the `tidyr` package.
@@ -129,7 +129,7 @@ ggplot(KA_hourly$hourtemps[20:100, ], aes(DATE, Temp)) +
   geom_line(lwd = 1.5) +
   xlab("Date") +
   ylab("Temperature (°C)") +
-  theme_bw(base_size = 20)
+  theme_bw(base_size = 15)
 
 ```
 
@@ -163,7 +163,7 @@ ggplot(data = empi_curve[1:96, ], aes(Hour, Prediction_coefficient)) +
   facet_grid(rows = vars(Month)) + 
   xlab("Hour of the day") +
   ylab("Prediction coefficient") +
-  theme_bw(base_size = 20)
+  theme_bw(base_size = 15)
 ```
 
 The set of coefficients can now be applied to a daily dataset from the same location, allowing for the creation of a reasonable hourly temperature record for the orchard. This is accomplished using the `Empirical_hourly_temperatures` function, which requires a set of hourly coefficients and a daily temperature record that includes `Tmin` and `Tmax` columns.
@@ -328,7 +328,7 @@ ggplot(Yakima_df_longer, aes(JDay, value)) +
   geom_line(lwd = 1.5) +
   facet_grid(cols = vars(name)) +
   ylab("Time of Day / Daylength (Hours)") +
-  theme_bw(base_size = 20)
+  theme_bw(base_size = 15)
 ```
 
 2.  *Produce an hourly dataset, based on idealized daily curves, for the* `KA_weather` *dataset* *(included in* `chillR`*)*
