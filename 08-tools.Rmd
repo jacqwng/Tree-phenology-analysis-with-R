@@ -1,0 +1,8 @@
+# Some useful tools in R
+
+## Learning goals 
+
+-   Get to know some neat tools in R that can make coding more elegant - and easier
+-   Get introduced to the tidyverse
+-   Learn about loops
+-   Get to know the apply function family

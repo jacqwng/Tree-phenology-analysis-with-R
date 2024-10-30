@@ -104,7 +104,7 @@ This will return only the Dynamic Model and Growing Degree Hours (GDH**)** value
 
 ## `Exercises` on chill models
 
-1.  *Run the* `chilling()` *function on the* `Winters_hours_gap` *dataset*
+1.  *Run the* `chilling()` *function on the* `Winters_hours_gap` *dataset.*
 
 ```{r}
 august <- chilling(make_JDay(Winters_hours_gaps), Start_JDay = 214, End_JDay = 244)
@@ -120,7 +120,7 @@ kable(august, align = rep("c", ncol(august))) %>%
   scroll_box(width = "100%")
 ```
 
-2.  *Create your own temperature-weighting chill model using the* `step_model()` *function*
+2.  *Create your own temperature-weighting chill model using the* `step_model()` *function.*
 
 ```{r}
 df <- data.frame(

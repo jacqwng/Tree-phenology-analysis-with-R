@@ -51,3 +51,10 @@ chilling-and-tempresponse-functions
 exercises-on-chill-models
 making-hourly-temperatures
 learning-goals-5
+generating-hourly-temperatures
+exercises-on-hourly-temperatures
+idealized-daily-temperature-curves
+empirical-daily-temperature-curves
+some-useful-tools-in-r
+learning-goals-for-this-lesson
+learning-goals-6

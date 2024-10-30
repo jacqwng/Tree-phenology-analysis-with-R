@@ -227,6 +227,7 @@ return(WHs)
 }
 ```
 
+Application Example: 
 ```{r}
 sum_WH(Winters_hours_gaps, startYEARMODAHO = 2008080100, 
                            endYEARMODAHO = 2008083100)

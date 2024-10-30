@@ -3056,6 +3056,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <li class="chapter" data-level="8" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html"><i class="fa fa-check"></i><b>8</b> Making hourly temperatures</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html#learning-goals-5"><i class="fa fa-check"></i><b>8.1</b> Learning goals</a></li>
+<li class="chapter" data-level="8.2" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html#generating-hourly-temperatures"><i class="fa fa-check"></i><b>8.2</b> Generating hourly temperatures</a></li>
+<li class="chapter" data-level="8.3" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html#idealized-daily-temperature-curves"><i class="fa fa-check"></i><b>8.3</b> Idealized daily temperature curves</a></li>
+<li class="chapter" data-level="8.4" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html#empirical-daily-temperature-curves"><i class="fa fa-check"></i><b>8.4</b> Empirical daily temperature curves</a></li>
+<li class="chapter" data-level="8.5" data-path="making-hourly-temperatures.html"><a href="making-hourly-temperatures.html#exercises-on-hourly-temperatures"><i class="fa fa-check"></i><b>8.5</b> <code>Exercises</code> on hourly temperatures</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -3911,6 +3915,7 @@ FALSE
 <span id="cb10-28"><a href="manual-chill.html#cb10-28" tabindex="-1"></a>WHs <span class="ot">&lt;-</span> <span class="fu">sum</span>(data<span class="sc">$</span>Warm_Hour[Start_Date<span class="sc">:</span>End_Date])</span>
 <span id="cb10-29"><a href="manual-chill.html#cb10-29" tabindex="-1"></a><span class="fu">return</span>(WHs)</span>
 <span id="cb10-30"><a href="manual-chill.html#cb10-30" tabindex="-1"></a>}</span></code></pre></div>
+<p>Application Example:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="manual-chill.html#cb11-1" tabindex="-1"></a><span class="fu">sum_WH</span>(Winters_hours_gaps, <span class="at">startYEARMODAHO =</span> <span class="dv">2008080100</span>, </span>
 <span id="cb11-2"><a href="manual-chill.html#cb11-2" tabindex="-1"></a>                           <span class="at">endYEARMODAHO =</span> <span class="dv">2008083100</span>)</span></code></pre></div>
 <pre><code>## [1] 283</code></pre>
