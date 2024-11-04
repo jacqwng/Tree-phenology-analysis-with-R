@@ -1,0 +1,10 @@
+# Getting temperature data
+
+## Learning goals
+
+-   Appreciate the need for daily temperature data
+-   Know how to get a list of promising weather stations contained in an international database
+-   Be able to download weather data using `chillR` functions
+-   Know how to convert downloaded data into `chillR` format
+
+## Temperature data needs
