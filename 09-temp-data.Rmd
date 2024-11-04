@@ -8,3 +8,17 @@
 -   Know how to convert downloaded data into `chillR` format
 
 ## Temperature data needs
+
+Temperature data is essential for phenology and chill modeling, as it serves as a key input for these models. Although weather data might seem easily accessible, it is often challenging to obtain. Many countries have official weather stations that record the necessary information, but access to these data is frequently restricted and expensive, despite likely being funded by taxpayers. While such costs may be manageable for small-scale studies, they quickly become prohibitive for larger analyses.
+
+Given the urgent need to understand climate change impacts, these access limitations are a barrier to effective climate research. Such restrictions may also reduce the quality of studies that rely on comprehensive data. Ideally, high-quality, localized datasets would be available, but in their absence, some alternative databases can be used. Currently, `chillR` connects to one global and one California-specific database, with the potential to expand as more data sources become accessible.
+
+## The Global Summary of the Day database
+
+## `Exercises` on getting temperature data
+
+1.  Choose a location of interest and find the 25 closest weather stations using the `handle_gsod` function
+
+2.  Download weather data for the most promising station on the list
+
+3.  Convert the weather data into `chillR` format

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.10.16)  28 OCT 2024 20:54
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.10.16)  4 NOV 2024 16:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -510,7 +510,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 ) (c:/Users/jacqu/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count339
-)) (./_main.aux)
+))
+No file _main.aux.
 \openout1 = `_main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 140.
@@ -792,6 +793,9 @@ LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 140.
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 12.0pt on input line 142.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -821,79 +825,61 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 142.
 (c:/Users/jacqu/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (./_main.toc
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 2.
-
-
-[1
-
-])
+)
+No file _main.toc.
 \tf@toc=\write4
 \openout4 = `_main.toc'.
 
 
 Package hyperref Warning: Suppressing link with empty target on input line 149.
 
-File: images/chillR_hexSticker.png Graphic file (type bmp)
-<images/chillR_hexSticker.png>
+File: ../../../../Downloads/chillR_hexSticker.png Graphic file (type bmp)
+<../../../../Downloads/chillR_hexSticker.png>
 
+
+[1
+
+]
 
 [2]
 
 [3]
-
-[4]
 File: images/dormant-grown-apple-tree-that-need-pruning-field-australia_866797-3589.jpg Graphic file (type bmp)
 <images/dormant-grown-apple-tree-that-need-pruning-field-australia_866797-3589.jpg>
 
 
-[5]
+[4]
 File: images/agronomy-10-00241-g003.png Graphic file (type bmp)
 <images/agronomy-10-00241-g003.png>
 
 
-[6]
+[5]
 
-[7]
+[6]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 309.
 File: images/pheno_stages.png Graphic file (type bmp)
 <images/pheno_stages.png>
 
 
-[8]
+[7]
 File: images/polar-bear-01.jpg Graphic file (type bmp)
 <images/polar-bear-01.jpg>
 
 
-[9]
+[8]
 Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no ₄ (U+2084) in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
 
 
+[9]
+Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
+Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
+Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
+
+
 [10]
-Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
-Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
-Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=tex-text;!
-
-
-[11]
 File: images/Fig_01_gradient_map.jpg Graphic file (type bmp)
 <images/Fig_01_gradient_map.jpg>
 
@@ -903,362 +889,4 @@ File: images/Luedeling_JPG_Figure_02_Hourly_regressions-01.jpeg Graphic file (ty
 <images/Luedeling_JPG_Figure_02_Hourly_regressions-01.jpeg>
 File: images/Luedeling_JPG_Figure_09_chilling_hours.jpeg Graphic file (type bmp)
 <images/Luedeling_JPG_Figure_09_chilling_hours.jpeg>
-File: images/Luedeling_JPG_Figure_10_Future_chilling.jpeg Graphic file (type bmp)
-<images/Luedeling_JPG_Figure_10_Future_chilling.jpeg>
-
-
-[12]
-
-[13]
-
-[14]
-
-[15]
-File: images/Luedeling_Figure_1.jpg Graphic file (type bmp)
-<images/Luedeling_Figure_1.jpg>
-
-
-[16]
-File: images/Luedeling_Figure_2.jpeg Graphic file (type bmp)
-<images/Luedeling_Figure_2.jpeg>
-File: images/Figure_2_Boxplots_Davis_chilling_hours_a2.jpeg Graphic file (type bmp)
-<images/Figure_2_Boxplots_Davis_chilling_hours_a2.jpeg>
-File: images/Figure_4_Chill_Portions_Central_Valley_absolute.jpg Graphic file (type bmp)
-<images/Figure_4_Chill_Portions_Central_Valley_absolute.jpg>
-File: images/Luedeling_Fig_4_all_ratios_map.jpg Graphic file (type bmp)
-<images/Luedeling_Fig_4_all_ratios_map.jpg>
-
-LaTeX Warning: Float too large for page by 24.0627pt on input line 570.
-
-File: images/Figure_5_Time_Comp.jpg Graphic file (type bmp)
-<images/Figure_5_Time_Comp.jpg>
-File: images/Figure_6_regional_grids_Mediterranean.jpg Graphic file (type bmp)
-<images/Figure_6_regional_grids_Mediterranean.jpg>
-
-
-[17]
-
-[18]
-
-[19]
-
-[20]
-
-[21]
-
-[22]
-File: images/Chilling_Germany.png Graphic file (type bmp)
-<images/Chilling_Germany.png>
-File: images/Tunisia_2018_Fig_1.jpg Graphic file (type bmp)
-<images/Tunisia_2018_Fig_1.jpg>
-File: images/Tunisia_pistachios.png Graphic file (type bmp)
-<images/Tunisia_pistachios.png>
-File: images/Chile_chill_map.png Graphic file (type bmp)
-<images/Chile_chill_map.png>
-
-LaTeX Warning: Float too large for page by 24.05869pt on input line 638.
-
-File: images/Chile_chill_all.png Graphic file (type bmp)
-<images/Chile_chill_all.png>
-
-
-[23]
-
-[24]
-File: images/Chile_chill_heatmap.png Graphic file (type bmp)
-<images/Chile_chill_heatmap.png>
-File: images/Patagonia_map.png Graphic file (type bmp)
-<images/Patagonia_map.png>
-File: images/Patagonia_heatmap.png Graphic file (type bmp)
-<images/Patagonia_heatmap.png>
-File: images/Patagonia_heat.png Graphic file (type bmp)
-<images/Patagonia_heat.png>
-File: images/Model_comp_map.png Graphic file (type bmp)
-<images/Model_comp_map.png>
-File: images/Model_comp_results.png Graphic file (type bmp)
-<images/Model_comp_results.png>
-
-
-[25]
-
-[26]
-File: images/Figure_1_Tunisia_historic.png Graphic file (type bmp)
-<images/Figure_1_Tunisia_historic.png>
-
-
-[27]
-
-[28]
-
-[29]
-
-[30]
-
-[31]
-
-[32]
-
-[33]
-
-[34]
-
-[35]
-File: images/Figure_2_Tunisia_all_scenarios.png Graphic file (type bmp)
-<images/Figure_2_Tunisia_all_scenarios.png>
-
-
-[36]
-
-[37]
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 816.
-
-
-[38]
-LaTeX Font Info:    Calculating math sizes for size <15> on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 15.0pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.49995pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.5pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 15.00137pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.5009pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.50069pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 14.9984pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.49883pt on input line 826.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.49919pt on input line 826.
-
-Underfull \hbox (badness 10000) in paragraph at lines 826--852
-
- []
-
-
-Overfull \hbox (21.5925pt too wide) in paragraph at lines 889--889
- []\TU/lmr/m/n/15 Chilling_Hour| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 865--891
-
- []
-
-
-
-[39]
-
-[40]
-
-[41]
-Overfull \hbox (16.29214pt too wide) in paragraph at lines 1053--1053
- []\TU/lmr/m/n/15 Temp_gaps| 
- []
-
-
-Overfull \hbox (22.47214pt too wide) in paragraph at lines 1053--1053
- []\TU/lmr/m/n/15 Warm_Hour| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1029--1055
-
- []
-
-
-
-[42]
-
-[43]
-Underfull \hbox (badness 10000) in paragraph at lines 1180--1200
-
- []
-
-
-
-[44]
-Overfull \hbox (20.12pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 End_year| 
- []
-
-
-Overfull \hbox (37.595pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Season_days| 
- []
-
-
-Overfull \hbox (26.705pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Data_days| 
- []
-
-
-Overfull \hbox (50.18pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Perc_complete| 
- []
-
-
-Overfull \hbox (53.075pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Chilling_Hours| 
- []
-
-
-Overfull \hbox (37.985pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Utah_Model| 
- []
-
-
-Overfull \hbox (48.37999pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 Chill_portions| 
- []
-
-
-Overfull \hbox (21.76999pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 2007/2008| 
- []
-
-
-Overfull \hbox (11.75pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 2.009147| 
- []
-
-
-Overfull \hbox (4.86499pt too wide) in paragraph at lines 1263--1263
- []\TU/lmr/m/n/15 2406.52| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1257--1265
-
- []
-
-
-Overfull \hbox (5.20714pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 End_year| 
- []
-
-
-Overfull \hbox (22.68214pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 Season_days| 
- []
-
-
-Overfull \hbox (11.79214pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 Data_days| 
- []
-
-
-Overfull \hbox (35.26714pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 Perc_complete| 
- []
-
-
-Overfull \hbox (34.44214pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 Chill_Portions| 
- []
-
-
-Overfull \hbox (6.85713pt too wide) in paragraph at lines 1285--1285
- []\TU/lmr/m/n/15 2007/2008| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1279--1287
-
- []
-
-
-Overfull \hbox (310.75996pt too wide) in paragraph at lines 1308--1316
- [][] 
- []
-
-
-
-[45]
-Underfull \hbox (badness 10000) in paragraph at lines 1339--1359
-
- []
-
-
-Overfull \hbox (5.59949pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Season| 
- []
-
-
-Overfull \hbox (25.3395pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 End_year| 
- []
-
-
-Overfull \hbox (42.8145pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Season_days| 
- []
-
-
-Overfull \hbox (31.9245pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Data_days| 
- []
-
-
-Overfull \hbox (55.39949pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Perc_complete| 
- []
-
-
-Overfull \hbox (58.2945pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Chilling_Hours| 
- []
-
-
-Overfull \hbox (77.50949pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Utah_Chill_Units| 
- []
-
-
-Overfull \hbox (54.5745pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 Chill_Portions| 
- []
-
-
-Overfull \hbox (7.9395pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 custom| 
- []
-
-
-Overfull \hbox (26.98949pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 2007/2008| 
- []
-
-
-Overfull \hbox (16.9695pt too wide) in paragraph at lines 1392--1392
- []\TU/lmr/m/n/15 9933.327| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1386--1394
-
- []
-
-No file _main.bbl.
-
-
-[46] (./_main.aux)
- ***********
-LaTeX2e <2024-06-01> patch level 2
-L3 programming layer <2024-09-10>
- ***********
- ) 
-Here is how much of TeX's memory you used:
- 19793 strings out of 476233
- 363692 string characters out of 5785006
- 909485 words of memory out of 5000000
- 42026 multiletter control sequences out of 15000+600000
- 567520 words of font info for 108 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 90i,13n,123p,939b,481s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Output written on _main.pdf (46 pages).
+File: images/Luedeling_JPG_Figure_10_Future_chilling.jpeg
