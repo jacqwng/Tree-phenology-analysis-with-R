@@ -2340,9 +2340,9 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <div id="action-list_stations" class="section level3 hasAnchor" number="10.3.1">
 <h3><span class="header-section-number">10.3.1</span> <code>action = list_stations</code><a href="getting-temperature-data.html#action-list_stations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When used with this action, the <code>handle_gsod()</code> function retrieves a list of weather stations and sorts them by their proximity to specified coordinates. For example, stations near Bonn (Latitude: 50.73, Longitude: 7.10) can be identified. Additionally, a time interval, such as 1990-2020, can be set to limit the search to data from those specific years:</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="getting-temperature-data.html#cb117-1" tabindex="-1"></a>station_list <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;list_stations&quot;</span>,</span>
-<span id="cb117-2"><a href="getting-temperature-data.html#cb117-2" tabindex="-1"></a>                            <span class="at">location =</span> <span class="fu">c</span>(<span class="at">long =</span> <span class="fl">7.10</span>, <span class="at">lat =</span> <span class="fl">50.73</span>),</span>
-<span id="cb117-3"><a href="getting-temperature-data.html#cb117-3" tabindex="-1"></a>                            <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="getting-temperature-data.html#cb1-1" tabindex="-1"></a>station_list <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;list_stations&quot;</span>,</span>
+<span id="cb1-2"><a href="getting-temperature-data.html#cb1-2" tabindex="-1"></a>                            <span class="at">location =</span> <span class="fu">c</span>(<span class="at">long =</span> <span class="fl">7.10</span>, <span class="at">lat =</span> <span class="fl">50.73</span>),</span>
+<span id="cb1-3"><a href="getting-temperature-data.html#cb1-3" tabindex="-1"></a>                            <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -3188,13 +3188,13 @@ GM
 <div id="action-download_weather" class="section level3 hasAnchor" number="10.3.2">
 <h3><span class="header-section-number">10.3.2</span> <code>action = &quot;download_weather&quot;</code><a href="getting-temperature-data.html#action-download_weather" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When used with this option, the <code>handle_gsod()</code> function downloads the weather data for a specific station, using its unique <code>chillR_code</code>, which is displayed in the respective column of the station list. Instead of manually entering the code, the function can reference the code from the station list. To download the data, the code for the 4th station in the list can be used, as it appears to cover most of the desired time period.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="getting-temperature-data.html#cb118-1" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;download_weather&quot;</span>,</span>
-<span id="cb118-2"><a href="getting-temperature-data.html#cb118-2" tabindex="-1"></a>                       <span class="at">location =</span> station_list<span class="sc">$</span>chillR_code[<span class="dv">4</span>],</span>
-<span id="cb118-3"><a href="getting-temperature-data.html#cb118-3" tabindex="-1"></a>                       <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="getting-temperature-data.html#cb2-1" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;download_weather&quot;</span>,</span>
+<span id="cb2-2"><a href="getting-temperature-data.html#cb2-2" tabindex="-1"></a>                       <span class="at">location =</span> station_list<span class="sc">$</span>chillR_code[<span class="dv">4</span>],</span>
+<span id="cb2-3"><a href="getting-temperature-data.html#cb2-3" tabindex="-1"></a>                       <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
 <pre><code>## Loading data for 31 years from station &#39;KOLN BONN&#39;
 ## ========================================================================================================</code></pre>
 <p>The result of this operation is a list with two elements. The first element (<code>weather[[1]]</code>) indicates the source of the database from which the data was retrieved. The second element (<code>weather[[2]]</code>) contains the actual weather dataset, which can be viewed here.</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="getting-temperature-data.html#cb120-1" tabindex="-1"></a>weather[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="getting-temperature-data.html#cb4-1" tabindex="-1"></a>weather[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -5017,8 +5017,8 @@ G
 <div id="downloaded-weather-as-action-argument" class="section level3 hasAnchor" number="10.3.3">
 <h3><span class="header-section-number">10.3.3</span> downloaded weather as <code>action</code> argument<a href="getting-temperature-data.html#downloaded-weather-as-action-argument" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This method of calling <code>handle_gsod()</code> cleans the dataset and converts it into a format that <code>chillR</code> can easily process.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="getting-temperature-data.html#cb121-1" tabindex="-1"></a>cleaned_weather <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(weather)</span></code></pre></div>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="getting-temperature-data.html#cb122-1" tabindex="-1"></a>cleaned_weather[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="getting-temperature-data.html#cb5-1" tabindex="-1"></a>cleaned_weather <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(weather)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="getting-temperature-data.html#cb6-1" tabindex="-1"></a>cleaned_weather[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -5579,19 +5579,19 @@ Prec
 <p>However, upon closer inspection, the dataset reveals significant gaps, including entire years with missing data. This issue will be addressed in the lesson on filling gaps in temperature records.</p>
 <p>Additionally, <code>chillR</code> has a similar function for downloading data from the <a href="https://cimis.water.ca.gov/">California Irrigation Management Information System (CIMIS)</a>, and there is potential for more data sources to be integrated into <code>chillR</code>.</p>
 <p>Finally, the files generated in this process will be saved for use in upcoming chapters.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="getting-temperature-data.html#cb123-1" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;data&quot;</span>)</span>
-<span id="cb123-2"><a href="getting-temperature-data.html#cb123-2" tabindex="-1"></a><span class="fu">write.csv</span>(station_list,<span class="st">&quot;data/station_list.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb123-3"><a href="getting-temperature-data.html#cb123-3" tabindex="-1"></a><span class="fu">write.csv</span>(weather[[<span class="dv">1</span>]],<span class="st">&quot;data/Bonn_raw_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb123-4"><a href="getting-temperature-data.html#cb123-4" tabindex="-1"></a><span class="fu">write.csv</span>(cleaned_weather[[<span class="dv">1</span>]],<span class="st">&quot;data/Bonn_chillR_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="getting-temperature-data.html#cb7-1" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;data&quot;</span>)</span>
+<span id="cb7-2"><a href="getting-temperature-data.html#cb7-2" tabindex="-1"></a><span class="fu">write.csv</span>(station_list,<span class="st">&quot;data/station_list.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-3"><a href="getting-temperature-data.html#cb7-3" tabindex="-1"></a><span class="fu">write.csv</span>(weather[[<span class="dv">1</span>]],<span class="st">&quot;data/Bonn_raw_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-4"><a href="getting-temperature-data.html#cb7-4" tabindex="-1"></a><span class="fu">write.csv</span>(cleaned_weather[[<span class="dv">1</span>]],<span class="st">&quot;data/Bonn_chillR_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 <div id="exercises-on-getting-temperature-data" class="section level2 hasAnchor" number="10.4">
 <h2><span class="header-section-number">10.4</span> <code>Exercises</code> on getting temperature data<a href="getting-temperature-data.html#exercises-on-getting-temperature-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li>Choose a location of interest and find the 25 closest weather stations using the <code>handle_gsod</code> function</li>
 </ol>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="getting-temperature-data.html#cb124-1" tabindex="-1"></a>station_list_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;list_stations&quot;</span>,</span>
-<span id="cb124-2"><a href="getting-temperature-data.html#cb124-2" tabindex="-1"></a>                                   <span class="at">location =</span> <span class="fu">c</span>(<span class="at">long =</span> <span class="sc">-</span><span class="fl">120.50</span>, <span class="at">lat =</span> <span class="fl">46.60</span>), </span>
-<span id="cb124-3"><a href="getting-temperature-data.html#cb124-3" tabindex="-1"></a>                                   <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="getting-temperature-data.html#cb8-1" tabindex="-1"></a>station_list_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;list_stations&quot;</span>,</span>
+<span id="cb8-2"><a href="getting-temperature-data.html#cb8-2" tabindex="-1"></a>                                   <span class="at">location =</span> <span class="fu">c</span>(<span class="at">long =</span> <span class="sc">-</span><span class="fl">120.50</span>, <span class="at">lat =</span> <span class="fl">46.60</span>), </span>
+<span id="cb8-3"><a href="getting-temperature-data.html#cb8-3" tabindex="-1"></a>                                   <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -6435,12 +6435,12 @@ US
 <ol start="2" style="list-style-type: decimal">
 <li>Download weather data for the most promising station on the list</li>
 </ol>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="getting-temperature-data.html#cb125-1" tabindex="-1"></a>weather_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;download_weather&quot;</span>,</span>
-<span id="cb125-2"><a href="getting-temperature-data.html#cb125-2" tabindex="-1"></a>                              <span class="at">location =</span> station_list_Yakima<span class="sc">$</span>chillR_code[<span class="dv">1</span>],</span>
-<span id="cb125-3"><a href="getting-temperature-data.html#cb125-3" tabindex="-1"></a>                              <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="getting-temperature-data.html#cb9-1" tabindex="-1"></a>weather_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(<span class="at">action =</span> <span class="st">&quot;download_weather&quot;</span>,</span>
+<span id="cb9-2"><a href="getting-temperature-data.html#cb9-2" tabindex="-1"></a>                              <span class="at">location =</span> station_list_Yakima<span class="sc">$</span>chillR_code[<span class="dv">1</span>],</span>
+<span id="cb9-3"><a href="getting-temperature-data.html#cb9-3" tabindex="-1"></a>                              <span class="at">time_interval =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>))</span></code></pre></div>
 <pre><code>## Loading data for 31 years from station &#39;YAKIMA AIR TERMINAL/MCALSR FIELD AP&#39;
 ## ========================================================================================================</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="getting-temperature-data.html#cb127-1" tabindex="-1"></a>weather_Yakima[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="getting-temperature-data.html#cb11-1" tabindex="-1"></a>weather_Yakima[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -8234,8 +8234,8 @@ D
 <ol start="3" style="list-style-type: decimal">
 <li>Convert the weather data into <code>chillR</code> format</li>
 </ol>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="getting-temperature-data.html#cb128-1" tabindex="-1"></a>cleaned_weather_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(weather_Yakima) </span></code></pre></div>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="getting-temperature-data.html#cb129-1" tabindex="-1"></a>cleaned_weather_Yakima[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="getting-temperature-data.html#cb12-1" tabindex="-1"></a>cleaned_weather_Yakima <span class="ot">&lt;-</span> <span class="fu">handle_gsod</span>(weather_Yakima) </span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="getting-temperature-data.html#cb13-1" tabindex="-1"></a>cleaned_weather_Yakima[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
 <table class="table table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
 <thead>
@@ -8790,10 +8790,10 @@ Prec
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="getting-temperature-data.html#cb130-1" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;Yakima&quot;</span>)</span>
-<span id="cb130-2"><a href="getting-temperature-data.html#cb130-2" tabindex="-1"></a><span class="fu">write.csv</span>(station_list_Yakima,<span class="st">&quot;Yakima/station_list.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb130-3"><a href="getting-temperature-data.html#cb130-3" tabindex="-1"></a><span class="fu">write.csv</span>(weather_Yakima[[<span class="dv">1</span>]],<span class="st">&quot;Yakima/raw_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb130-4"><a href="getting-temperature-data.html#cb130-4" tabindex="-1"></a><span class="fu">write.csv</span>(cleaned_weather_Yakima[[<span class="dv">1</span>]],<span class="st">&quot;Yakima/chillR_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="getting-temperature-data.html#cb14-1" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">&quot;Yakima&quot;</span>)</span>
+<span id="cb14-2"><a href="getting-temperature-data.html#cb14-2" tabindex="-1"></a><span class="fu">write.csv</span>(station_list_Yakima,<span class="st">&quot;Yakima/station_list.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-3"><a href="getting-temperature-data.html#cb14-3" tabindex="-1"></a><span class="fu">write.csv</span>(weather_Yakima[[<span class="dv">1</span>]],<span class="st">&quot;Yakima/raw_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-4"><a href="getting-temperature-data.html#cb14-4" tabindex="-1"></a><span class="fu">write.csv</span>(cleaned_weather_Yakima[[<span class="dv">1</span>]],<span class="st">&quot;Yakima/chillR_weather.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 
             </section>
 
