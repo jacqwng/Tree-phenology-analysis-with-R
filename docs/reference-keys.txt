@@ -90,9 +90,9 @@ learning-goals-8
 gaps
 filling-short-gaps-in-daily-records
 filling-long-gaps-in-daily-records
-exercises-on-filling-gaps
 bias-correction-for-shorter-intervals
 saving-the-data-for-later
+exercises-on-filling-gaps
 generating-temperature-scenarios
 learning-goals-9
 chill-scenarios
@@ -100,3 +100,7 @@ risk-assessment-in-orchard-planning
 weather-generators
 weather-generation-in-chillr
 exercises-on-temperature-generation
+saving-and-loading-data-and-hiding-this-in-markdown
+learning-goals-10
+saving-and-loading-data
+hiding-all-this-from-the-readers-of-our-markdown-file

@@ -23,7 +23,7 @@
 <meta name="author" content="Jacqueline Wingen" />
 
 
-<meta name="date" content="2024-11-06" />
+<meta name="date" content="2024-11-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2166,7 +2166,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
-<style type="text/css">p {margin-bottom: 30px;}</style>
+<style type="text/css">body, p, h1, h2, h3, ul, ol, table {font-family: "Times New Roman";font-size: 18px;text-align: justify;}p {margin-bottom: 30px !important; }pre {word-break: normal;word-wrap: normal;background-color: #bbdefb; border-radius: 5px;margin-bottom: 30px; color: #333; }h1 {font-size: 30px;text-align: left;}h2 {font-size: 20px;text-align: left;}h3 {font-size: 20px;text-align: left;}table {margin-top: 20px;margin-bottom: 50px;border-collapse: collapse; }th, td {border: 1px solid #ddd; padding: 8px; }ul, ol {margin-top: 5px;margin-bottom: 5px;}ul li, ol li {margin-bottom: 5px; }.caption {color: #777;margin-top: 10px;margin-bottom: 20px;font-size: 10px;font-family: "Times New Roman";}code.language-shell {margin-bottom: 30px; }figure {margin: 20px 0; }figcaption {font-size: 14px; color: #555; text-align: center; font-style: italic; margin-top: 5px; }</style>
 </head>
 
 <body>
@@ -3399,6 +3399,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
