@@ -94,7 +94,7 @@ kable(KA_weather[1:10,], align = rep("c", ncol(KA_weather))) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover"), 
     position = "center", 
-    font_size = 15,   
+    font_size = 14,   
     full_width = TRUE
   )
 ```
@@ -110,7 +110,7 @@ stack_hourly_temps(KA_weather, latitude = 50.4)
 KA_hourly <- stack_hourly_temps(KA_weather, latitude = 50.4)
 
 kable(KA_hourly$hourtemps[100:120, ], row.names = FALSE, align = c("c", "c","c","c","c","c","c","c"))  %>%
-  kable_styling("striped", position = "center", font_size = 15)
+  kable_styling("striped", position = "center", font_size = 14)
 ```
 
 And here’s a plot of the data:
@@ -153,7 +153,7 @@ empi_curve <- Empirical_daily_temperature_curve(Winters_hours_gaps)
 
 ```{r, echo = FALSE}
 kable(empi_curve[1:48, ], align = rep("c", ncol(empi_curve)))  %>%
-  kable_styling("striped", position = "center", font_size = 15)
+  kable_styling("striped", position = "center", font_size = 14)
 ```
 
 ```{r}

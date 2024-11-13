@@ -135,7 +135,7 @@
 
 \title{Tree phenology analysis with R}
 \author{Jacqueline Wingen}
-\date{28 Oktober 2024}
+\date{04 November 2024}
 
 \begin{document}
 \maketitle
@@ -148,7 +148,7 @@
 
 Hi, my name is Jacqueline. I'm a master's student in crop sciences at the \href{}{University of Bonn}. This is my learning logbook for the module ``Tree phenology analysis with R''. This module provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the \href{https://www.uni-bonn.de/en}{University of Bonn}, the material is accessible to anyone interested.
 
-\includegraphics{images/chillR_hexSticker.png}
+\includegraphics{../../../../Downloads/chillR_hexSticker.png}
 
 The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the \texttt{chillR} package for R. This tool has been continuously developed since 2013 by \href{https://www.gartenbauwissenschaft.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Prof.~Dr.~Eike Lüdeling}, head of the \href{https://inresgb-lehre.iaas.uni-bonn.de/}{HortiBonn research group} at the \href{https://www.inres.uni-bonn.de/de}{Institute of Crop Science and Resource Conservation (INRES)} at the \href{https://www.uni-bonn.de/en}{University of Bonn}, to support this type of analysis.
 
@@ -1096,6 +1096,8 @@ Year & Month & Day & Hour & Temp\_gaps & Temp & Warm\_Hour\\
 \end{Highlighting}
 \end{Shaded}
 
+Application Example:
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{sum\_WH}\NormalTok{(Winters\_hours\_gaps, }\AttributeTok{startYEARMODAHO =} \DecValTok{2008080100}\NormalTok{, }
@@ -1293,7 +1295,7 @@ This will return only the Dynamic Model and Growing Degree Hours (GDH\textbf{)} 
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \emph{Run the} \texttt{chilling()} \emph{function on the} \texttt{Winters\_hours\_gap} \emph{dataset}
+  \emph{Run the} \texttt{chilling()} \emph{function on the} \texttt{Winters\_hours\_gap} \emph{dataset.}
 \end{enumerate}
 
 \begin{Shaded}
@@ -1320,7 +1322,7 @@ Season & End\_year & Season\_days & Data\_days & Perc\_complete & Chilling\_Hour
 \setcounter{enumi}{1}
 \tightlist
 \item
-  \emph{Create your own temperature-weighting chill model using the} \texttt{step\_model()} \emph{function}
+  \emph{Create your own temperature-weighting chill model using the} \texttt{step\_model()} \emph{function.}
 \end{enumerate}
 
 \begin{Shaded}
@@ -1395,6 +1397,1599 @@ Season & End\_year & Season\_days & Data\_days & Perc\_complete & Chilling\_Hour
 \section{Making hourly temperatures}\label{making-hourly-temperatures}
 
 \subsection{Learning goals}\label{learning-goals-5}
+
+\begin{itemize}
+\tightlist
+\item
+  Understand why we often need hourly temperature data and why we need ways of making them out of daily data
+\item
+  Understand some basic algorithms for making hourly data from daily minimum and maximum temperatures
+\item
+  Understand how we can make use of observed hourly temperatures to produce our own empirical transfer function that can make hourly from daily data
+\item
+  Be able to use the respective \texttt{chillR} functions that implement these steps
+\end{itemize}
+
+\subsection{Generating hourly temperatures}\label{generating-hourly-temperatures}
+
+With the Chilling Hours function developed, the next challenge arises from the limited availability of hourly temperature data, as most sources provide only daily minimum and maximum temperatures. This limitation complicates the direct calculation of Chilling Hours. Various methods have been employed to address this issue, including relating Chilling Hours to minimum temperatures (Crossa-Raynaud, 1955) or using complex equations.
+
+With better computing tools, some researchers started to assume that daily minimum and maximum temperatures occur at specific times and used linear interpolation for the hours in between, creating a triangular shape for daily temperature patterns (\href{https://link.springer.com/article/10.1007/s10584-007-9367-8}{Baldocchi \& Wong, 2008}).
+
+\includegraphics[width=0.8\linewidth,height=0.5\textheight]{_main_files/figure-latex/triangular-1}
+
+While assuming a triangular temperature pattern may serve as a rough approximation, it is not entirely realistic. The rate of temperature increase in the morning differs from the rate of decrease in the evening. Additionally, the timing of the lowest daily temperature varies significantly throughout the year, particularly outside of equatorial regions. Therefore, it is important to take these variations into account.
+
+\subsection{Idealized daily temperature curves}\label{idealized-daily-temperature-curves}
+
+A major breakthrough in modeling daily temperature curves was made when \href{https://journals.ashs.org/hortsci/view/journals/hortsci/25/1/article-p14.xml}{Dale E. Linvill} from Clemson University published a paper in 1990. He combined two mathematical equations: a sine curve to represent warming during the day and a logarithmic decay function for cooling at night. The times for sunrise and sunset defined the transition between these phases, and the length of each phase was linked to the amount of daylight. This method allowed for more accurate daily temperature curves than previous approaches, but not all researchers adopted these equations due to a lack of awareness or data processing skills.
+
+One challenge with Linvill's equations was their dependence on local sunrise and sunset times. While these can be calculated from observations, having a general method would help researchers. Fortunately, for areas without major geographical features, sunrise and sunset times can be calculated based on solar system geometry. Although agricultural scientists may not be familiar with this, they can use insights from other fields. The \texttt{chillR} package uses equations from \href{https://www.mail-archive.com/sundial@uni-koeln.de/msg01050.html}{Spencer (1971)} and \href{https://www.sciencedirect.com/science/article/abs/pii/S0196890404001992}{Almorox et al.~(2005)}. \href{https://inresgb-lehre.iaas.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Prof.~Dr.~Eike Lüdeling} only needed to understand these equations once to code them into an R function for future use.
+
+Bringing together these functions is similar to how the \texttt{CH()} function was developed and used in the \texttt{sum\_CH} function, though the components were more complex. The result is a function that can create realistic daily temperature curves based on the latitude of a location. The provided code illustrates how to use the \texttt{daylength} function to create plots showing sunrise time, sunset time, and daylength for Klein-Altendorf (Latitude: 50.4°N) throughout the year:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Days }\OtherTok{\textless{}{-}} \FunctionTok{daylength}\NormalTok{(}\AttributeTok{latitude =} \FloatTok{50.4}\NormalTok{, }\AttributeTok{JDay =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{365}\NormalTok{)}
+\NormalTok{Days\_df }\OtherTok{\textless{}{-}}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{JDay =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{365}\NormalTok{,}
+    \AttributeTok{Sunrise =}\NormalTok{ Days}\SpecialCharTok{$}\NormalTok{Sunrise,}
+    \AttributeTok{Sunset =}\NormalTok{ Days}\SpecialCharTok{$}\NormalTok{Sunset,}
+    \AttributeTok{Daylength =}\NormalTok{ Days}\SpecialCharTok{$}\NormalTok{Daylength}
+\NormalTok{  )}
+\NormalTok{Days\_df }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(Days\_df, }\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(Sunrise}\SpecialCharTok{:}\NormalTok{Daylength))}
+
+\FunctionTok{ggplot}\NormalTok{(Days\_df, }\FunctionTok{aes}\NormalTok{(JDay, value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{vars}\NormalTok{(name)) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Time of Day / Daylength (Hours)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-46-1.pdf}
+
+In this context, JDay refers to the Julian Date, which represents the Day of the Year. For example, January 1st is JDay 1, while December 31st is JDay 365 in regular years and JDay 366 in leap years. The \texttt{ggplot2} package is used for creating attractive plots, and the ideal input for it is a data frame. Therefore, the outputs from the \texttt{daylength()} function were first converted into a data frame. Additionally, the three time series - Sunrise, Sunset, and Daylength - were organized into a stacked format using the \texttt{pivot\_longer} command from the \texttt{tidyr} package.
+
+The \texttt{stack\_hourly\_temps()} function in the \texttt{chillR} package integrates these daily dynamics. This function requires a dataset containing daily minimum and maximum temperatures, specifically with columns labeled \texttt{Tmin}, \texttt{Tmax}, \texttt{Year}, \texttt{Month}, and \texttt{Day}. The latitude of the location must also be provided. Using these inputs, the function applies the previously discussed equations to calculate hourly temperatures, and it can also output sunrise and sunset times if desired.
+
+To demonstrate this process, another dataset included with \texttt{chillR}, called \texttt{KA\_weather}, will be used. This data frame contains temperature data from the University of Bonn's experimental station at Klein-Altendorf. The first 10 rows of the \texttt{KA\_weather} dataset will be shown for illustration:
+
+\begingroup\fontsize{15}{17}\selectfont
+
+\begin{tabu} to \linewidth {>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\hline
+Year & Month & Day & Tmax & Tmin\\
+\hline
+1998 & 1 & 1 & 8.2 & 5.1\\
+\hline
+1998 & 1 & 2 & 9.1 & 5.0\\
+\hline
+1998 & 1 & 3 & 10.4 & 3.3\\
+\hline
+1998 & 1 & 4 & 8.4 & 4.5\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4\\
+\hline
+1998 & 1 & 7 & 12.0 & 6.9\\
+\hline
+1998 & 1 & 8 & 11.2 & 8.6\\
+\hline
+1998 & 1 & 9 & 13.9 & 8.5\\
+\hline
+1998 & 1 & 10 & 14.5 & 3.6\\
+\hline
+\end{tabu}
+\endgroup{}
+
+The following process describes how hourly temperatures can be calculated based on the idealized daily temperature curve:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{stack\_hourly\_temps}\NormalTok{(KA\_weather, }\AttributeTok{latitude =} \FloatTok{50.4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\centering\begingroup\fontsize{15}{17}\selectfont
+
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\hline
+Year & Month & Day & Tmax & Tmin & JDay & Hour & Temp\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 3 & 4.844164\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 4 & 4.746566\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 5 & 4.656244\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 6 & 4.572187\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 7 & 4.493583\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 8 & 4.569464\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 9 & 5.384001\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 10 & 6.139939\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 11 & 6.787169\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 12 & 7.282787\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 13 & 7.593939\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 14 & 7.700000\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 15 & 7.593939\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 16 & 7.282787\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 17 & 6.591821\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 18 & 6.168074\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 19 & 5.870570\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 20 & 5.641106\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 21 & 5.454280\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 22 & 5.296704\\
+\hline
+1998 & 1 & 5 & 7.7 & 4.5 & 5 & 23 & 5.160445\\
+\hline
+\end{tabular}
+\endgroup{}
+\end{table}
+
+And here's a plot of the data:
+
+\includegraphics[width=0.8\linewidth,height=0.5\textheight]{_main_files/figure-latex/idealized-1}
+
+\subsection{Empirical daily temperature curves}\label{empirical-daily-temperature-curves}
+
+In some locations, idealized daily temperature curves are ineffective, particularly in areas with rugged topography where temperate fruit trees may be shaded for part of the day. For example, in the Jabal Al Akhdar region of Oman, where \href{https://inresgb-lehre.iaas.uni-bonn.de/author/prof.-dr.-eike-luedeling/}{Prof.~Dr.~Eike Lüdeling} initially studied winter chill, various oases in the deeply incised Wadi Muaydin canyon were investigated. Trees near the top of the canyon receive significantly more sunlight than those at the bottom, which is about 1000 meters lower.
+
+\begin{figure}
+\centering
+\includegraphics{images/IMG_8487-01.jpeg}
+\caption{Terraced oasis fields at Ash Sharayjah}
+\end{figure}
+
+Even in the absence of mountains, the temperature curve in an orchard may not closely resemble the curve proposed by \href{https://journals.ashs.org/hortsci/view/journals/hortsci/25/1/article-p14.xml}{Linvill (1990)} due to its unique microclimate, featuring shaded and sunny spots, dew-covered grass, and bare ground.
+
+In the initial study on Omani oases (\href{https://link.springer.com/article/10.1007/s10584-009-9581-7}{Luedeling et al., 2009b}), this issue was not adequately addressed. However, a recent revisit to the location aimed to improve this aspect (\href{https://link.springer.com/article/10.1007/s10584-020-02862-8}{Buerkert et al., 2020}).
+
+To analyze the temperature patterns, a dataset of hourly temperature data for the relevant location is needed, ideally covering an entire year or multiple years. For this exercise, the \texttt{Winters\_hours\_gaps} dataset from a walnut orchard near Winters, California, will be used, as the temperature logger was directly attached to a tree branch, making it unlikely for the data to exactly match the standard daily temperature curve.
+
+The \texttt{Empirical\_daily\_temperature\_curve()} function will be employed to determine the typical hourly temperature patterns for each month of the year, although this method could potentially be enhanced by allowing for continuous analysis instead of monthly breakdowns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{empi\_curve }\OtherTok{\textless{}{-}} \FunctionTok{Empirical\_daily\_temperature\_curve}\NormalTok{(Winters\_hours\_gaps)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+\centering\begingroup\fontsize{15}{17}\selectfont
+
+\begin{tabular}{c|c|c}
+\hline
+Month & Hour & Prediction\_coefficient\\
+\hline
+3 & 0 & 0.1774859\\
+\hline
+3 & 1 & 0.1550693\\
+\hline
+3 & 2 & 0.1285651\\
+\hline
+3 & 3 & 0.1145597\\
+\hline
+3 & 4 & 0.0696064\\
+\hline
+3 & 5 & 0.0339583\\
+\hline
+3 & 6 & 0.0000000\\
+\hline
+3 & 7 & 0.0313115\\
+\hline
+3 & 8 & 0.3121959\\
+\hline
+3 & 9 & 0.4953232\\
+\hline
+3 & 10 & 0.6819674\\
+\hline
+3 & 11 & 0.8227423\\
+\hline
+3 & 12 & 0.9506491\\
+\hline
+3 & 13 & 0.9662604\\
+\hline
+3 & 14 & 0.9915996\\
+\hline
+3 & 15 & 1.0000000\\
+\hline
+3 & 16 & 0.9490319\\
+\hline
+3 & 17 & 0.8483098\\
+\hline
+3 & 18 & 0.6864529\\
+\hline
+3 & 19 & 0.4945415\\
+\hline
+3 & 20 & 0.3636642\\
+\hline
+3 & 21 & 0.2972377\\
+\hline
+3 & 22 & 0.2360349\\
+\hline
+3 & 23 & 0.1794802\\
+\hline
+4 & 0 & 0.1960789\\
+\hline
+4 & 1 & 0.1407018\\
+\hline
+4 & 2 & 0.1283250\\
+\hline
+4 & 3 & 0.0819307\\
+\hline
+4 & 4 & 0.0541415\\
+\hline
+4 & 5 & 0.0188241\\
+\hline
+4 & 6 & 0.0000000\\
+\hline
+4 & 7 & 0.1697052\\
+\hline
+4 & 8 & 0.4442722\\
+\hline
+4 & 9 & 0.5939797\\
+\hline
+4 & 10 & 0.7363923\\
+\hline
+4 & 11 & 0.8399804\\
+\hline
+4 & 12 & 0.9245702\\
+\hline
+4 & 13 & 0.9770693\\
+\hline
+4 & 14 & 0.9963131\\
+\hline
+4 & 15 & 1.0000000\\
+\hline
+4 & 16 & 0.9568107\\
+\hline
+4 & 17 & 0.8698369\\
+\hline
+4 & 18 & 0.7343896\\
+\hline
+4 & 19 & 0.5330597\\
+\hline
+4 & 20 & 0.3941038\\
+\hline
+4 & 21 & 0.3186075\\
+\hline
+4 & 22 & 0.2594569\\
+\hline
+4 & 23 & 0.2114486\\
+\hline
+\end{tabular}
+\endgroup{}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ empi\_curve[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{96}\NormalTok{, ], }\FunctionTok{aes}\NormalTok{(Hour, Prediction\_coefficient)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.3}\NormalTok{, }
+            \AttributeTok{col =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_grid}\NormalTok{(}\AttributeTok{rows =} \FunctionTok{vars}\NormalTok{(Month)) }\SpecialCharTok{+} 
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Hour of the day"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Prediction coefficient"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-52-1.pdf}
+
+The set of coefficients can now be applied to a daily dataset from the same location, allowing for the creation of a reasonable hourly temperature record for the orchard. This is accomplished using the \texttt{Empirical\_hourly\_temperatures} function, which requires a set of hourly coefficients and a daily temperature record that includes \texttt{Tmin} and \texttt{Tmax} columns.
+
+Additionally, the \texttt{?} operator can be used to access help on how to use any function, such as \texttt{?Empirical\_hourly\_temperatures}.
+
+The process also involves using the \texttt{make\_all\_day\_table} function, which fills gaps in daily or hourly temperature records and summarizes hourly data into daily minimum and maximum temperatures.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coeffs }\OtherTok{\textless{}{-}} \FunctionTok{Empirical\_daily\_temperature\_curve}\NormalTok{(Winters\_hours\_gaps)}
+\NormalTok{Winters\_daily }\OtherTok{\textless{}{-}}
+  \FunctionTok{make\_all\_day\_table}\NormalTok{(Winters\_hours\_gaps, }\AttributeTok{input\_timestep =} \StringTok{"hour"}\NormalTok{)}
+\NormalTok{Winters\_hours }\OtherTok{\textless{}{-}} \FunctionTok{Empirical\_hourly\_temperatures}\NormalTok{(Winters\_daily, coeffs)}
+\end{Highlighting}
+\end{Shaded}
+
+The next step is to plot the results to visualize the hourly temperature data. This allows for a comparison between the results from the empirical method, the triangular function, and the idealized temperature curve. Additionally, actual observed temperatures will be used to validate the results. To facilitate this process, the data will first be simplified for easier handling:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_hours }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_hours[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{, }\StringTok{"Temp"}\NormalTok{)]}
+\FunctionTok{colnames}\NormalTok{(Winters\_hours)[}\FunctionTok{ncol}\NormalTok{(Winters\_hours)] }\OtherTok{\textless{}{-}} \StringTok{"Temp\_empirical"}
+\NormalTok{Winters\_ideal }\OtherTok{\textless{}{-}}
+  \FunctionTok{stack\_hourly\_temps}\NormalTok{(Winters\_daily, }\AttributeTok{latitude =} \FloatTok{38.5}\NormalTok{)}\SpecialCharTok{$}\NormalTok{hourtemps}
+\NormalTok{Winters\_ideal }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_ideal[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{, }\StringTok{"Temp"}\NormalTok{)]}
+\FunctionTok{colnames}\NormalTok{(Winters\_ideal)[}\FunctionTok{ncol}\NormalTok{(Winters\_ideal)] }\OtherTok{\textless{}{-}} \StringTok{"Temp\_ideal"}
+\end{Highlighting}
+\end{Shaded}
+
+The next step involves creating the `triangular' dataset. Understanding the process behind this construction is essential.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_triangle }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_daily}
+\NormalTok{Winters\_triangle[, }\StringTok{"Hour"}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{Winters\_triangle}\SpecialCharTok{$}\NormalTok{Hour[}\FunctionTok{nrow}\NormalTok{(Winters\_triangle)] }\OtherTok{\textless{}{-}} \DecValTok{23}
+\NormalTok{Winters\_triangle[, }\StringTok{"Temp"}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{Winters\_triangle }\OtherTok{\textless{}{-}}
+  \FunctionTok{make\_all\_day\_table}\NormalTok{(Winters\_triangle, }\AttributeTok{timestep =} \StringTok{"hour"}\NormalTok{)}
+\FunctionTok{colnames}\NormalTok{(Winters\_triangle)[}\FunctionTok{ncol}\NormalTok{(Winters\_triangle)] }\OtherTok{\textless{}{-}}
+  \StringTok{"Temp\_triangular"}
+
+\CommentTok{\# with the following loop, we fill in the daily Tmin and Tmax values for every}
+\CommentTok{\# hour of the dataset}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{2}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(Winters\_triangle))}
+\NormalTok{\{}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.na}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmin[i]))}
+\NormalTok{    Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmin[i] }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmin[i }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{]}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.na}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmax[i]))}
+\NormalTok{    Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmax[i] }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmax[i }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{Winters\_triangle}\SpecialCharTok{$}\NormalTok{Temp\_triangular }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+
+\CommentTok{\# now we assign the daily Tmin value to the 6th hour of every day}
+
+\NormalTok{Winters\_triangle}\SpecialCharTok{$}\NormalTok{Temp\_triangular[}\FunctionTok{which}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Hour }\SpecialCharTok{==} \DecValTok{6}\NormalTok{)] }\OtherTok{\textless{}{-}}
+\NormalTok{  Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmin[}\FunctionTok{which}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Hour }\SpecialCharTok{==} \DecValTok{6}\NormalTok{)]}
+
+\CommentTok{\# we also assign the daily Tmax value to the 18th hour of every day}
+
+\NormalTok{Winters\_triangle}\SpecialCharTok{$}\NormalTok{Temp\_triangular[}\FunctionTok{which}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Hour }\SpecialCharTok{==} \DecValTok{18}\NormalTok{)] }\OtherTok{\textless{}{-}}
+\NormalTok{  Winters\_triangle}\SpecialCharTok{$}\NormalTok{Tmax[}\FunctionTok{which}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Hour }\SpecialCharTok{==} \DecValTok{18}\NormalTok{)]}
+
+\CommentTok{\# in the following step, we use the chillR function "interpolate\_gaps"}
+\CommentTok{\# to fill in all the gaps in the hourly record with straight lines}
+
+\NormalTok{Winters\_triangle}\SpecialCharTok{$}\NormalTok{Temp\_triangular }\OtherTok{\textless{}{-}}
+  \FunctionTok{interpolate\_gaps}\NormalTok{(Winters\_triangle}\SpecialCharTok{$}\NormalTok{Temp\_triangular)}\SpecialCharTok{$}\NormalTok{interp}
+\NormalTok{Winters\_triangle }\OtherTok{\textless{}{-}}
+\NormalTok{  Winters\_triangle[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{, }\StringTok{"Temp\_triangular"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+The next step is to merge all the data frames to facilitate easier display and comparison of the datasets.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_temps }\OtherTok{\textless{}{-}}
+  \FunctionTok{merge}\NormalTok{(Winters\_hours\_gaps,}
+\NormalTok{        Winters\_hours,}
+        \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{))}
+\NormalTok{Winters\_temps }\OtherTok{\textless{}{-}}
+  \FunctionTok{merge}\NormalTok{(Winters\_temps,}
+\NormalTok{        Winters\_triangle,}
+        \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{))}
+\NormalTok{Winters\_temps }\OtherTok{\textless{}{-}}
+  \FunctionTok{merge}\NormalTok{(Winters\_temps,}
+\NormalTok{        Winters\_ideal,}
+        \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+The dataset now includes observed temperatures along with the three approximations: triangular, idealized curve, and empirical curve. To plot this data effectively, the \texttt{Year}, \texttt{Month}, \texttt{Day}, and \texttt{Hour} columns will be converted into R's date format using \texttt{ISOdate}, and the data frame will be reorganized for better usability.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_temps[, }\StringTok{"DATE"}\NormalTok{] }\OtherTok{\textless{}{-}}
+  \FunctionTok{ISOdate}\NormalTok{(Winters\_temps}\SpecialCharTok{$}\NormalTok{Year,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Month,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Day,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Hour)}
+
+
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}}
+\NormalTok{  Winters\_temps[, }\FunctionTok{c}\NormalTok{(}\StringTok{"DATE"}\NormalTok{,}
+                    \StringTok{"Temp"}\NormalTok{,}
+                    \StringTok{"Temp\_empirical"}\NormalTok{,}
+                    \StringTok{"Temp\_triangular"}\NormalTok{,}
+                    \StringTok{"Temp\_ideal"}\NormalTok{)]}
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_temps\_to\_plot[}\DecValTok{100}\SpecialCharTok{:}\DecValTok{200}\NormalTok{, ]}
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(Winters\_temps\_to\_plot, }\AttributeTok{cols=}\NormalTok{Temp}\SpecialCharTok{:}\NormalTok{Temp\_ideal)}
+\FunctionTok{colnames}\NormalTok{(Winters\_temps\_to\_plot) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"DATE"}\NormalTok{, }\StringTok{"Method"}\NormalTok{, }\StringTok{"Temperature"}\NormalTok{)}
+
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ Winters\_temps\_to\_plot, }\FunctionTok{aes}\NormalTok{(DATE, Temperature, }\AttributeTok{colour =}\NormalTok{ Method)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{"Temperature (°C)"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-57-1.pdf}
+
+The plot indicates that the triangular curve deviates significantly from the observed data, while the \texttt{Temp\_empirical} and \texttt{Temp\_ideal} curves appear quite similar and are difficult to differentiate.
+
+To compare these curves more thoroughly, the Root Mean Square Error (RMSE) can be calculated, as it is useful for quantifying the alignment between predicted and observed values. The \texttt{chillR} package includes a function to perform this calculation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# here\textquotesingle{}s the RMSE for the triangular method:}
+\FunctionTok{RMSEP}\NormalTok{(Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp\_triangular, Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.695289
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# here\textquotesingle{}s the RMSE for the idealized{-}curve method:}
+\FunctionTok{RMSEP}\NormalTok{(Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp\_ideal, Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.630714
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# and here\textquotesingle{}s the RMSE for the empirical{-}curve method:}
+\FunctionTok{RMSEP}\NormalTok{(Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp\_empirical, Winters\_temps}\SpecialCharTok{$}\NormalTok{Temp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.410625
+\end{verbatim}
+
+The results show an RMSE of 4.7 for the triangular method, 1.63 for the idealized curve method, and 1.41 for the empirical curve method. Since a lower RMSE indicates better accuracy, these results demonstrate that calibrating the prediction function with observed hourly data significantly improves accuracy, especially compared to the triangular method.
+
+While it might be questioned how much this affects chill accumulation modeling, it is often found to make a considerable difference.
+
+\subsection{\texorpdfstring{\texttt{Exercises} on hourly temperatures}{Exercises on hourly temperatures}}\label{exercises-on-hourly-temperatures}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Choose a location of interest, find out its latitude and produce plots of daily sunrise, sunset and daylength.}
+\end{enumerate}
+
+The \textbf{Yakima Valley} in Washington State, USA, is located at about \textbf{46.6° N} latitude. This region has a continental climate with cold winters and hot, dry summers, creating ideal conditions for growing fruit trees. The valley is well known for producing a variety of fruits, including apples, cherries, pears, and grapes, which benefit from its distinct seasonal changes. Using the \texttt{daylength()} function, you could create plots showing daily sunrise, sunset, and day length times.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Yakima }\OtherTok{\textless{}{-}} \FunctionTok{daylength}\NormalTok{(}\AttributeTok{latitude =} \FloatTok{46.6}\NormalTok{, }\AttributeTok{JDay =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{365}\NormalTok{)}
+
+\NormalTok{Yakima\_df }\OtherTok{\textless{}{-}}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{JDay =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{365}\NormalTok{,}
+    \AttributeTok{Sunrise =}\NormalTok{ Yakima}\SpecialCharTok{$}\NormalTok{Sunrise,}
+    \AttributeTok{Sunset =}\NormalTok{ Yakima}\SpecialCharTok{$}\NormalTok{Sunset,}
+    \AttributeTok{Daylength =}\NormalTok{ Yakima}\SpecialCharTok{$}\NormalTok{Daylength}
+\NormalTok{  )}
+
+\NormalTok{Yakima\_df\_longer }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(Yakima\_df, }\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(Sunrise}\SpecialCharTok{:}\NormalTok{Daylength))}
+
+\FunctionTok{ggplot}\NormalTok{(Yakima\_df\_longer, }\FunctionTok{aes}\NormalTok{(JDay, value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{vars}\NormalTok{(name)) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Time of Day / Daylength (Hours)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-62-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \emph{Produce an hourly dataset, based on idealized daily curves, for the} \texttt{KA\_weather} \emph{dataset} \emph{(included in} \texttt{chillR}\emph{)}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KA\_hourly }\OtherTok{\textless{}{-}} \FunctionTok{stack\_hourly\_temps}\NormalTok{(KA\_weather, }\AttributeTok{latitude =} \FloatTok{50.4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Based on idealized daily curves, the hourly dataset for Julian Day 6 (January 6th) is shown below:
+
+\begingroup\fontsize{15}{17}\selectfont
+
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\hline
+Year & Month & Day & Tmax & Tmin & JDay & Hour & Temp\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 0 & 4.990741\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 1 & 4.881232\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 2 & 4.782253\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 3 & 4.691956\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 4 & 4.608939\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 5 & 4.532117\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 6 & 4.460628\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 7 & 4.393780\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 8 & 4.491337\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 9 & 5.430950\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 10 & 6.302486\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 11 & 7.048391\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 12 & 7.619410\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 13 & 7.977836\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 14 & 8.100000\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 15 & 7.977836\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 16 & 7.619410\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 17 & 7.419674\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 18 & 7.318918\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 19 & 7.248287\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 20 & 7.193854\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 21 & 7.149557\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 22 & 7.112208\\
+\hline
+1998 & 1 & 6 & 8.1 & 4.4 & 6 & 23 & 7.079920\\
+\hline
+\end{tabular}
+\endgroup{}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \emph{Produce empirical temperature curve parameters for the} \texttt{Winters\_hours\_gaps} \emph{dataset, and use them to predict hourly values from daily temperatures (this is very similar to the example above, but please make sure you understand what's going on).}
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Generating empirical daily temperature curve from observed hourly data:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{empi\_curve }\OtherTok{\textless{}{-}} \FunctionTok{Empirical\_daily\_temperature\_curve}\NormalTok{(Winters\_hours\_gaps)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Filling gaps in daily or hourly temperature data:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_daily }\OtherTok{\textless{}{-}} \FunctionTok{make\_all\_day\_table}\NormalTok{(Winters\_hours\_gaps, }\AttributeTok{input\_timestep =} \StringTok{"hour"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Using empirical coefficients to predict hourly temperatures based on daily temperatures:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_hours }\OtherTok{\textless{}{-}} \FunctionTok{Empirical\_hourly\_temperatures}\NormalTok{(Winters\_daily, empi\_curve)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_hours }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_hours[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{, }\StringTok{"Temp"}\NormalTok{)]}
+\FunctionTok{colnames}\NormalTok{(Winters\_hours)[}\FunctionTok{ncol}\NormalTok{(Winters\_hours)] }\OtherTok{\textless{}{-}} \StringTok{"Temp\_empirical"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_temps }\OtherTok{\textless{}{-}}
+  \FunctionTok{merge}\NormalTok{(Winters\_hours\_gaps,}
+\NormalTok{        Winters\_hours,}
+        \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Month"}\NormalTok{, }\StringTok{"Day"}\NormalTok{, }\StringTok{"Hour"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Winters\_temps[, }\StringTok{"DATE"}\NormalTok{] }\OtherTok{\textless{}{-}}
+  \FunctionTok{ISOdate}\NormalTok{(Winters\_temps}\SpecialCharTok{$}\NormalTok{Year,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Month,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Day,}
+\NormalTok{          Winters\_temps}\SpecialCharTok{$}\NormalTok{Hour)}
+
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}}
+\NormalTok{  Winters\_temps[, }\FunctionTok{c}\NormalTok{(}\StringTok{"DATE"}\NormalTok{,}
+                    \StringTok{"Temp"}\NormalTok{,}
+                    \StringTok{"Temp\_empirical"}\NormalTok{)]}
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_temps\_to\_plot[}\DecValTok{100}\SpecialCharTok{:}\DecValTok{200}\NormalTok{, ]}
+\NormalTok{Winters\_temps\_to\_plot }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(Winters\_temps\_to\_plot, }\AttributeTok{cols=}\NormalTok{Temp}\SpecialCharTok{:}\NormalTok{Temp\_empirical)}
+\FunctionTok{colnames}\NormalTok{(Winters\_temps\_to\_plot) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"DATE"}\NormalTok{, }\StringTok{"Method"}\NormalTok{, }\StringTok{"Temperature"}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ Winters\_temps\_to\_plot, }\FunctionTok{aes}\NormalTok{(DATE, Temperature, }\AttributeTok{colour =}\NormalTok{ Method)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{"Temperature (°C)"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-70-1.pdf}
+
+\section{Some useful tools in R}\label{some-useful-tools-in-r}
+
+\includegraphics[width=0.5\linewidth]{../../../../Downloads/featured}
+
+\subsection{Learning goals}\label{learning-goals-6}
+
+\begin{itemize}
+\tightlist
+\item
+  Get to know some neat tools in R that can make coding more elegant - and easier
+\item
+  Get introduced to the \texttt{tidyverse}
+\item
+  Learn about loops
+\item
+  Get to know the \texttt{apply} function family
+\end{itemize}
+
+\subsection{An evolving language - and a lifelong learning process}\label{an-evolving-language---and-a-lifelong-learning-process}
+
+The R universe is constantly evolving, offering much more now than the original base functions. Over time, modern tools and more elegant programming styles have become integral. In the upcoming chapters, some of these new tools will be introduced, along with the basics needed to use them effectively.
+
+\subsection{\texorpdfstring{The \texttt{tidyverse}}{The tidyverse}}\label{the-tidyverse}
+
+Many of the tools introduced here come from the \texttt{tidyverse} - a collection of packages developed by Hadley Wickham and his team. This collection offers many ways to improve programming skills. In this book, only the functions that are directly used will be covered. A big advantage of the tidyverse is that, with just one command - \texttt{library(tidyverse)} - all functions in the package collection become available.
+
+\subsection{\texorpdfstring{The \texttt{ggplot2} package}{The ggplot2 package}}\label{the-ggplot2-package}
+
+The \texttt{ggplot2} package, first released by Hadley Wickham in 2007, has become one of the most popular R packages because it greatly simplifies the creation of attractive graphics. The history of the package can be found \href{https://en.wikipedia.org/wiki/Ggplot2}{here}, and an introduction along with links to various tutorials is available \href{https://ggplot2.tidyverse.org/}{here}.
+
+\subsection{\texorpdfstring{The \texttt{tibble} package}{The tibble package}}\label{the-tibble-package}
+
+A tibble is an enhanced version of a data.frame that offers several improvements. The most notable improvement is that tibbles avoid the common data.frame behavior of unexpectedly converting strings into factors. Although tibbles are relatively new here, they will be used throughout the rest of the book.
+
+To create a tibble from a regular data.frame (or a similar structure), the \texttt{as\_tibble} command can be used.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{a =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{b =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{))}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{as\_tibble}\NormalTok{(dat)}
+\NormalTok{d}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 2
+##       a     b
+##   <dbl> <dbl>
+## 1     1     4
+## 2     2     5
+## 3     3     6
+\end{verbatim}
+
+\subsection{\texorpdfstring{The \texttt{magrittr} package - pipes}{The magrittr package - pipes}}\label{the-magrittr-package---pipes}
+
+\texttt{Magrittr} helps organize steps applied to the same dataset by using the pipe operator \texttt{\%\textgreater{}\%}. This operator links multiple operations on a data structure, such as a tibble, making it easier to perform tasks like calculating the sum of all numbers in the dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 21
+\end{verbatim}
+
+After the pipe operator \texttt{\%\textgreater{}\%}, the next function automatically takes the piped-in data as its first input, so it's unnecessary to specify it explicitly. Additional commands can be chained by adding more pipes. This approach allows for building more complex workflows, as shown in examples later.
+
+\subsection{\texorpdfstring{The \texttt{tidyr} package}{The tidyr package}}\label{the-tidyr-package}
+
+The \texttt{tidyr} package offers helpful functions for organizing data. The \texttt{KA\_weather} dataset from \texttt{chillR} will be used here to illustrate some of these functions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw}\OtherTok{\textless{}{-}}\FunctionTok{as\_tibble}\NormalTok{(KA\_weather[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,])}
+\NormalTok{KAw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1     1   8.2   5.1
+##  2  1998     1     2   9.1   5  
+##  3  1998     1     3  10.4   3.3
+##  4  1998     1     4   8.4   4.5
+##  5  1998     1     5   7.7   4.5
+##  6  1998     1     6   8.1   4.4
+##  7  1998     1     7  12     6.9
+##  8  1998     1     8  11.2   8.6
+##  9  1998     1     9  13.9   8.5
+## 10  1998     1    10  14.5   3.6
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{pivot\_longer}}{pivot\_longer}}\label{pivot_longer}
+
+The \texttt{pivot\_longer} function, introduced previously, is useful for reshaping data from separate columns (like \texttt{Tmin} and \texttt{Tmax}) into individual rows. In this setup, each day's record will have a row for \texttt{Tmin} and another for \texttt{Tmax}. This transformation is often necessary for tasks like plotting data with the \texttt{ggplot2} package. The function can be combined with a pipe for a streamlined workflow.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAwlong }\OtherTok{\textless{}{-}}\NormalTok{ KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =}\NormalTok{ Tmax}\SpecialCharTok{:}\NormalTok{Tmin)}
+\NormalTok{KAwlong}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 20 x 5
+##     Year Month   Day name  value
+##    <int> <int> <int> <chr> <dbl>
+##  1  1998     1     1 Tmax    8.2
+##  2  1998     1     1 Tmin    5.1
+##  3  1998     1     2 Tmax    9.1
+##  4  1998     1     2 Tmin    5  
+##  5  1998     1     3 Tmax   10.4
+##  6  1998     1     3 Tmin    3.3
+##  7  1998     1     4 Tmax    8.4
+##  8  1998     1     4 Tmin    4.5
+##  9  1998     1     5 Tmax    7.7
+## 10  1998     1     5 Tmin    4.5
+## 11  1998     1     6 Tmax    8.1
+## 12  1998     1     6 Tmin    4.4
+## 13  1998     1     7 Tmax   12  
+## 14  1998     1     7 Tmin    6.9
+## 15  1998     1     8 Tmax   11.2
+## 16  1998     1     8 Tmin    8.6
+## 17  1998     1     9 Tmax   13.9
+## 18  1998     1     9 Tmin    8.5
+## 19  1998     1    10 Tmax   14.5
+## 20  1998     1    10 Tmin    3.6
+\end{verbatim}
+
+In this example, it was necessary to specify the columns to stack. The \texttt{pivot\_longer} function serves a similar purpose to the \texttt{melt} function from the \texttt{reshape2} package, which was used previously and in earlier book editions. However, \texttt{pivot\_longer} is more intuitive, so it will be used throughout the remaining chapters.
+
+\subsubsection{\texorpdfstring{\texttt{pivot\_wider}}{pivot\_wider}}\label{pivot_wider}
+
+The \texttt{pivot\_wider} function allows for the opposite transformation of \texttt{pivot\_longer}, converting rows back into separate columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAwwide }\OtherTok{\textless{}{-}}\NormalTok{ KAwlong }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ name) }
+\NormalTok{KAwwide}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1     1   8.2   5.1
+##  2  1998     1     2   9.1   5  
+##  3  1998     1     3  10.4   3.3
+##  4  1998     1     4   8.4   4.5
+##  5  1998     1     5   7.7   4.5
+##  6  1998     1     6   8.1   4.4
+##  7  1998     1     7  12     6.9
+##  8  1998     1     8  11.2   8.6
+##  9  1998     1     9  13.9   8.5
+## 10  1998     1    10  14.5   3.6
+\end{verbatim}
+
+The \texttt{names\_from} argument in \texttt{pivot\_wider} specifies the column that will provide the headers for the new columns. In some cases, \texttt{pivot\_wider} might work without this argument, but it's generally recommended to include it for clarity and to ensure that the function behaves as expected, especially with more complex datasets.
+
+\subsubsection{\texorpdfstring{\texttt{select}}{select}}\label{select}
+
+The \texttt{select} function allows users to choose a subset of columns from a data frame or tibble.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{c}\NormalTok{(Month, Day, Tmax))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    Month   Day  Tmax
+##    <int> <int> <dbl>
+##  1     1     1   8.2
+##  2     1     2   9.1
+##  3     1     3  10.4
+##  4     1     4   8.4
+##  5     1     5   7.7
+##  6     1     6   8.1
+##  7     1     7  12  
+##  8     1     8  11.2
+##  9     1     9  13.9
+## 10     1    10  14.5
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{filter}}{filter}}\label{filter}
+
+The \texttt{filter} function reduces a data.frame or tibble to just the rows that fulfill certain conditions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Tmax }\SpecialCharTok{\textgreater{}} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 5
+##    Year Month   Day  Tmax  Tmin
+##   <int> <int> <int> <dbl> <dbl>
+## 1  1998     1     3  10.4   3.3
+## 2  1998     1     7  12     6.9
+## 3  1998     1     8  11.2   8.6
+## 4  1998     1     9  13.9   8.5
+## 5  1998     1    10  14.5   3.6
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{mutate}}{mutate}}\label{mutate}
+
+The \texttt{mutate} function is essential for creating, modifying, and deleting columns in a data frame or tibble. For example, it can be used to add new columns, such as converting \texttt{Tmin} and \texttt{Tmax} to Kelvin.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw\_K }\OtherTok{\textless{}{-}}\NormalTok{ KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Tmax\_K =}\NormalTok{ Tmax }\SpecialCharTok{+} \FloatTok{273.15}\NormalTok{, }\AttributeTok{Tmin\_K =}\NormalTok{ Tmin }\SpecialCharTok{+} \FloatTok{273.15}\NormalTok{)}
+\NormalTok{KAw\_K}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 7
+##     Year Month   Day  Tmax  Tmin Tmax_K Tmin_K
+##    <int> <int> <int> <dbl> <dbl>  <dbl>  <dbl>
+##  1  1998     1     1   8.2   5.1   281.   278.
+##  2  1998     1     2   9.1   5     282.   278.
+##  3  1998     1     3  10.4   3.3   284.   276.
+##  4  1998     1     4   8.4   4.5   282.   278.
+##  5  1998     1     5   7.7   4.5   281.   278.
+##  6  1998     1     6   8.1   4.4   281.   278.
+##  7  1998     1     7  12     6.9   285.   280.
+##  8  1998     1     8  11.2   8.6   284.   282.
+##  9  1998     1     9  13.9   8.5   287.   282.
+## 10  1998     1    10  14.5   3.6   288.   277.
+\end{verbatim}
+
+To delete the columns created with \texttt{mutate}, you can set them to \texttt{NULL}. This effectively removes the specified columns from the data frame or tibble.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw\_K }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Tmin\_K =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{Tmax\_K =} \ConstantTok{NULL}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1     1   8.2   5.1
+##  2  1998     1     2   9.1   5  
+##  3  1998     1     3  10.4   3.3
+##  4  1998     1     4   8.4   4.5
+##  5  1998     1     5   7.7   4.5
+##  6  1998     1     6   8.1   4.4
+##  7  1998     1     7  12     6.9
+##  8  1998     1     8  11.2   8.6
+##  9  1998     1     9  13.9   8.5
+## 10  1998     1    10  14.5   3.6
+\end{verbatim}
+
+Next, the original temperature values will be replaced directly with their corresponding Kelvin values. The following code will make these modifications to the specified columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Tmin =}\NormalTok{ Tmin }\SpecialCharTok{+} \FloatTok{273.15}\NormalTok{, }\AttributeTok{Tmax =}\NormalTok{ Tmax }\SpecialCharTok{+} \FloatTok{273.15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1     1  281.  278.
+##  2  1998     1     2  282.  278.
+##  3  1998     1     3  284.  276.
+##  4  1998     1     4  282.  278.
+##  5  1998     1     5  281.  278.
+##  6  1998     1     6  281.  278.
+##  7  1998     1     7  285.  280.
+##  8  1998     1     8  284.  282.
+##  9  1998     1     9  287.  282.
+## 10  1998     1    10  288.  277.
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{arrange}}{arrange}}\label{arrange}
+
+\texttt{arrange}~is a function to sort data in~\texttt{data.frames}~or~\texttt{tibbles}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(Tmax, Tmin)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1     5   7.7   4.5
+##  2  1998     1     6   8.1   4.4
+##  3  1998     1     1   8.2   5.1
+##  4  1998     1     4   8.4   4.5
+##  5  1998     1     2   9.1   5  
+##  6  1998     1     3  10.4   3.3
+##  7  1998     1     8  11.2   8.6
+##  8  1998     1     7  12     6.9
+##  9  1998     1     9  13.9   8.5
+## 10  1998     1    10  14.5   3.6
+\end{verbatim}
+
+It is also possible to sort a data frame or tibble in descending order.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{KAw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Tmax), Tmin)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##     Year Month   Day  Tmax  Tmin
+##    <int> <int> <int> <dbl> <dbl>
+##  1  1998     1    10  14.5   3.6
+##  2  1998     1     9  13.9   8.5
+##  3  1998     1     7  12     6.9
+##  4  1998     1     8  11.2   8.6
+##  5  1998     1     3  10.4   3.3
+##  6  1998     1     2   9.1   5  
+##  7  1998     1     4   8.4   4.5
+##  8  1998     1     1   8.2   5.1
+##  9  1998     1     6   8.1   4.4
+## 10  1998     1     5   7.7   4.5
+\end{verbatim}
+
+\subsection{Loops}\label{loops}
+
+In addition to the tidyverse functions, understanding loops is essential for efficient coding. Loops enable the repetition of operations multiple times without needing to retype or copy and paste code. They also allow for modifications to be made with each iteration. While detailed explanations on loops can be found elsewhere, the basics will be covered here.
+
+There are two primary types of loops: \textbf{for loops} and \textbf{while loops}. For both types, it is necessary to provide instructions that determine how many times the loop will run, as well as what actions to perform during each iteration.
+
+\subsubsection{\texorpdfstring{\emph{For} loops}{For loops}}\label{for-loops}
+
+In a for loop, explicit instructions dictate how many times the code inside the loop should be executed. This is typically done by providing a vector or list of elements, directing R to run the code for each of these elements. As a result, the number of executions corresponds to the number of elements in the vector or list. A counter is needed to track the current iteration, commonly referred to as \texttt{i}, though it can be any variable name.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{) }\FunctionTok{print}\NormalTok{(}\StringTok{"Hello"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hello"
+## [1] "Hello"
+## [1] "Hello"
+\end{verbatim}
+
+This command executed the code three times, producing the same output with each iteration. The structure can be made more complex by including multiple lines of code within curly brackets.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{addition }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
+\NormalTok{\{}
+\NormalTok{  addition }\OtherTok{\textless{}{-}}\NormalTok{ addition }\SpecialCharTok{+} \DecValTok{1}
+  \FunctionTok{print}\NormalTok{(addition)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2
+## [1] 3
+## [1] 4
+\end{verbatim}
+
+The code in this loop incremented an initial value of 1 by 1 in each iteration and printed the resulting value. It is important to note that R may require explicit instructions to print these values when the operation is embedded within a loop.
+
+By utilizing the index \texttt{i} within the code block, additional flexibility can be introduced to the operations performed in each iteration.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{addition }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
+\NormalTok{\{}
+\NormalTok{  addition }\OtherTok{\textless{}{-}}\NormalTok{ addition }\SpecialCharTok{+}\NormalTok{ i}
+  \FunctionTok{print}\NormalTok{(addition)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2
+## [1] 4
+## [1] 7
+\end{verbatim}
+
+In this iteration, the respective value of \texttt{i} was added to the initial element during each run. Additionally, \texttt{i} can be utilized in more creative ways within the loop to enhance the operations being performed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{names }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Paul"}\NormalTok{, }\StringTok{"Mary"}\NormalTok{, }\StringTok{"John"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
+\NormalTok{\{}
+  \FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Hello"}\NormalTok{, names[i]))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hello Paul"
+## [1] "Hello Mary"
+## [1] "Hello John"
+\end{verbatim}
+
+The counter in a loop does not have to be numeric; it can take on various forms, including strings. By using this flexibility, the same output as generated in the previous code block can be achieved with a different formulation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\StringTok{"Paul"}\NormalTok{, }\StringTok{"Mary"}\NormalTok{, }\StringTok{"John"}\NormalTok{))}
+\NormalTok{\{}
+  \FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Hello"}\NormalTok{, i))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hello Paul"
+## [1] "Hello Mary"
+## [1] "Hello John"
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\emph{While} loops}{While loops}}\label{while-loops}
+
+A loop can also be controlled using a while statement, which executes the code until a specified condition is no longer met. This approach is meaningful only if the condition can change based on the operations performed within the loop.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cond }\OtherTok{\textless{}{-}} \DecValTok{5}
+
+\ControlFlowTok{while}\NormalTok{ (cond }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)}
+\NormalTok{\{}
+  \FunctionTok{print}\NormalTok{(cond)}
+\NormalTok{  cond }\OtherTok{\textless{}{-}}\NormalTok{ cond }\SpecialCharTok{{-}} \DecValTok{1}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+## [1] 4
+## [1] 3
+## [1] 2
+## [1] 1
+\end{verbatim}
+
+Once \texttt{cond} reaches 0, the starting condition is no longer satisfied, and the code will not execute again. It is important to note that while loops can lead to issues if the condition remains true regardless of the code block's execution. In such cases, the code may become stuck and will need to be manually interrupted.
+
+\subsection{\texorpdfstring{\texttt{apply} functions}{apply functions}}\label{apply-functions}
+
+In addition to loops, R offers a more efficient way to perform operations on multiple elements simultaneously. This method, which is often faster, utilizes functions from the \textbf{apply} family: \texttt{apply}, \texttt{lapply}, and \texttt{sapply}. These functions require two key arguments: the list of items to which the operation will be applied and the operation itself.
+
+\subsubsection{\texorpdfstring{\texttt{sapply}}{sapply}}\label{sapply}
+
+When the goal is to apply an operation to a vector of elements, the simplest function to use is \texttt{sapply}. It requires two arguments: the vector (\texttt{X}) and the function to be applied (\texttt{FUN}). For illustration, a simple function called \texttt{func} will be created, which adds 1 to an input object:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)}
+\NormalTok{  x }\SpecialCharTok{+} \DecValTok{1}
+
+\FunctionTok{sapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, func)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2 3 4 5 6
+\end{verbatim}
+
+The output is a vector of numbers that are each 1 greater than the corresponding elements of the input vector. When this function is applied to a list of numbers, the output becomes a matrix, although the values remain the same.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sapply}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{), func)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1]
+## [1,]    2
+## [2,]    3
+## [3,]    4
+## [4,]    5
+## [5,]    6
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{lapply}}{lapply}}\label{lapply}
+
+To obtain a list as the output, the \texttt{lapply} function can be used. This function treats the input element \texttt{X} as a list and returns a new list containing the same number of elements as the input. Each element in the output list corresponds to the result of applying \texttt{FUN} to the respective element of the input list.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, func)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] 2
+## 
+## [[2]]
+## [1] 3
+## 
+## [[3]]
+## [1] 4
+## 
+## [[4]]
+## [1] 5
+## 
+## [[5]]
+## [1] 6
+\end{verbatim}
+
+If the input element \texttt{X} is a list, \texttt{lapply} treats the entire list as a single input element, applying \texttt{FUN} to the whole list and returning the result as one element in the output list. An example can help clarify this behavior.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lapply}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{), func)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] 2 3 4 5 6
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{apply}}{apply}}\label{apply}
+
+The basic \texttt{apply} function is designed for applying functions to arrays, allowing operations to be performed either on the rows (\texttt{MARGIN\ =\ 1}) or on the columns (\texttt{MARGIN\ =\ 2}) of the array. While this function may not be used frequently, here are some simple examples of its functionality. For further information, it is advisable to consult the help file or explore online resources, as there are many helpful materials available.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\NormalTok{mat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    1    2    3
+## [3,]    1    2    3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{apply}\NormalTok{(mat, }\AttributeTok{MARGIN =} \DecValTok{1}\NormalTok{, sum) }\CommentTok{\# adding up all the data in each row}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6 6 6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{apply}\NormalTok{(mat, }\AttributeTok{MARGIN =} \DecValTok{2}\NormalTok{, sum) }\CommentTok{\# adding up all the data in each column}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3 6 9
+\end{verbatim}
+
+\subsection{\texorpdfstring{\texttt{Exercises} on useful R tools}{Exercises on useful R tools}}\label{exercises-on-useful-r-tools}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Based on the} \texttt{Winters\_hours\_gaps} \emph{dataset, use} \texttt{magrittr} \emph{pipes and functions of the} \texttt{tidyverse} \emph{to accomplish the following:}
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \tightlist
+  \item
+    \emph{Convert the dataset into a} \texttt{tibble}
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    \emph{Select only the top 10 rows of the dataset}
+  \end{enumerate}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHG }\OtherTok{\textless{}{-}} \FunctionTok{as\_tibble}\NormalTok{(Winters\_hours\_gaps[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, ])}
+\NormalTok{WHG}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 6
+##     Year Month   Day  Hour Temp_gaps  Temp
+##    <int> <int> <int> <int>     <dbl> <dbl>
+##  1  2008     3     3    10      15.1  15.1
+##  2  2008     3     3    11      17.2  17.2
+##  3  2008     3     3    12      18.7  18.7
+##  4  2008     3     3    13      18.7  18.7
+##  5  2008     3     3    14      18.8  18.8
+##  6  2008     3     3    15      19.5  19.5
+##  7  2008     3     3    16      19.3  19.3
+##  8  2008     3     3    17      17.7  17.7
+##  9  2008     3     3    18      15.4  15.4
+## 10  2008     3     3    19      12.7  12.7
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    \emph{Convert the} \texttt{tibble} \emph{to a} \texttt{long} \emph{format, with separate rows for} \texttt{Temp\_gaps} \emph{and} \texttt{Temp}
+  \end{enumerate}
+\end{itemize}
+
+To see the difference between the columns \texttt{Temp\_gaps} and \texttt{Temp}, rows 279 to 302 (Julian Day 15) are used below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHG }\OtherTok{\textless{}{-}} \FunctionTok{as\_tibble}\NormalTok{(Winters\_hours\_gaps[}\DecValTok{279}\SpecialCharTok{:}\DecValTok{302}\NormalTok{, ])}
+\NormalTok{WHGlong }\OtherTok{\textless{}{-}}\NormalTok{ WHG }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =}\NormalTok{ Temp\_gaps}\SpecialCharTok{:}\NormalTok{Temp)}
+\NormalTok{WHGlong}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 48 x 6
+##     Year Month   Day  Hour name      value
+##    <int> <int> <int> <int> <chr>     <dbl>
+##  1  2008     3    15     0 Temp_gaps  6.76
+##  2  2008     3    15     0 Temp       6.76
+##  3  2008     3    15     1 Temp_gaps  6.48
+##  4  2008     3    15     1 Temp       6.48
+##  5  2008     3    15     2 Temp_gaps  5.51
+##  6  2008     3    15     2 Temp       5.51
+##  7  2008     3    15     3 Temp_gaps  6.89
+##  8  2008     3    15     3 Temp       6.89
+##  9  2008     3    15     4 Temp_gaps  6.10
+## 10  2008     3    15     4 Temp       6.10
+## # i 38 more rows
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    \emph{Use} \texttt{ggplot2} \emph{to plot} \texttt{Temp\_gaps} \emph{and} \texttt{Temp} \emph{as facets (point or line plot)}
+  \end{enumerate}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(WHGlong, }\FunctionTok{aes}\NormalTok{(Hour, value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{lwd =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{vars}\NormalTok{(name)) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"Temperature (°C)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 3 rows containing missing values or values outside the scale range
+## (`geom_line()`).
+\end{verbatim}
+
+\includegraphics{_main_files/figure-latex/unnamed-chunk-102-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{4}
+  \tightlist
+  \item
+    \emph{Convert the dataset back to the} \texttt{wide} \emph{format}
+  \end{enumerate}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHGwide }\OtherTok{\textless{}{-}}\NormalTok{ WHGlong }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ name)}
+\NormalTok{WHGwide}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 24 x 6
+##     Year Month   Day  Hour Temp_gaps  Temp
+##    <int> <int> <int> <int>     <dbl> <dbl>
+##  1  2008     3    15     0      6.76  6.76
+##  2  2008     3    15     1      6.48  6.48
+##  3  2008     3    15     2      5.51  5.51
+##  4  2008     3    15     3      6.89  6.89
+##  5  2008     3    15     4      6.10  6.10
+##  6  2008     3    15     5     NA     6.91
+##  7  2008     3    15     6     NA     6.10
+##  8  2008     3    15     7     NA     5.98
+##  9  2008     3    15     8     NA     8.99
+## 10  2008     3    15     9     10.8  10.8 
+## # i 14 more rows
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{5}
+  \tightlist
+  \item
+    \emph{Select only the following columns:} \texttt{Year}, \texttt{Month}, \texttt{Day} \emph{and} \texttt{Temp}
+  \end{enumerate}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHG }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{c}\NormalTok{(Year, Month, Day, Temp))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 24 x 4
+##     Year Month   Day  Temp
+##    <int> <int> <int> <dbl>
+##  1  2008     3    15  6.76
+##  2  2008     3    15  6.48
+##  3  2008     3    15  5.51
+##  4  2008     3    15  6.89
+##  5  2008     3    15  6.10
+##  6  2008     3    15  6.91
+##  7  2008     3    15  6.10
+##  8  2008     3    15  5.98
+##  9  2008     3    15  8.99
+## 10  2008     3    15 10.8 
+## # i 14 more rows
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{\alph{enumi})}
+  \setcounter{enumi}{6}
+  \tightlist
+  \item
+    \emph{Sort the dataset by the} \texttt{Temp} \emph{column, in descending order}
+  \end{enumerate}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHG }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Temp))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 24 x 6
+##     Year Month   Day  Hour Temp_gaps  Temp
+##    <int> <int> <int> <int>     <dbl> <dbl>
+##  1  2008     3    15    13      NA    15.2
+##  2  2008     3    15    16      14.5  14.5
+##  3  2008     3    15    14      NA    14.2
+##  4  2008     3    15    12      NA    14.2
+##  5  2008     3    15    15      14.1  14.1
+##  6  2008     3    15    11      NA    13.6
+##  7  2008     3    15    17      13.3  13.3
+##  8  2008     3    15    18      12.1  12.1
+##  9  2008     3    15    10      12.0  12.0
+## 10  2008     3    15     9      10.8  10.8
+## # i 14 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \emph{For the} \texttt{Winter\_hours\_gaps} \emph{dataset, write a} \texttt{for} \emph{loop to convert all temperatures} (\texttt{Temp} \emph{column}) \emph{to degrees Fahrenheit}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Temp }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_hours\_gaps}\SpecialCharTok{$}\NormalTok{Temp[}\DecValTok{279}\SpecialCharTok{:}\DecValTok{302}\NormalTok{]}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in}\NormalTok{ Temp)}
+\NormalTok{\{}
+\NormalTok{  Fahrenheit }\OtherTok{\textless{}{-}}\NormalTok{ i }\SpecialCharTok{*} \FloatTok{1.8} \SpecialCharTok{+} \DecValTok{32} 
+  \FunctionTok{print}\NormalTok{(Fahrenheit)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 44.1734
+## [1] 43.6712
+## [1] 41.9252
+## [1] 44.4002
+## [1] 42.9836
+## [1] 44.4452
+## [1] 42.9836
+## [1] 42.755
+## [1] 48.182
+## [1] 51.3698
+## [1] 53.69
+## [1] 56.4692
+## [1] 57.506
+## [1] 59.4446
+## [1] 57.5492
+## [1] 57.3332
+## [1] 58.1522
+## [1] 55.9058
+## [1] 53.8196
+## [1] 49.4708
+## [1] 47.6474
+## [1] 47.3342
+## [1] 48.182
+## [1] 47.7806
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \emph{Execute the same operation with a function from the} \texttt{apply} \emph{family}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ Winters\_hours\_gaps}\SpecialCharTok{$}\NormalTok{Temp[}\DecValTok{279}\SpecialCharTok{:}\DecValTok{302}\NormalTok{]}
+
+\NormalTok{fahrenheit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)}
+\NormalTok{  x }\SpecialCharTok{*} \FloatTok{1.8} \SpecialCharTok{+} \DecValTok{32}
+
+\FunctionTok{sapply}\NormalTok{(x, fahrenheit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 44.1734 43.6712 41.9252 44.4002 42.9836 44.4452 42.9836 42.7550 48.1820
+## [10] 51.3698 53.6900 56.4692 57.5060 59.4446 57.5492 57.3332 58.1522 55.9058
+## [19] 53.8196 49.4708 47.6474 47.3342 48.1820 47.7806
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  \emph{Now use the} \texttt{tidyverse} \emph{function} \texttt{mutate} \emph{to achieve the same outcome}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WHG\_F }\OtherTok{\textless{}{-}}\NormalTok{ WHG }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Temp\_F =}\NormalTok{ Temp }\SpecialCharTok{*} \FloatTok{1.8} \SpecialCharTok{+} \DecValTok{32}\NormalTok{)}
+\NormalTok{WHG\_F}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 24 x 7
+##     Year Month   Day  Hour Temp_gaps  Temp Temp_F
+##    <int> <int> <int> <int>     <dbl> <dbl>  <dbl>
+##  1  2008     3    15     0      6.76  6.76   44.2
+##  2  2008     3    15     1      6.48  6.48   43.7
+##  3  2008     3    15     2      5.51  5.51   41.9
+##  4  2008     3    15     3      6.89  6.89   44.4
+##  5  2008     3    15     4      6.10  6.10   43.0
+##  6  2008     3    15     5     NA     6.91   44.4
+##  7  2008     3    15     6     NA     6.10   43.0
+##  8  2008     3    15     7     NA     5.98   42.8
+##  9  2008     3    15     8     NA     8.99   48.2
+## 10  2008     3    15     9     10.8  10.8    51.4
+## # i 14 more rows
+\end{verbatim}
+
+\section{Getting temperature data}\label{getting-temperature-data}
+
+\subsection{Learning goals}\label{learning-goals-7}
+
+\begin{itemize}
+\tightlist
+\item
+  Appreciate the need for daily temperature data
+\item
+  Know how to get a list of promising weather stations contained in an international database
+\item
+  Be able to download weather data using \texttt{chillR} functions
+\item
+  Know how to convert downloaded data into \texttt{chillR} format
+\end{itemize}
+
+\subsection{Temperature data needs}\label{temperature-data-needs}
+
+Temperature data is essential for phenology and chill modeling, as it serves as a key input for these models. Although weather data might seem easily accessible, it is often challenging to obtain. Many countries have official weather stations that record the necessary information, but access to these data is frequently restricted and expensive, despite likely being funded by taxpayers. While such costs may be manageable for small-scale studies, they quickly become prohibitive for larger analyses.
+
+Given the urgent need to understand climate change impacts, these access limitations are a barrier to effective climate research. Such restrictions may also reduce the quality of studies that rely on comprehensive data. Ideally, high-quality, localized datasets would be available, but in their absence, some alternative databases can be used. Currently, \texttt{chillR} connects to one global and one California-specific database, with the potential to expand as more data sources become accessible.
+
+\subsection{The Global Summary of the Day database}\label{the-global-summary-of-the-day-database}
+
+\subsection{\texorpdfstring{\texttt{Exercises} on getting temperature data}{Exercises on getting temperature data}}\label{exercises-on-getting-temperature-data}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Choose a location of interest and find the 25 closest weather stations using the \texttt{handle\_gsod} function
+\item
+  Download weather data for the most promising station on the list
+\item
+  Convert the weather data into \texttt{chillR} format
+\end{enumerate}
 
   \bibliography{book.bib,packages.bib}
 

@@ -1,14 +1,82 @@
-p.caption {
-  color: #777;
-  margin-top: 10px;
+/* Allgemeine Schriftarten und -größen */
+body, p, h1, h2, h3, ul, ol, table {
+  font-family: "Times New Roman";
+  font-size: 18px;
+  text-align: justify;
 }
-p code {
-  white-space: inherit;
+
+/* Absatzstil */
+p {
+  margin-bottom: 30px !important; /* Leicht verringert für bessere Lesbarkeit */
 }
+
+/* Codeblock-Stil */
 pre {
   word-break: normal;
   word-wrap: normal;
+  background-color: #bbdefb; /* Helles Blau für Codeblöcke */
+  border-radius: 5px;
+  margin-bottom: 30px; /* Abstand zwischen Codeblöcken erhöhen */
+  color: #333; /* Dunkelgrau für besseren Kontrast */
 }
-pre code {
-  white-space: inherit;
+
+/* Überschriftstile */
+h1 {
+  font-size: 30px;
+  text-align: left;
+}
+h2 {
+  font-size: 20px;
+  text-align: left;
+}
+h3 {
+  font-size: 20px;
+  text-align: left;
+}
+
+/* Tabellenstile */
+table {
+  margin-top: 20px;
+  margin-bottom: 50px;
+  border-collapse: collapse; /* Kollision der Rahmen vermeiden */
+}
+th, td {
+  border: 1px solid #ddd; /* Rahmen um Tabellenzellen */
+  padding: 8px; /* Innenabstand */
+}
+
+/* Abstand und Stil für Listen */
+ul, ol {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+ul li, ol li {
+  margin-bottom: 5px; /* Leicht erhöht */
+}
+
+/* Bildunterschriftenstil */
+.caption {
+  color: #777;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 10px;
+  font-family: "Times New Roman";
+}
+
+/* Spezifischer Abstand für Shell- oder Output-Code */
+code.language-shell {
+    margin-bottom: 30px; /* Erhöhter Abstand */
+}
+/* Stil für das Bild */
+figure {
+    margin: 20px 0; /* Abstand um das Bild, oben und unten 20px */
+}
+
+/* Stil für die Bildunterschrift */
+figcaption {
+    font-size: 14px; /* Schriftgröße in Pixeln */
+    color: #555; /* Schriftfarbe */
+    text-align: center; /* Zentrierte Ausrichtung */
+    font-style: italic; /* Kursivschrift für die Bildunterschrift */
+    margin-top: 5px; /* Abstand zwischen Bild und Bildunterschrift */
 }

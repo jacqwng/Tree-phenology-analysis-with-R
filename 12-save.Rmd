@@ -1,0 +1,103 @@
+# Saving and loading data (and hiding this in markdown)
+
+## Learning Goals
+
+-   Learn how to write and read tables
+-   Learn how to save and load lists of (not-too-complicated) objects
+-   Learn how to hide such writing and saving from the readers of your markdown document
+
+The learning logbook compilation time increases as more code and data processing are added, due to handling a large dataset—100 years of synthetic hourly weather data, totaling about 876,000 hours. Each hourly temperature calculation required extensive computations, including sunrise, sunset, day length, and chill metrics with the Dynamic Model function. Climate change scenario analysis will require even more data, with calculations potentially taking an hour or longer. To manage this, saving results for faster reloading becomes essential.
+
+## Saving and loading data
+
+R provides `save` and `load` functions to store and retrieve data, though simpler formats like CSV are often preferred for easy inspection outside R. For basic `data.frames`, `write.csv` can be used to save data efficiently. For example, to save the `Temperatures` dataset created in the last lesson, `write.csv` is a straightforward solution:
+
+```{r, include = FALSE}
+library(chillR)
+library(tidyverse)
+library(kableExtra)
+Temperatures<-read_tab("Yakima/Temperatures.csv")
+```
+
+```{r, eval = FALSE}
+head(Temperatures)
+```
+
+```{r, echo = FALSE}
+kable((head(Temperatures)), align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+```{r}
+write.csv(Temperatures, file = "Yakima/Temperatures.csv", row.names = FALSE)
+```
+
+To save the dataset without row numbering, `row.names=FALSE` is set in `write.csv`. To load the dataset back into R, use `read.tab` as shown below:
+
+```{r}
+Temperatures <- read_tab("Yakima/Temperatures.csv")
+```
+
+```{r, eval = FALSE}
+head(Temperatures)
+```
+
+```{r, echo = FALSE}
+kable((head(Temperatures)), align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+In the previous example, instead of using R’s built-in `read.csv` function, the `chillR` package’s `read_tab` function was used, which behaves similarly by reading comma-separated files. However, `.csv` files can cause issues in non-English locales where commas are used as decimal symbols (e.g., in French, Spanish, or German environments). In these cases, values are often separated by semicolons instead. `read_tab` can detect whether commas or semicolons are used as delimiters, ensuring compatibility across different regional settings.
+
+Saving and loading simple `data.frames` is straightforward, but more complex objects, like lists of multiple data frames, require a different approach. For this purpose, `chillR` includes functions specifically for saving and loading lists containing numbers, character strings, and `data frames`. Here’s how to create and save a simple list in the designated `data` folder:
+
+```{r}
+test_list <- list(Number = 1,
+                  String = "Thanks for using chillR!",
+                  DataFrame = data.frame(a = c(1, 2, 3),
+                                         b = c(3, 2, 1),
+                                         c = c(5, 4, 3)))
+
+save_temperature_scenarios(test_list,
+                           path = "data",
+                           prefix = "test_list")
+```
+
+In the data folder, three files have been created:
+
+-   `test_list_1_Number.csv`
+
+-   `test_list_2_String.csv`
+
+-   `test_list_3_DataFrame.csv`
+
+Each file stores a specific element of the list. To retrieve the list elements, `chillR` provides a function that reads these files and reassembles them into the original list format:
+
+```{r}
+test_list <- load_temperature_scenarios(path = "data",
+                                        prefix = "test_list")
+```
+
+The function's name includes "temperature_scenarios" because it was primarily designed to avoid repeating the time-intensive generation of temperature scenarios, a key step in many `chillR` workflows. Although this function works with other lists as well, it currently has a limitation: single strings and numbers within lists are converted into mini-data frames, an issue that needs addressing.
+
+## Hiding all this from the readers of our markdown file
+
+After completing several lessons, the calculations in the document accumulate, leading to significant processing time, especially as more complex tasks are introduced. To avoid re-running code each time, calculations are typically performed once, and the results are saved. During the document knitting process, the saved data is reloaded.
+
+However, the code can still be visible, even though it may not be executed. This is possible because code chunks in a Markdown document can be configured to either run but remain hidden or be visible without being executed. Key options include:
+
+-   `echo = FALSE`: Runs the code but hides it (and any output) in the final document, while "side effects" like figures are still shown.
+
+-   `eval = FALSE`: Shows the code in the final document but doesn’t execute it.
+
+-   `include = FALSE`: Hides code and results in the final file, but runs the code.
+
+-   `message = FALSE`: Hides messages generated by the code.
+
+-   `warning = FALSE`: Hides warnings generated by the code.
+
+This strategy requires ensuring that all necessary data for later code chunks is preloaded.

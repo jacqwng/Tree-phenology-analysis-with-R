@@ -1,6 +1,19 @@
 delete_merged_file: true
-output_dir: "docs"  
 language:
   ui:
     chapter_name: "Chapter "
 
+rmd_files:
+- index.Rmd
+- 01-tools.Rmd 
+- 02-tree-dormancy.Rmd
+- 03-climate.Rmd
+- 04-winter-chill.Rmd
+- 05-manual-chill.Rmd
+- 06-chill.Rmd
+- 07-temp.Rmd
+- 08-tools.Rmd
+- 09-temp-data.Rmd
+- 10-gaps.Rmd
+- 11-generate-temp.Rmd
+- 12-save.Rmd
