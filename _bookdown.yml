@@ -16,5 +16,6 @@ rmd_files: [
   "09-temp-data.Rmd",
   "10-gaps.Rmd",
   "11-generate-temp.Rmd",
-  "12-save.Rmd"
+  "12-save.Rmd",
+  "13-historic.Rmd"
 ]

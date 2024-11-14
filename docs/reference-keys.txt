@@ -104,3 +104,8 @@ saving-and-loading-data-and-hiding-this-in-markdown
 learning-goals-10
 saving-and-loading-data
 hiding-all-this-from-the-readers-of-our-markdown-file
+historic-temperature-scenarios
+learning-goals-11
+climate-change-scenarios
+making-historic-temperature-scenarios
+exercises-on-generating-historic-temperature-scenarios
