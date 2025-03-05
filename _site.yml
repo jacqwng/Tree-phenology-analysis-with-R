@@ -1,12 +1,51 @@
 name: "Tree-phenology-analysis-with-R"
-title: "My Website"
-description: |
-  My Website
+title: "Jacqueline Wingen"
+theme: my_theme.css
 output_dir: "docs"
 navbar:
   right:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
+    - text: "Getting Started"
+      href: getting_started.html
+    - text: "Lessons"
+      menu: 
+        - text: "Tree dormancy"
+          href: tree_dormancy.html
+        - text: "Climate change and impact projection"
+          href: climate_change.html
+        - text: "Winter chill projections"
+          href: winter_chill.html
+        - text: "Manual chill"
+          href: manual_chill.html
+        - text: "Chill models"
+          href: chill.html
+        - text: "Making hourly temperatures"
+          href: making_temp.html
+        - text: "Useful tools in R"          
+          href: tools.html
+        - text: "Getting temperature data"
+          href: temp_data.html
+        - text: "Filling gaps in temperature records"
+          href: gaps.html
+        - text: "Generating temperature scenarios"
+          href: generate_temp.html
+        - text: "Saving and loading data"
+          href: save.html
+        - text: "Historic temperature scenarios"
+          href: historic.html
+        - text: "Future temperature scenarios"
+          href: future.html
+        - text: "Making CMIP6 scenarios"
+          href: cmip6.html
+        - text: "Making CMIP5 scenarios with the `ClimateWizard`"
+          href: cmip5.html
+        - text: "Plotting future scenarios"
+          href: plotting.html
+        - text: "Chill model comparison"
+          href: chill_model.html
+        - text: "Simple phenology analysis"
+          href: simple.html
+        
+
 output: distill::distill_article

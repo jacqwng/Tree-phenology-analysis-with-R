@@ -1,0 +1,319 @@
+---
+title: "Making hourly temperatures"
+output: distill::distill_article
+---
+
+```{r, include = FALSE}
+library(chillR)
+library(tidyr)
+library(ggplot2)
+library(kableExtra)
+```
+
+The calculation of Chilling Hours requires hourly temperature data. However, since only daily minimum and maximum temperatures are often available, methods for hourly interpolation must be developed. Previous approaches used linear interpolation and triangular temperature profiles ([Baldocchi & Wong, 2008](https://link.springer.com/article/10.1007/s10584-007-9367-8)):
+
+```{r triangular, out.width="80%", out.height="50%", echo=FALSE}
+KA_hours <- KA_weather[10:20, ]
+KA_hours[, "Hour"] <- 0
+KA_hours$Hour[nrow(KA_hours)] <- 23
+KA_hours[, "Temp"] <- 0
+KA_hours <- make_all_day_table(KA_hours, timestep = "hour")
+
+for (i in 2:nrow(KA_hours))
+{
+  if (is.na(KA_hours$Tmin[i]))
+    KA_hours$Tmin[i] <- KA_hours$Tmin[i - 1]
+  if (is.na(KA_hours$Tmax[i]))
+    KA_hours$Tmax[i] <- KA_hours$Tmax[i - 1]
+}
+KA_hours$Temp <- NA
+
+KA_hours$Temp[which(KA_hours$Hour == 6)] <-
+  KA_hours$Tmin[which(KA_hours$Hour == 6)]
+KA_hours$Temp[which(KA_hours$Hour == 18)] <-
+  KA_hours$Tmax[which(KA_hours$Hour == 18)]
+KA_hours$Temp <- interpolate_gaps(KA_hours$Temp)$interp
+
+ggplot(KA_hours[20:100, ], aes(DATE, Temp)) +
+  geom_line(lwd = 1.5) +
+  xlab("Date") +
+  ylab("Temperature (°C)") +
+  theme_bw(base_size = 15)
+```
+
+However, triangular temperature profiles are not always realistic, as temperature increases and decreases are asymmetric.
+
+### Idealized Daily Temperature Model
+
+[Dale E. Linvill (1990)](https://journals.ashs.org/hortsci/view/journals/hortsci/25/1/article-p14.xml) developed a model that describes daytime warming with a sine curve and nighttime cooling with a logarithmic function. The `chillR` function `daylength()` uses astronomical calculations to determine the length of daylight:
+
+```{r, out.width="80%", out.height="50%", exercise=TRUE}
+Days <- daylength(latitude = 50.4, JDay = 1:365)
+Days_df <-
+  data.frame(
+    JDay = 1:365,
+    Sunrise = Days$Sunrise,
+    Sunset = Days$Sunset,
+    Daylength = Days$Daylength
+  )
+Days_df <- pivot_longer(Days_df, cols = c(Sunrise:Daylength))
+
+ggplot(Days_df, aes(JDay, value)) +
+  geom_line(lwd = 1.5) +
+  facet_grid(cols = vars(name)) +
+  ylab("Time of Day / Daylength (Hours)") +
+  theme_bw(base_size = 15)
+```
+
+The `stack_hourly_temps()` function calculates hourly temperatures based on daily Tmin/Tmax values and latitude:
+
+```{r, echo=FALSE}
+kable(KA_weather[1:10,], align = rep("c", ncol(KA_weather))) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"), 
+    position = "center", 
+    font_size = 14,   
+    full_width = TRUE
+  )
+
+```
+
+And the following process describes how hourly temperatures can be calculated based on the idealized daily temperature curve:
+
+```{r, echo=TRUE, eval=FALSE}
+stack_hourly_temps(KA_weather, latitude = 50.4)
+```
+
+```{r, echo = FALSE}
+
+KA_hourly <- stack_hourly_temps(KA_weather, latitude = 50.4)
+
+kable(KA_hourly$hourtemps[100:120, ], row.names = FALSE, align = c("c"))  %>%
+  kable_styling("striped", position = "center", font_size = 14) %>% 
+  scroll_box(height="500px")
+```
+
+Based on this the following plot shows the calculated data:
+
+```{r idealized, out.width="80%", out.height="50%", echo=FALSE}
+
+KA_hourly$hourtemps[, "DATE"] <-
+  ISOdate(
+    KA_hourly$hourtemps$Year,
+    KA_hourly$hourtemps$Month,
+    KA_hourly$hourtemps$Day,
+    KA_hourly$hourtemps$Hour
+  )
+
+ggplot(KA_hourly$hourtemps[20:100, ], aes(DATE, Temp)) +
+  geom_line(lwd = 1.5) +
+  xlab("Date") +
+  ylab("Temperature (°C)") +
+  theme_bw(base_size = 15)
+
+```
+
+### Empirical Daily Temperature Profiles
+
+In complex topographies (e.g., Oman), idealized models can be inaccurate. Here, the `Empirical_daily_temperature_curve()` function helps to empirically determine typical hourly temperature patterns:
+
+```{r}
+empi_curve <- Empirical_daily_temperature_curve(Winters_hours_gaps)
+```
+
+```{r, echo = FALSE}
+kable(empi_curve[1:48, ], align = rep("c", ncol(empi_curve)))  %>%
+  kable_styling("striped", position = "center", font_size = 14) %>% 
+  scroll_box(height = "300px")
+```
+
+```{r}
+ggplot(data = empi_curve[1:96, ], aes(Hour, Prediction_coefficient)) +
+  geom_line(lwd = 1.3, 
+            col = "red") + 
+  facet_grid(rows = vars(Month)) + 
+  xlab("Hour of the day") +
+  ylab("Prediction coefficient") +
+  theme_bw(base_size = 15)
+```
+
+The function `Empirical_hourly_temperatures()` uses these coefficients to generate hourly temperatures. To fill gaps in daily or hourly temperature records, the `make_all_day_table()` function is used.
+
+```{r}
+coeffs <- Empirical_daily_temperature_curve(Winters_hours_gaps)
+Winters_daily <-
+  make_all_day_table(Winters_hours_gaps, input_timestep = "hour")
+Winters_hours <- Empirical_hourly_temperatures(Winters_daily, coeffs)
+```
+
+The next step is to plot the results to visualize the hourly temperature data. This enables a comparison between the empirical method, the triangular function, and the idealized temperature curve. Furthermore, actual observed temperatures will be used for validation. To streamline this process, the data will first be simplified for easier handling:
+
+```{r}
+Winters_hours <- Winters_hours[, c("Year", "Month", "Day", "Hour", "Temp")]
+colnames(Winters_hours)[ncol(Winters_hours)] <- "Temp_empirical"
+Winters_ideal <-
+  stack_hourly_temps(Winters_daily, latitude = 38.5)$hourtemps
+Winters_ideal <- Winters_ideal[, c("Year", "Month", "Day", "Hour", "Temp")]
+colnames(Winters_ideal)[ncol(Winters_ideal)] <- "Temp_ideal"
+```
+
+The next step is to generate the triangular dataset, requiring a clear understanding of its construction.
+
+```{r}
+Winters_triangle <- Winters_daily
+Winters_triangle[, "Hour"] <- 0
+Winters_triangle$Hour[nrow(Winters_triangle)] <- 23
+Winters_triangle[, "Temp"] <- 0
+Winters_triangle <-
+  make_all_day_table(Winters_triangle, timestep = "hour")
+colnames(Winters_triangle)[ncol(Winters_triangle)] <-
+  "Temp_triangular"
+
+# with the following loop, we fill in the daily Tmin and Tmax values for every
+# hour of the dataset
+
+for (i in 2:nrow(Winters_triangle))
+{
+  if (is.na(Winters_triangle$Tmin[i]))
+    Winters_triangle$Tmin[i] <- Winters_triangle$Tmin[i - 1]
+  if (is.na(Winters_triangle$Tmax[i]))
+    Winters_triangle$Tmax[i] <- Winters_triangle$Tmax[i - 1]
+}
+Winters_triangle$Temp_triangular <- NA
+
+# now we assign the daily Tmin value to the 6th hour of every day
+
+Winters_triangle$Temp_triangular[which(Winters_triangle$Hour == 6)] <-
+  Winters_triangle$Tmin[which(Winters_triangle$Hour == 6)]
+
+# we also assign the daily Tmax value to the 18th hour of every day
+
+Winters_triangle$Temp_triangular[which(Winters_triangle$Hour == 18)] <-
+  Winters_triangle$Tmax[which(Winters_triangle$Hour == 18)]
+
+# in the following step, we use the chillR function "interpolate_gaps"
+# to fill in all the gaps in the hourly record with straight lines
+
+Winters_triangle$Temp_triangular <-
+  interpolate_gaps(Winters_triangle$Temp_triangular)$interp
+Winters_triangle <-
+  Winters_triangle[, c("Year", "Month", "Day", "Hour", "Temp_triangular")]
+```
+
+### Comparison of Temperature Models
+
+Three methods were compared: the triangular model, the idealized model, and the empirical model. The data were merged and visualized:
+
+```{r}
+Winters_temps <-
+  merge(Winters_hours_gaps,
+        Winters_hours,
+        by = c("Year", "Month", "Day", "Hour"))
+Winters_temps <-
+  merge(Winters_temps,
+        Winters_triangle,
+        by = c("Year", "Month", "Day", "Hour"))
+Winters_temps <-
+  merge(Winters_temps,
+        Winters_ideal,
+        by = c("Year", "Month", "Day", "Hour"))
+```
+
+Accuracy of the three models was then compared using the Root Mean Square Error (RMSE) metric:
+
+```{r}
+RMSEP(Winters_temps$Temp_triangular, Winters_temps$Temp)
+RMSEP(Winters_temps$Temp_ideal, Winters_temps$Temp)
+RMSEP(Winters_temps$Temp_empirical, Winters_temps$Temp)
+```
+
+**Results:**
+
+-   Triangular method: RMSE = 4.7
+-   Idealized model: RMSE = 1.63
+-   Empirical model: RMSE = 1.41
+
+The empirical model achieves the highest accuracy. This approach is especially crucial for calculating the Chilling Hours.
+
+## `Exercises` on hourly temperatures
+
+1.  Choose a location of interest, find out its latitude and produce plots of daily sunrise, sunset and daylength.
+
+The Yakima Valley in Washington State, USA, is located at about 46.6° N latitude. This region has a continental climate with cold winters and hot, dry summers, creating ideal conditions for growing fruit trees. The valley is well known for producing a variety of fruits, including apples, cherries, pears, and grapes, which benefit from its distinct seasonal changes. Using the `daylength()` function, you could create plots showing daily sunrise, sunset, and day length times.
+
+```{r}
+Yakima <- daylength(latitude = 46.6, JDay = 1:365)
+
+Yakima_df <-
+  data.frame(
+    JDay = 1:365,
+    Sunrise = Yakima$Sunrise,
+    Sunset = Yakima$Sunset,
+    Daylength = Yakima$Daylength
+  )
+
+Yakima_df_longer <- pivot_longer(Yakima_df, cols = c(Sunrise:Daylength))
+
+ggplot(Yakima_df_longer, aes(JDay, value)) +
+  geom_line(lwd = 1.5) +
+  facet_grid(cols = vars(name)) +
+  ylab("Time of Day / Daylength (Hours)") +
+  theme_bw(base_size = 15)
+```
+
+2.  Produce an hourly dataset, based on idealized daily curves, for the `KA_weather` dataset (included in `chillR`)
+
+```{r, echo = TRUE, eval = FALSE}
+KA_hourly <- stack_hourly_temps(KA_weather, latitude = 50.4)
+```
+
+Based on idealized daily curves, the hourly dataset for Julian Day 6 (January 6th) is shown below:
+
+```{r echo = FALSE}
+KA_hourly <- stack_hourly_temps(KA_weather, latitude = 50.4)
+
+kable(KA_hourly$hourtemps[121:144, ], row.names = FALSE, align = c("c"))  %>%  kable_styling("striped", position = "left", font_size = 14)
+```
+
+3.  Produce empirical temperature curve parameters for the `Winters_hours_gaps` dataset, and use them to predict hourly values from daily temperatures (this is very similar to the example above, but please make sure you understand what’s going on).
+
+```{r}
+# Generating empirical daily temperature curve from observed hourly data
+empi_curve <- Empirical_daily_temperature_curve(Winters_hours_gaps)
+
+# Filling gaps in daily or hourly temperature data
+Winters_daily <- make_all_day_table(Winters_hours_gaps, input_timestep = "hour")
+
+# Using empirical coefficients to predict hourly temperatures based on daily temperatures
+Winters_hours <- Empirical_hourly_temperatures(Winters_daily, empi_curve)
+
+# Make an empirical dataset 
+Winters_hours <- Winters_hours[, c("Year", "Month", "Day", "Hour", "Temp")]
+colnames(Winters_hours)[ncol(Winters_hours)] <- "Temp_empirical"
+
+# Merge data frames
+Winters_temps <-
+  merge(Winters_hours_gaps,
+        Winters_hours,
+        by = c("Year", "Month", "Day", "Hour"))
+```
+
+```{r}
+# Covert Year, Month, Day and Hour columns into R's date formate and reorganizing the data frame
+Winters_temps[, "DATE"] <-
+  ISOdate(Winters_temps$Year,
+          Winters_temps$Month,
+          Winters_temps$Day,
+          Winters_temps$Hour)
+
+Winters_temps_to_plot <-
+  Winters_temps[, c("DATE",
+                    "Temp",
+                    "Temp_empirical")]
+Winters_temps_to_plot <- Winters_temps_to_plot[100:200, ]
+Winters_temps_to_plot <- pivot_longer(Winters_temps_to_plot, cols=Temp:Temp_empirical)
+colnames(Winters_temps_to_plot) <- c("DATE", "Method", "Temperature")
+
+ggplot(data = Winters_temps_to_plot, aes(DATE, Temperature, colour = Method)) +
+  geom_line(lwd = 1.3) + ylab("Temperature (°C)") + xlab("Date")
+```

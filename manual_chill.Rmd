@@ -1,0 +1,177 @@
+---
+title: "Manual chill"
+output: distill::distill_article
+---
+
+```{r, include = FALSE}
+library(chillR)
+library(kableExtra)
+library(tidyverse)
+```
+
+This chapter explains how to calculate Chilling Hours using R and the `chillR` package. Chilling Hours measure the number of hours where temperatures are between 0°C and 7.2°C, which is important for certain plants to meet their cold requirements during dormancy and grow properly.
+
+### **Data Requirements**
+
+The calculation requires hourly temperature data, which is not always available. The `chillR` package provides tools to approximate data from daily records. In this example, the dataset *Winters_hours_gaps* is used, containing hourly temperature data recorded in 2008 from a walnut orchard in Winters, California.
+
+### **Data Preparation**
+
+The `chillR` package is loaded using `library(chillR)`. The relevant columns (*year, month, day, hour, temperature*) are extracted and stored in a new dataset named `hourtemps`, ensuring the correct format for calculating Chilling Hours.
+
+```{r}
+hourtemps <- Winters_hours_gaps[,c("Year",
+                                   "Month",
+                                   "Day",
+                                   "Hour",
+                                   "Temp")]
+```
+
+### **Manual Calculation of Chilling Hours**
+
+Chilling Hours are defined as any hour where the temperature falls between 0°C and 7.2°C. In R, this is implemented using a logical condition:
+
+```{r}
+hourtemps[, "Chilling_Hour"] <- hourtemps$Temp >= 0 & hourtemps$Temp <= 7.2
+```
+
+A new column *Chilling_Hour* (TRUE/FALSE) is created to indicate whether a given hour qualifies. The total number of Chilling Hours can then be calculated using `sum(hourtemps$Chilling_Hour)`.
+
+### **Automation with Functions**
+
+To simplify the process, a function `CH()` was created to automatically add the *Chilling_Hour* column:
+
+```{r}
+CH <- function(hourtemps) {
+  hourtemps[, "Chilling_Hour"] <- hourtemps$Temp >= 0 & hourtemps$Temp <= 7.2
+  return(hourtemps)
+}
+```
+
+Additionally, a function `sum_CH()` was developed to calculate the total number of Chilling Hours between two specific dates:
+
+```{r}
+sum_CH <- function(hourtemps, Start_Year, Start_Month, Start_Day, Start_Hour, 
+                              End_Year, End_Month, End_Day, End_Hour) {
+  hourtemps[,"Chilling_Hour"] <- hourtemps$Temp >= 0 & hourtemps$Temp <= 7.2
+
+  Start_Index <- which(hourtemps$Year == Start_Year & hourtemps$Month == Start_Month &
+                       hourtemps$Day == Start_Day & hourtemps$Hour == Start_Hour)
+  End_Index <- which(hourtemps$Year == End_Year & hourtemps$Month == End_Month &
+                     hourtemps$Day == End_Day & hourtemps$Hour == End_Hour)
+
+  CHs <- sum(hourtemps$Chilling_Hour[Start_Index:End_Index])
+  return(CHs)
+}
+```
+
+This function uses the `which()` function to identify the relevant rows in the dataset based on the selected time range.
+
+### **Optimization of Function Parameters**
+
+Instead of passing year, month, day, and hour separately, compact strings in the format *YEARMODAHO* (e.g., 2008040100 for April 1, 2008, at 00:00) can be used. The function extracts values using `substr()` and converts them into numeric values.
+
+```{r}
+sum_CH <- function(hourtemps, startYEARMODAHO, endYEARMODAHO) {
+  hourtemps[, "Chilling_Hour"] <- hourtemps$Temp >= 0 & hourtemps$Temp <= 7.2
+
+  startYear <- as.numeric(substr(startYEARMODAHO, 1, 4))
+  startMonth <- as.numeric(substr(startYEARMODAHO, 5, 6))
+  startDay <- as.numeric(substr(startYEARMODAHO, 7, 8))
+  startHour <- as.numeric(substr(startYEARMODAHO, 9, 10))
+
+  endYear <- as.numeric(substr(endYEARMODAHO, 1, 4))
+  endMonth <- as.numeric(substr(endYEARMODAHO, 5, 6))
+  endDay <- as.numeric(substr(endYEARMODAHO, 7, 8))
+  endHour <- as.numeric(substr(endYEARMODAHO, 9, 10))
+
+  Start_Index <- which(hourtemps$Year == startYear & hourtemps$Month == startMonth &
+                       hourtemps$Day == startDay & hourtemps$Hour == startHour)
+  End_Index <- which(hourtemps$Year == endYear & hourtemps$Month == endMonth &
+                     hourtemps$Day == endDay & hourtemps$Hour == endHour)
+
+  CHs <- sum(hourtemps$Chilling_Hour[Start_Index:End_Index])
+  return(CHs)
+}
+```
+
+### **Application Example**
+
+Using the function `sum_CH()`, it was calculated that between April 1st and October 11th, 2008, the walnut orchard experienced **77 Chilling Hours**:
+
+```{r}
+sum_CH(hourtemps, startYEARMODAHO = 2008040100, endYEARMODAHO = 2008101100)
+```
+
+## `Exercises` on basic chill modeling
+
+1.  Write a basic function that calculates warm hours (\>25°C).
+
+```{r}
+WH <- function(data)
+  {data[, "Warm_Hour"] <- data$Temp > 25
+  return(data)
+}
+```
+
+2.  Apply this function to the `Winters_hours_gaps` dataset.
+
+```{r, eval = FALSE}
+WH(Winters_hours_gaps)
+```
+
+```{r, echo = FALSE}
+library(chillR)
+result <- WH(Winters_hours_gaps)
+kable(result[1:10, ], align = rep("c", ncol(hourtemps))) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover"), 
+    position = "center", 
+    font_size = 14,   
+    full_width = TRUE 
+  )
+```
+
+3.  Extend this function, so that it can take start and end dates as inputs and sums up warm hours between these dates.
+
+```{r}
+sum_WH <- function(data, 
+                   startYEARMODAHO,
+                   endYEARMODAHO)
+  
+{data[,"Warm_Hour"] <- data$Temp > 25
+
+startYear <- as.numeric(substr(startYEARMODAHO, 1, 4))
+startMonth <- as.numeric(substr(startYEARMODAHO, 5, 6))
+startDay <- as.numeric(substr(startYEARMODAHO, 7, 8))
+startHour <- as.numeric(substr(startYEARMODAHO, 9, 10))
+
+endYear <- as.numeric(substr(endYEARMODAHO, 1, 4))
+endMonth <- as.numeric(substr(endYEARMODAHO, 5, 6))
+endDay <- as.numeric(substr(endYEARMODAHO, 7, 8))
+endHour <- as.numeric(substr(endYEARMODAHO, 9, 10))
+
+
+Start_Date <- which(data$Year == startYear &
+                    data$Month == startMonth &
+                    data$Day == startDay &
+                    data$Hour == startHour)
+
+End_Date <- which(data$Year == endYear &
+                  data$Month == endMonth &
+                  data$Day == endDay &
+                  data$Hour == endHour)
+
+WHs <- sum(data$Warm_Hour[Start_Date:End_Date])
+return(WHs)
+}
+```
+
+Application Example:
+
+```{r}
+sum_WH(Winters_hours_gaps, startYEARMODAHO = 2008080100, 
+                           endYEARMODAHO = 2008083100)
+```
+
+During the month of August 2008, from the 1st to the 31st, the walnut orchard experienced a total of 283 warm hours (defined as hours when the temperature exceeded 25°C).

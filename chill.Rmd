@@ -1,0 +1,166 @@
+---
+title: "Chill models"
+output: distill::distill_article
+---
+
+In this chapter, various chill models will be explored using the `chillR` package in R, which simplifies the calculation of chilling hours and other dormancy-related metrics based on temperature data.
+
+## `Chilling_Hours()` Function
+
+The `Chilling_Hours()` function calculates the time during which temperatures fall within a key range for chill accumulation. It takes hourly temperature data as input and, by default, provides the cumulative amount of chilling accumulated over time.
+
+```{r, include=FALSE}
+library(chillR)
+```
+
+```{r}
+Chilling_Hours(Winters_hours_gaps$Temp)[1:100]
+```
+
+The result will show the first 100 values, where the cumulative chilling hours increase as the temperature falls within the specified range.
+
+## Utah Model
+
+The Utah Model assigns different weights to various temperature ranges, reflecting their impact on chill accumulation. The `Utah_Model()` function in `chillR` calculates these weighted chilling contributions for each hour of temperature data. The output will show the Utah model values for the first 100 hours, where positive, zero, and negative weights are applied based on the temperature:
+
+```{r}
+Utah_Model(Winters_hours_gaps$Temp)[1:100]
+```
+
+## Creating Custom Chill Models with `step_model()`
+
+The `step_model()` function, part of the `chillR` package, enables the creation of custom chill models based on temperature thresholds and weights. This process involves defining a data frame that specifies temperature ranges and their corresponding weights. Here’s an example of a data frame that defines temperature ranges and their corresponding weights:
+
+```{r}
+df <- data.frame(
+  lower = c(-1000, 1, 2, 3, 4, 5,    6),
+  upper = c(    1, 2, 3, 4, 5, 6, 1000),
+  weight = c(   0, 1, 2, 3, 2, 1,    0))
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(df, align = rep("c", ncol(df))) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                position = "center",
+                font_size = 14,
+                full_width = TRUE)
+```
+
+A function called `custom()` implements a chill model based on this data frame. This function is then applied to the `Winters_hours_gaps` dataset to calculate the chilling contributions:
+
+```{r}
+custom <- function(x) step_model(x, df)
+custom(Winters_hours_gaps$Temp)[1:100]
+```
+
+## Dynamic model
+
+The Dynamic Model provides a more complex and reliable approach to calculating chill, with the `Dynamic_Model()` function handling the intricate equations involved. This function can be easily applied to the `Winters_hours_gaps` dataset, producing output that displays dynamic chill values for the first 100 hours, reflecting the underlying physiological processes:
+
+```{r}
+Dynamic_Model(Winters_hours_gaps$Temp)[1:100]
+```
+
+## `Chilling` and `tempResponse` functions
+
+The `chillR` package offers several functions for analyzing hourly temperature data, including wrapper functions that enable the computation of chill between specific start and end dates. The `chilling()` function automatically calculates various basic metrics, including Chilling Hours, Utah Model, Dynamic Model, and Growing Degree Hours. It is important to use the `make_JDay()` function to add Julian dates (which count the days of the year) to the dataset, ensuring proper functionality.
+
+```{r}
+chill_output <- chilling(make_JDay(Winters_hours_gaps), Start_JDay = 90, End_JDay = 100)
+```
+
+```{r, echo = FALSE}
+kable(chill_output, align = rep("c", ncol(Winters_hours_gaps))) %>%
+  kable_styling("striped",
+                position = "center",
+                font_size = 14,
+                full_width = TRUE)%>%
+  scroll_box(width = "100%")
+```
+
+However, there may be instances where not all metrics are desired, or there is a need for different metrics altogether. In such cases, the `tempResponse` function can be employed. This function is similar to `chilling()` but offers the flexibility to take a list of specific temperature models to be computed as input.
+
+```{r}
+chill_output <- tempResponse(make_JDay(Winters_hours_gaps), 
+                       Start_JDay = 90, 
+                       End_JDay = 100, 
+                       models = list(Chill_Portions = Dynamic_Model, GDH = GDH))
+```
+
+```{r, echo = FALSE}
+kable(chill_output, align = rep("c", ncol(chill_output))) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14, 
+                full_width = TRUE,  
+                bootstrap_options = c("striped", "hover", "responsive"))
+```
+
+This will return only the Dynamic Model and Growing Degree Hours (GDH**)** values for the specified period.
+
+## `Exercises` on chill models
+
+1.  Run the `chilling()` function on the `Winters_hours_gap` dataset.
+
+```{r}
+august <- chilling(make_JDay(Winters_hours_gaps), Start_JDay = 214, End_JDay = 244)
+```
+
+```{r, echo = FALSE}
+kable(august, align = rep("c", ncol(august))) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14, 
+                full_width = FALSE,  
+                bootstrap_options = c("striped", "hover", "responsive")) %>%
+  scroll_box(width = "100%")
+```
+
+2.  Create your own temperature-weighting chill model using the `step_model()` function.
+
+```{r}
+df <- data.frame(
+  lower = c(-1000, 0,  5, 10, 15, 20,   25),  
+  upper = c(    0, 5, 10, 15, 20, 25, 1000), 
+  weight = c(   0, 1,  2,  3,  2,  1,    0))
+
+custom <- function(x) step_model(x, df)
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(df, align = rep("c", ncol(df))) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                position = "center",
+                font_size = 14,
+                full_width = TRUE)
+```
+
+3.  Run this model on the `Winters_hours_gaps` dataset using the `tempResponse()` function.
+
+```{r}
+models <- list(
+  Chilling_Hours = Chilling_Hours,
+  Utah_Chill_Units = Utah_Model,
+  Chill_Portions = Dynamic_Model,
+  GDH = GDH,
+  custom = custom)
+
+result <- tempResponse(make_JDay(Winters_hours_gaps), 
+                       Start_JDay = 214, 
+                       End_JDay = 244, 
+                       models)
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+
+kable(result, align = rep("c", ncol(result))) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "responsive"), 
+    position = "center", 
+    font_size = 14,   
+    full_width = TRUE) %>%
+   scroll_box(width = "100%")
+```

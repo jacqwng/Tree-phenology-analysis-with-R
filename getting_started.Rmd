@@ -1,0 +1,51 @@
+---
+title: "Learning goals and tools used in the Module"
+output: distill::distill_article
+---
+
+# Learning goals
+
+The content begins with an introduction to phenology (with a special emphasis on dormancy) as well as an overview of climate change. It then focuses heavily on the practical application of the `chillR` package for R. This tool has been continuously developed since 2013 by [Prof. Dr. Eike Lüdeling](https://www.gartenbauwissenschaften.uni-bonn.de/en/staff/eike-luedeling), head of the HortiBonn research group at the [Institute of Crop Science and Resource Conservation (INRES)](https://www.inres.uni-bonn.de/de) at the University of Bonn, to support this type of analysis.
+
+This course will offer the following skills and experiences:
+
+-   Knowledge about phenology
+-   Knowledge about tree dormancy
+-   Understanding of climate change impact projection methods
+-   Appreciation for the importance of risks and uncertainty in climate change projection
+-   Understanding of how to use some staple tools of R code development
+-   Ability to use `chillR` functions for climate change impact projection
+-   Ability to use `chillR` functions for tree phenology analysis
+-   Understanding and ability to use the `PhenoFlex` dormancy analysis framework
+
+# Tools
+
+This course is designed to provide knowledge about tree phenology, climate change, and related topics, along with hands-on exercises to demonstrate the functionalities of the `chillR` package. It is recommended to document everything learned in a `learning logbook`. To engage in these practical components effectively, various tools are required. Since `chillR` is an [R](https://www.r-project.org/) package, using R, preferably through the [RStudio](https://posit.co/download/rstudio-desktop/) interface, will be necessary.
+
+Although it is possible to run RStudio on a local computer and save files directly on the hard drive, this approach differs from the methods commonly used by professional programmers. To align with standard programming practices, familiarity with certain code development tools is essential. This course will therefore cover the basics of using [Git](https://git-scm.com/) and [GitHub](https://github.com/), which are valuable tools for organizing, securing, and sharing code. Additionally, proper documentation techniques in R will be introduced, focusing on creating well-structured, professional reports using [RMarkdown](https://rmarkdown.rstudio.com/). While these tools may seem complex at first, their usefulness is likely to become clearer as they are used throughout the module.
+
+[Dr. Cory Whitney](https://inresgb-lehre.iaas.uni-bonn.de/author/dr.-cory-whitney/), a researcher at HortiBonn, has volunteered to create tutorial videos to provide an introduction to these tools.
+
+## R and RStudio
+
+The first video *Using R and RStudio* demonstrates how to install and run [R](https://www.r-project.org/) and [RStudio](https://posit.co/download/rstudio-desktop/):
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/WT3tKlzCZgo")
+```
+
+## Git and Github
+
+The next video Using *Git and Github* explores the programming version control environment [Git](https://git-scm.com/) and the interface [GitHub](https://github.com/), which is used to access these features:
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/S98XJTyIVaY")
+```
+
+## Rmarkdown
+
+In the last video *Using R Mardown*, [R Markdown](https://rmarkdown.rstudio.com/) will be examined, a powerful tool that enables the creation of sophisticated reports, websites, and more from R code:
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/hh4wyP8tvkI")
+```

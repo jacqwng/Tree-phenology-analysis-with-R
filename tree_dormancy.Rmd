@@ -1,0 +1,113 @@
+---
+title: "Tree dormancy in temperate fruit trees"
+output: distill::distill_article
+---
+
+This chapter explores dormancy in temperate fruit trees. This topic remains complex and has many unanswered questions. A central question for researchers is, “How do trees know when to flower?” Although it seems clear that trees bloom in spring, the reality is more complicated. This chapter provides a better understanding of dormancy and demonstrates how to use the `chillR` tool to predict flowering times, even in the face of challenges posed by global warming.
+
+## Dormancy definition
+
+Tree dormancy is a state of reduced activity that occurs when environmental conditions are unfavorable, especially during winter. This state acts as a survival strategy, helping trees withstand extreme temperatures, water shortages, and other stress factors. During dormancy, trees slow down or stop their growth to conserve energy and avoid damage. Dormancy is a continuous process divided into three phases:
+
+## Dormancy Establishment
+
+Dormancy establishment is the process where temperate trees transition from active growth in summer to a dormant state in autumn. This shift is mainly triggered by shorter daylight hours and decreasing temperatures, causing buds to form, growth to stop, and leaves to fall. The importance of these factors varies by species, with some trees responding more to day length and others to temperature.
+
+## Endo-dormancy
+
+Endo-dormancy is a phase of dormancy controlled by the plant's internal factors, where growth is suppressed even under favorable conditions. It requires a period of cold exposure (chilling) to release the buds from this state, preventing premature growth during temporary warm spells in winter. Low temperatures are the main trigger for breaking endo-dormancy, while the role of light (photoperiod) is still uncertain.
+
+## Eco-dormancy
+
+Eco-dormancy is the phase after endo-dormancy, where buds have regained their ability to grow but remain inactive due to unfavorable environmental conditions, mainly low temperatures. During this phase, growth is on hold until warmer temperatures trigger it. Heat accumulation is needed to resume growth. Eco-dormancy ends when enough heat has been accumulated, leading to visible growth changes, typically in late winter or early spring.
+
+The below video *Introduction to dormancy* by [Dr. Erica Fadón](https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ) gives the basic knowledge of this dormancy phases and processes that regulate dormancy.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/qh9AZDmOm3o")
+```
+
+## Dormancy physiology
+
+Dormancy as a whole is the result of complex interactions between numerous physiological processes that occur in different parts of the tree, such as buds, twigs, meristems, and vascular tissues. We divide these processes into four main themes:
+
+-   Transport: occurs at both the whole-plant and cellular levels
+-   Phytohormone Dynamics: behavior and levels of plant hormones during dormancy
+-   Genetic and Epigenetic Regulation: how genetic factors and their modifications influence dormancy
+-   Dynamics of Nonstructural Carbohydrates: changes in carbohydrate levels that affect dormancy
+
+The following figure from the study ["A conceptual framework for Winter Dormancy in Deciduous Trees"](https://www.mdpi.com/2073-4395/10/2/241#) by Fadón et al. (2015) presents a conceptual framework of winter dormancy in deciduous trees and summarizes the three dormancy phases along with their respective physiological processes.
+
+![**Conceptual framework of winter dormancy in deciduous trees. The dormancy framework (gray background) indicates three main phases: (a) dormancy establishment (light gray), (b) endo-dormancy (dark gray), and (c) eco-dormancy (medium gray). For each phase (a–c), the dormancy-related physiological processes are represented by colored shapes and numbers (0 to 4).**](images/framework.png)
+
+All the processes depicted are explained in detail in the video below, *Dormancy Physiology* by [Dr. Erica Fadón](https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ).
+
+```{r,echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/HriLSz77QEQ")
+```
+
+## Experimental and statistical determination of chilling and forcing periods
+
+Dormancy consists of two phases where temperatures have opposite effects on flowering. During endodormancy, higher chill accumulation leads to earlier flowering, whereas similar cool temperatures during ecodormancy can delay flowering. The challenge lies in differentiating between these two phases, as the tree buds appear to be in the same developmental stage throughout. To address this, there are two methods available:
+
+-   Experimental method: collecting buds periodically during winter, exposing them to favorable growth conditions, and evaluating bud break to determine when dormancy is overcome
+
+-   Statistical method: uses long-term phenological data and temperature records to estimate the dates of chilling fulfillment and heat accumulation through partial least squares (PLS) regression analysis
+
+The video *Dormancy determination* covers the experimental and statistical methods to determine the chilling and forcing periods for temperate fruit trees to overcome dormancy and initiate growth. It explains the concept of dormancy, its phases (endodormancy and ecodormancy), and the temperature requirements for breaking dormancy.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/hMM27ktlzBM")
+```
+
+## Phenology record and BBCH scale
+
+Phenology is the study of periodic events in biological life cycles and how these are influenced by seasonal and interannual variations in climate. This module will involve working with phenology data sets, primarily focusing on a specific stage, usually budbreak, even though trees pass through various developmental stages during the year. These stages are typically identified by numerical codes.
+
+To describe these growth stages systematically, the BBCH scale is employed. This internationally standardized system outlines the growth and developmental phases of plants. The BBCH scale consists of ten main stages, known as principal growth stages, which are numbered from 0 to 9. Each of these main stages is further divided into substages, enabling a more detailed description of a plant's development.
+
+Principal growth stages:
+
+| Stage | Description |
+|------------------------------------|------------------------------------|
+| 0 | Germination / sprouting / bud development |
+| 1 | Leaf development (main shoot) |
+| 2 | Formation of side shoots / tillering |
+| 3 | Stem elongation or rosette growth / shoot development (main shoot) |
+| 4 | Development of harvestable vegetative plant parts or vegetatively propagated organs / booting (main shoot) |
+| 5 | Inflorescence emergence |
+| 6 | Flowering (main shoot) |
+| 7 | Development of fruit |
+| 8 | Ripening or maturity of fruit and seed |
+| 9 | Senescence, beginning of dormancy |
+
+For a comprehensive overview of phenology and the BBCH scale, the video *Phenology* by [Dr. Erica Fadón](https://scholar.google.de/citations?hl=de&user=MTmTnnsAAAAJ) is recommended. In this video, Dr. Fadón explains the concept of phenology and how the BBCH scale uses numerical codes to represent the different developmental stages of trees, from budding and flowering to fruit ripening and leaf fall.
+
+```{r, echo=FALSE}
+knitr::include_url("https://www.youtube.com/embed/Ssoe6Ahv88Y")
+```
+
+## `Excercises` on tree dormancy
+
+1.  Put yourself in the place of a breeder who wants to calculate the temperature requirements of a newly released cultivar. Which method will you use to calculate the chilling and forcing periods? Please justify your answer.
+
+As a breeder aiming to calculate the temperature requirements for the chilling and forcing periods of a newly released cultivar, I would use the experimental method to determine the chilling and forcing periods. Here's my justification:
+
+-   **Direct measurement of bud response:** The experimental method allows me to directly observe when buds break under controlled temperature conditions. By regularly collecting buds during winter and placing them in ideal growth conditions, I can determine exactly when dormancy ends. This practical approach gives me quick and useful information about the specific cultivar
+
+-   **Specific to the cultivar:** Each cultivar has its own unique chilling and forcing needs. The experimental method looks at the specific traits of the new cultivar, making sure the results are relevant and applicable to that variety
+
+-   **Immediate results for breeding decisions:** The experimental method provides quick evaluations of bud break, allowing me to make faster decisions about breeding and managing the new cultivar
+
+2.  Which are the advantages (2) of the BBCH scale compared with earlier scales?
+
+-   **Standardization:** The BBCH scale provides a standardized framework for describing plant growth stages, enabling consistent communication and comparisons across studies
+-   **Detailed Staging**: It offers a more granular categorization of developmental stages using a two-digit system, allowing for a better understanding of plant development and environmental impacts.
+
+3.  Classify the following phenological stages of sweet cherry according to the BBCH scale:
+
+![](images/pheno_stages.png)
+
+-   **left image:** BBCH stage 55 (single flower buds visible (still closed), green scales slightly open)
+-   **middle image:** BBCH stage 65 (full flowering: at least 50% of flowers open, first petals falling)
+-   **right image:** BBCH stage 89 (fruit ripe for harvesting)

@@ -1,0 +1,311 @@
+---
+title: "Some useful tools in R"
+output: distill::distill_article
+---
+
+## An evolving language - and a lifelong learning process
+
+The R universe is continuously evolving, offering more than just its original base functions. Over time, modern tools and more elegant programming styles have become integral. In the upcoming chapters, we will introduce some of these new tools, along with the basics required to use them effectively.
+
+## The `tidyverse`
+
+Many of the tools introduced here come from the `tidyverse` – a collection of packages developed by [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham) and his team. This collection offers numerous ways to improve programming skills. In this book, only the functions that are directly used will be covered. A major advantage of the tidyverse is that with a single command – `library(tidyverse)` – all functions in the package collection become available.
+
+## The `ggplot2` package
+
+The `ggplot2` package, first released by [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham) in 2007, has become one of the most popular R packages because it significantly simplifies the creation of attractive graphics. The package history can be found [here](https://en.wikipedia.org/wiki/Ggplot2), and an introduction with links to various tutorials is available [here](https://ggplot2.tidyverse.org/).
+
+## The `tibble` package
+
+A `tibble` is an enhanced version of a `data.frame` offering several improvements. The most notable improvement is that `tibbles` avoid the common `data.frame` behavior of unexpectedly converting strings into factors. Although `tibbles` are relatively new here, they will be used throughout the rest of the book.
+
+To create a `tibble` from a regular `data.frame` (or a similar structure), the `as_tibble` command can be used:
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+dat <- data.frame(a = c(1, 2, 3), b = c(4, 5, 6))
+d <- as_tibble(dat)
+d
+```
+
+## The `magrittr` package - pipes
+
+`Magrittr` helps organize steps applied to the same dataset by using the pipe operator `%>%`. This operator links multiple operations on a data structure, such as a `tibble`, making it easier to perform tasks like calculating the sum of all numbers in the dataset:
+
+```{r}
+d %>% sum()
+```
+
+After the pipe operator `%>%`, the next function automatically takes the piped-in data as its first input, so it’s unnecessary to specify it explicitly. Additional commands can be chained by adding more pipes, allowing for building more complex workflows, as shown in examples later.
+
+## The `tidyr` package
+
+The `tidyr` package offers helpful functions for organizing data. The `KA_weather` dataset from `chillR` will be used here to illustrate some of these functions:
+
+```{r}
+library(chillR)
+```
+
+```{r}
+KAw <- as_tibble(KA_weather[1:10,])
+KAw
+```
+
+### `pivot_longer`
+
+The `pivot_longer` function reshapes data from separate columns (like `Tmin` and `Tmax`) into individual rows. This transformation is often necessary for tasks like plotting data with the `ggplot2` package. The function can be combined with a pipe for a streamlined workflow:
+
+```{r}
+KAwlong <- KAw %>% pivot_longer(cols = Tmax:Tmin)
+KAwlong
+```
+
+### `pivot_wider`
+
+The `pivot_wider` function allows for the opposite transformation of `pivot_longer`, converting rows back into separate columns:
+
+```{r}
+KAwwide <- KAwlong %>% pivot_wider(names_from = name) 
+KAwwide
+```
+
+### `select`
+
+The `select` function allows users to choose a subset of columns from a `data.frame` or `tibble`:
+
+```{r}
+KAw %>% select(c(Month, Day, Tmax))
+```
+
+### `filter`
+
+The `filter` function reduces a `data.frame` or `tibble` to just the rows that fulfill certain conditions:
+
+```{r}
+KAw %>% filter(Tmax > 10)
+```
+
+### `mutate`
+
+The `mutate` function is essential for creating, modifying, and deleting columns in a `data.frame` or `tibble`. For example, it can be used to add new columns, such as converting `Tmin` and `Tmax` to Kelvin:
+
+```{r}
+KAw_K <- KAw %>% mutate(Tmax_K = Tmax + 273.15, Tmin_K = Tmin + 273.15)
+KAw_K
+```
+
+To delete the columns created with `mutate`, you can set them to `NULL`:
+
+```{r}
+KAw_K %>% mutate(Tmin_K = NULL, Tmax_K = NULL)
+```
+
+Next, the original temperature values will be replaced directly with their corresponding Kelvin values:
+
+```{r}
+KAw %>% mutate(Tmin = Tmin + 273.15, Tmax = Tmax + 273.15)
+```
+
+### `arrange`
+
+The `arrange` function sorts data in `data.frames` or `tibbles`:
+
+```{r}
+KAw %>% arrange(Tmax, Tmin)
+```
+
+It can also sort in descending order:
+
+```{r}
+KAw %>% arrange(desc(Tmax), Tmin)
+```
+
+## Loops
+
+Understanding loops is essential for efficient coding. Loops enable the repetition of operations multiple times without needing to retype or copy-paste code. There are two primary types of loops: **for loops** and **while loops**.
+
+### *For* loops
+
+In a for loop, explicit instructions dictate how many times the code inside the loop should be executed, based on a vector or list of elements:
+
+```{r}
+for (i in 1:3) print("Hello")
+```
+
+This code executes the loop three times, printing "Hello" each time. A more complex example uses multiple lines inside curly brackets:
+
+```{r}
+addition <- 1
+
+for (i in 1:3)
+{
+  addition <- addition + 1
+  print(addition)
+}
+```
+
+You can also use a variable such as `i` in more creative ways within the loop:
+
+```{r}
+names <- c("Paul", "Mary", "John")
+
+for (i in 1:3)
+{
+  print(paste("Hello", names[i]))
+}
+```
+
+### *While* loops
+
+A `while` loop continues until a condition is no longer met:
+
+```{r}
+cond <- 5
+
+while (cond > 0)
+{
+  print(cond)
+  cond <- cond - 1
+}
+```
+
+## `apply` functions
+
+R offers a more efficient way to perform operations on multiple elements simultaneously using functions from the **apply** family: `apply`, `lapply`, and `sapply`. These functions require two key arguments: the list of items to apply the operation to and the operation itself.
+
+### `sapply`
+
+The `sapply` function is used to apply an operation to a vector:
+
+```{r}
+func <- function(x) x + 1
+sapply(1:5, func)
+```
+
+### `lapply`
+
+The `lapply` function returns a list as the output, even if the input is a vector:
+
+```{r}
+lapply(1:5, func)
+```
+
+### `apply`
+
+The `apply` function is designed for arrays, allowing operations to be performed either on rows (`MARGIN = 1`) or columns (`MARGIN = 2`):
+
+```{r}
+mat <- matrix(c(1, 1, 1, 2, 2, 2, 3, 3, 3), c(3, 3))
+apply(mat, MARGIN = 1, sum) # sum of rows
+apply(mat, MARGIN = 2, sum) # sum of columns
+```
+
+## `Exercises` on useful R tools
+
+1.  Based on the `Winters_hours_gaps` dataset, use `magrittr` pipes and functions of the `tidyverse` to accomplish the following:
+
+-   
+
+    a)  Convert the dataset into a `tibble`
+
+-   
+
+    b)  Select only the top 10 rows of the dataset
+
+```{r, include = FALSE}
+library(tidyverse)
+library(chillR)
+library(ggplot2)
+```
+
+```{r}
+WHG <- as_tibble(Winters_hours_gaps[1:10, ])
+WHG
+```
+
+-   
+
+    c)  Convert the `tibble` to a `long` format, with separate rows for `Temp_gaps` and `Temp`
+
+To see the difference between the columns `Temp_gaps` and `Temp`, rows 279 to 302 (Julian Day 15) are used below:
+
+```{r}
+WHG <- as_tibble(Winters_hours_gaps[279:302, ])
+WHGlong <- WHG %>% pivot_longer(cols = Temp_gaps:Temp)
+WHGlong
+```
+
+-   
+
+    d)  Use `ggplot2` to plot `Temp_gaps` and `Temp` as facets (point or line plot)
+
+```{r, warning = FALSE}
+ggplot(WHGlong, aes(Hour, value)) +
+  geom_line(lwd = 1.5) +
+  facet_grid(cols = vars(name)) +
+  ylab("Temperature (°C)") +
+  theme_bw(base_size = 15)
+```
+
+-   
+
+    e)  Convert the dataset back to the `wide` format
+
+```{r}
+WHGwide <- WHGlong %>% pivot_wider(names_from = name)
+WHGwide
+```
+
+-   
+
+    f)  Select only the following columns: `Year`, `Month`, `Day` and `Temp`
+
+```{r}
+WHG %>% select(c(Year, Month, Day, Temp))
+```
+
+-   
+
+    g)  Sort the dataset by the `Temp` column, in descending order
+
+```{r}
+WHG %>% arrange(desc(Temp))
+```
+
+2.  For the `Winter_hours_gaps` dataset, write a `for` loop to convert all temperatures (`Temp` column) to degrees Fahrenheit
+
+So that the execution of the following code does not take too long, only Julian Day 15 (rows 279 to 302) is used here. To convert the entire `Temp` column to Fahrenheit, just omit `[279:302]`
+
+```{r}
+Temp <- Winters_hours_gaps$Temp[279:302]
+
+for (i in Temp)
+{
+  Fahrenheit <- i * 1.8 + 32 
+  print(Fahrenheit)
+}
+```
+
+3.  Execute the same operation with a function from the `apply` family
+
+Here it is the same as in 2, just omit `[279:302]` to convert the entire `Temp` column
+
+```{r}
+
+x <- Winters_hours_gaps$Temp
+
+fahrenheit <- function(x)
+  x * 1.8 + 32
+
+sapply(x[279:302], fahrenheit)
+```
+
+4.  Now use the `tidyverse` function `mutate` to achieve the same outcome
+
+```{r}
+WHG_F <- WHG %>% mutate(Temp_F = Temp * 1.8 + 32)
+WHG_F
+```
