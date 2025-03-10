@@ -181,6 +181,10 @@ d-article li {
 .nav-right {
   padding: 0.35em;
 }
+/*-- Navbar Schriftgrößen-Anpassung --*/
+.navbar {
+    font-size: 16px; /* Setze hier deine gewünschte Schriftgröße */
+}
 
 /* remove scroll bar on right hand side */
 .d-flex{

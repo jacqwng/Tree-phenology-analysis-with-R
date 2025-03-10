@@ -2356,6 +2356,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   .nav-right {
     padding: 0.35em;
   }
+  /*-- Navbar Schriftgrößen-Anpassung --*/
+  .navbar {
+      font-size: 16px; /* Setze hier deine gewünschte Schriftgröße */
+  }
 
   /* remove scroll bar on right hand side */
   .d-flex{
@@ -2623,11 +2627,7 @@ Lessons
 <a href="save.html">Saving and loading data</a>
 <a href="historic.html">Historic temperature scenarios</a>
 <a href="future.html">Future temperature scenarios</a>
-<a href="cmip6.html">Making CMIP6 scenarios</a>
-<a href="cmip5.html">Making CMIP5 scenarios with the `ClimateWizard`</a>
-<a href="plotting.html">Plotting future scenarios</a>
-<a href="chill_model.html">Chill model comparison</a>
-<a href="simple.html">Simple phenology analysis</a>
+<a href="major_concepts.html">Major concepts</a>
 </div>
 </div>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
@@ -4171,31 +4171,32 @@ Prediction_coefficient
 </div>
 <p>Based on idealized daily curves, the hourly dataset for Julian Day 6 (January 6th) is shown below:</p>
 <div class="layout-chunk" data-layout="l-body">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
 <table class="table table-striped" style="font-size: 14px; ">
 <thead>
 <tr>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Year
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Month
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Day
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Tmax
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Tmin
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 JDay
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Hour
 </th>
-<th style="text-align:center;">
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
 Temp
 </th>
 </tr>
@@ -4827,6 +4828,7 @@ Temp
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <ol start="3" type="1">
 <li>Produce empirical temperature curve parameters for the <code>Winters_hours_gaps</code> dataset, and use them to predict hourly values from daily temperatures (this is very similar to the example above, but please make sure you understand what’s going on).</li>

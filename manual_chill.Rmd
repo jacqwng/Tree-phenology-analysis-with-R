@@ -174,4 +174,4 @@ sum_WH(Winters_hours_gaps, startYEARMODAHO = 2008080100,
                            endYEARMODAHO = 2008083100)
 ```
 
-During the month of August 2008, from the 1st to the 31st, the walnut orchard experienced a total of 283 warm hours (defined as hours when the temperature exceeded 25°C).
+During the month of August 2008, from the 1st to the 31st, the walnut orchard experienced a total of **283 warm hours** (defined as hours when the temperature exceeded 25°C).

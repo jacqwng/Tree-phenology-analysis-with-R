@@ -14,5 +14,7 @@ site: distill::distill_website
 
 # Welcome!
 
-Hi, my name is Jacqueline. I’m a master’s student in Crop Sciences at the [University of Bonn](https://www.uni-bonn.de/de). This is my learning logbook for the module “Tree phenology analysis with R”. This module provides an overview of methods to study the impact of climate and climate change on tree phenology. It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the University of Bonn, the material is accessible to anyone interested.
+Hi, my name is Jacqueline. I’m a master’s student in Crop Sciences at the [University of Bonn](https://www.uni-bonn.de/de). This is my learning logbook for the module “Tree phenology analysis with R”. This module provides an overview of methods to study the impact of climate and climate change on tree phenology. 
+
+It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the University of Bonn, the material is accessible to anyone interested.
 

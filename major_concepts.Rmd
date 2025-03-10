@@ -1,0 +1,129 @@
+---
+title: "Major concepts"
+output: distill::distill_article
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## Tree Dormancy 
+
+Woody plants in cold climates enter a dormant phase during winter. To
+resume growth in spring, they must first go through a period of cold
+exposure (endodormancy) and then a period of warmth (ecodormancy). The
+release from dormancy is influenced by factors such as intercellular
+communication, carbohydrate storage and transport, plant hormones, and
+the regulation of specific genes. The exact mechanisms are not yet fully
+understood, and there are no complete process-based models.
+
+## Climate Change 
+
+Global warming leads to changes in temperature and precipitation
+patterns worldwide. While the exact developments remain uncertain,
+climate scientists have a strong understanding to create models of
+future conditions. The extent of future warming depends on atmospheric
+greenhouse gas concentrations, which are uncertain. Therefore, different
+scenarios are used to represent these uncertainties. Effective climate
+change mitigation requires significant reductions in greenhouse gas
+emissions, particularly in the energy sector.
+
+## Phenology Modeling 
+
+Modeling phenology, which is the timing of plant growth phases, is
+challenging due to gaps in understanding. Various models exist for chill
+and heat accumulation, but estimates of their effects on phenology
+differ greatly. The Dynamic Model is the leading model for chill
+accumulation, while the Growing Degree Hour Model is favored for heat
+accumulation. Some comprehensive modeling frameworks attempt to predict
+future phenology based on temperature data, but they have limitations
+and fail to account for uncertainties.
+
+## Phenology Responses to Global Warming 
+
+Most plant species have advanced their phenology in response to rising
+temperatures. However, this trend may not continue indefinitely as
+warming progresses. In areas where temperatures are high enough to
+interfere with chill accumulation during endodormancy, phenology shifts
+may slow, stop, or even reverse. This hypothesis is supported by
+fundamental principles but requires further validation.
+
+## The `PhenoFlex` Modeling Framework 
+
+PhenoFlex integrates effective chill and heat accumulation models into a
+comprehensive framework to predict the timing of spring phenological
+phases. The model can be parameterized using long-term phenology data
+through an empirical fitting algorithm called Simulated Annealing. It
+allows the characterization of cultivar-specific temperature response
+functions. Initial results are promising, but the model has limitations,
+including challenges in generalizing across species and the risk of
+suboptimal parameters from the fitting procedure.
+
+## Key Concepts 
+
+-   **Reproducibility & Transparency:** Science should prioritize
+    reproducibility and transparency. While experiments are often
+    challenging to fully replicate, modeling studies typically allow for
+    higher reproducibility. Methods should be clearly documented, and
+    the code and raw data should be shared for verification.
+
+-   **Tools:** GitHub, R, RStudio, and various R add-ons were used in
+    this study to enhance workflows. Whether these tools will remain
+    relevant in the future is uncertain, but using effective tools
+    remains important.
+
+-   **Automation:** Repetitive tasks should be automated to free up time
+    for more creative and meaningful work. This also helps in generating
+    comparable results across different contexts efficiently.
+
+-   **The Power of R:** R is not just a statistical program but also a
+    powerful tool for advanced statistical analyses, spatial analyses,
+    animated visualizations, and interactive applications. R is free and
+    a valuable investment for any scientific career.
+
+-   **Curiosity and Interdisciplinarity:** Focusing too narrowly on one
+    field can lead to deep expertise but may stifle innovation. Exposure
+    to other fields fosters new perspectives and can lead to
+    groundbreaking discoveries.
+
+-   **Uncertainty:** Uncertainty is an inherent part of real-world
+    problems. Models are approximations of complex natural processes,
+    and acknowledging and quantifying this uncertainty is essential.
+
+-   **Ensemble Analysis:** In cases like climate change, where
+    uncertainty arises from not knowing which scenario will unfold,
+    ensemble analysis combines multiple models and scenarios to provide
+    a more comprehensive view of possible future developments.
+
+-   **P-Hacking:** P-hacking refers to manipulating data to find random
+    correlations that lack true significance. This leads to findings
+    that do not provide meaningful insights into the system.
+
+-   **Dangers of Machine Learning:** Machine learning can be problematic
+    when applied without domain-specific knowledge, as many models
+    operate as “black boxes,” making it difficult to understand how
+    conclusions are reached. This increases the risk of
+    misinterpretation and flawed conclusions.
+
+-   **Rationalizing:** A problematic practice in science involves
+    drawing conclusions from data and then crafting stories to justify
+    the results. These explanations can mislead and should be avoided.
+
+-   **Overfitting:** When models are too complex and capture random
+    noise in the data rather than the true underlying process,
+    overfitting occurs. This leads to incorrect conclusions.
+
+-   **Process and Model Validation:** Models should not only fit the
+    data but also accurately represent the underlying biological or
+    ecological processes. Models need validation to ensure they provide
+    reliable predictions in real-world scenarios.
+
+-   **Model Validation and Purpose:** Validation should reflect the
+    context of the intended prediction. For example, climate change
+    models should use data from warmer conditions, and prediction models
+    should be tested on years without prior data.
+
+-   **Our Role in Research:** Scientific research should be grounded in
+    theory, hypotheses, and predictions. There is a debate over whether
+    prior knowledge and beliefs should influence research, but
+    integrating expertise can enhance scientific inquiry if assumptions
+    are made explicit and continuously questioned.

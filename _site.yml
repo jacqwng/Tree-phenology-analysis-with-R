@@ -36,16 +36,8 @@ navbar:
           href: historic.html
         - text: "Future temperature scenarios"
           href: future.html
-        - text: "Making CMIP6 scenarios"
-          href: cmip6.html
-        - text: "Making CMIP5 scenarios with the `ClimateWizard`"
-          href: cmip5.html
-        - text: "Plotting future scenarios"
-          href: plotting.html
-        - text: "Chill model comparison"
-          href: chill_model.html
-        - text: "Simple phenology analysis"
-          href: simple.html
+        - text: "Major concepts"
+          href: major_concepts.html
         
 
 output: distill::distill_article

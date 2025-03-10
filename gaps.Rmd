@@ -1,0 +1,316 @@
+---
+title: "Filling gaps in temperature records"
+output: distill::distill_article
+---
+
+Weather data often contains gaps due to equipment malfunctions, power outages, or storage problems. These gaps create challenges for modeling agroclimatic conditions, requiring effective gap-filling methods.
+
+## Filling Short Gaps in Daily Records
+
+For short gaps (2-3 days), linear interpolation estimates missing values by averaging the last known and first known values around the gap. The `chillR` package provides the `interpolate_gaps()` function for this:
+
+```{r, include=FALSE}
+library(chillR)
+library(tidyverse)
+library(kableExtra)
+library(magrittr)
+```
+
+```{r}
+weather <- KA_weather %>% make_all_day_table()
+
+Tmin_int <- interpolate_gaps(weather[,"Tmin"])
+weather <- weather %>% mutate(Tmin = Tmin_int$interp, Tmin_interpolated = Tmin_int$missing)
+
+Tmax_int <- interpolate_gaps(weather[,"Tmax"])
+weather <- weather %>% mutate(Tmax = Tmax_int$interp, Tmax_interpolated = Tmax_int$missing)
+
+KA_weather_gap <- rbind(KA_weather, c(Year = 2011,
+                                      Month = 3,
+                                      Day = 3,
+                                      Tmax = 26,
+                                      Tmin = 14)) 
+```
+
+The `fix_weather()` function can also be used to fill gaps:
+
+```{r}
+fixed_winter_days <- KA_weather_gap %>% fix_weather(start_year = 2000, 
+                                                    end_year = 2011, 
+                                                    start_date = 300, 
+                                                    end_date = 100)
+fixed_all_days <- KA_weather_gap %>% fix_weather()
+```
+
+The function returns a `weather` dataframe with interpolated data and a `QC` object summarizing interpolation quality:
+
+```{r, eval=FALSE}
+fixed_winter_days$QC
+```
+
+```{r, echo = FALSE}
+kable(fixed_winter_days$QC, align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) %>% 
+  scroll_box(width = "100%",
+             height = "300px",
+             fixed_thead = TRUE)
+
+```
+
+```{r, eval=FALSE}
+fixed_all_days$QC
+```
+
+```{r, echo = FALSE}
+kable(fixed_all_days$QC, align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) %>% 
+  scroll_box(width = "100%",
+             height = "300px",
+             fixed_thead = TRUE)
+```
+
+A plot illustrates the effect of gap length on interpolation accuracy:
+
+```{r}
+gap_weather <- KA_weather[200:305, ]
+gap_weather[ ,"Tmin_observed"] <- gap_weather$Tmin
+gap_weather$Tmin[c(2, 4:5, 7:9, 11:14, 16:20, 22:27, 29:35, 
+                   37:44, 46:54, 56:65, 67:77, 79:90, 92:104)] <- NA
+fixed_gaps <- fix_weather(gap_weather)$weather
+
+ggplot(data = fixed_gaps, aes(DATE, Tmin_observed)) +
+  geom_line(lwd = 1.3) +
+  xlab("Date") +
+  ylab("Daily minimum temperature (°C)") +
+  geom_line(data = fixed_gaps, aes(DATE, Tmin), col = "red", lwd = 1.3)
+```
+
+Interpolation errors increase with gap size:
+
+```{r}
+fixed_gaps[,"error"] <- abs(fixed_gaps$Tmin - fixed_gaps$Tmin_observed)
+
+ggplot(data = fixed_gaps, aes(DATE, error)) +
+  geom_line(lwd = 1.3) +
+  xlab("Date") +
+  ylab("Error introduced by interpolation (°C)") +
+  geom_point(data = fixed_gaps[which(!fixed_gaps$no_Tmin),], aes(DATE, error), col = "red", cex = 3)
+```
+
+## Filling Long Gaps in Daily Records
+
+For long gaps, data from nearby weather stations is used. The `patch_weather()` function in `chillR` helps with this:
+
+```{r, echo=FALSE}
+Bonn <- read.csv("data/Bonn_chillR_weather.csv")
+Bonn_QC <- fix_weather(Bonn)$QC
+station_list <- read.csv("data/station_list.csv")
+```
+
+```{r, eval=FALSE}
+station_list <- handle_gsod(action = "list_stations",
+                            location = c(7.10, 50.73),
+                            time_interval = c(1990, 2020))
+```
+
+Relevant stations are downloaded:
+
+```{r, echo=FALSE, message=FALSE}
+patch_weather<-load_temperature_scenarios("data/", "patch_weather")
+```
+
+```{r, eval=FALSE}
+patch_weather <- 
+  handle_gsod(action = "download_weather", 
+              location = as.character(station_list$chillR_code[c(2, 3, 6)]), 
+              time_interval = c(1990, 2020)) %>% 
+  handle_gsod()
+```
+
+Gaps are filled using `patch_daily_temperatures()`:
+
+```{r}
+patched <- patch_daily_temperatures(weather = Bonn, patch_weather = patch_weather)
+```
+
+Patch statistics are examined:
+
+```{r, eval=FALSE}
+patched$statistics[[1]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[1]], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+```{r}
+patched$statistics[[2]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[2]], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+```{r}
+patched$statistics[[3]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[3]], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+To improve accuracy, mean bias and standard deviation bias limits are set:
+
+```{r}
+patched <- patch_daily_temperatures(weather = Bonn, 
+                                    patch_weather = patch_weather, 
+                                    max_mean_bias = 1, 
+                                    max_stdev_bias = 2)
+```
+
+Final gaps are identified:
+
+```{r}
+post_patch_stats <- fix_weather(patched)$QC
+```
+
+Remaining short gaps are filled with interpolation:
+
+```{r}
+Bonn_weather <- fix_weather(patched)
+```
+
+For seasonally adjusted bias correction, `patch_daily_temps()` is used:
+
+```{r}
+patched_monthly <- patch_daily_temps(weather = Bonn, 
+                                     patch_weather = patch_weather, 
+                                     max_mean_bias = 1, 
+                                     max_stdev_bias = 2, 
+                                     time_interval = "month")
+```
+
+This function allows for interval-based bias corrections:
+
+```{r warning=FALSE}
+patched_2weeks <- patch_daily_temps(weather = Bonn, 
+                                    patch_weather = patch_weather, 
+                                    max_mean_bias = 1, 
+                                    max_stdev_bias = 2, 
+                                    time_interval = "2 weeks")
+```
+
+Using finer time intervals improves bias correction accuracy, but requires sufficient data for reliability.
+
+## `Exercises` on filling gaps
+
+1.  Use `chillR` functions to find out how many gaps you have in your dataset (even if you have none, please still follow all further steps)
+
+```{r}
+Yakima <- read.csv("Yakima/Yakima_chillR_weather.csv")
+Yakima_QC <- fix_weather(Yakima)$QC
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(Yakima_QC, align = c("c")) %>%
+  kable_styling("striped", position = "left", font_size = 14) %>% 
+  scroll_box(width = "100%",
+             height = "300px",
+             fixed_thead = TRUE)
+```
+
+2.  Create a list of the 25 closest weather stations using the `handle_gsod` function
+
+```{r}
+station_list_Yakima <- handle_gsod(action = "list_stations",
+                                   location = c(long = -120.50, lat = 46.60),
+                                   time_interval = c(1990, 2020))
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(station_list_Yakima, align = c("c")) %>%
+  kable_styling("striped", position = "left", font_size = 14) %>% 
+  scroll_box(width = "100%",
+             height = "300px",
+             fixed_thead = TRUE)
+```
+
+3.  Identify suitable weather stations for patching gaps
+4.  Download weather data for promising stations, convert them to `chillR` format and compile them in a list
+
+```{r load_patch_weather, echo=FALSE, message=FALSE}
+patch_weather<-load_temperature_scenarios("Yakima/", "patch_weather")
+```
+
+```{r, eval=FALSE}
+patch_weather <-
+  handle_gsod(action = "download_weather",
+              location = as.character(station_list_Yakima$chillR_code[c(4, 6, 8)]),
+              time_interval = c(1990, 2020)) %>%
+  handle_gsod()
+```
+
+5.  Use the `patch_daily_temperatures` function to fill gaps
+
+```{r}
+patched <- patch_daily_temperatures(weather = Yakima,
+                                    patch_weather = patch_weather)
+```
+
+```{r, eval = FALSE}
+# Patch statistics for YRANGE OP 13 /AKIMA TRAINING CENTER
+patched$statistics[[1]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[1]], align = c("c")) %>%
+  kable_styling("striped", 
+                 position = "center", 
+                 font_size = 14) 
+```
+
+```{r}
+# Patch statistics for HANFORD AIRPORT
+patched$statistics[[2]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[2]], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) 
+```
+
+```{r}
+# Patch statistics for BOWERS FIELD AIRPORT
+patched$statistics[[3]]
+```
+
+```{r, echo = FALSE}
+kable(patched$statistics[[3]], align = c("c")) %>%
+  kable_styling("striped", 
+                   position = "center", 
+                   font_size = 14) 
+```
+
+6.  Investigate the results - have all gaps been filled?
+
+```{r}
+write.csv(patched$weather,
+          "Yakima/Yakima_weather.csv", row.names = FALSE)
+```

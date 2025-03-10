@@ -1,0 +1,76 @@
+---
+title: "Saving and loading data"
+output: distill::distill_article
+---
+
+```{r, include = FALSE}
+library(chillR)
+library(tidyverse)
+library(kableExtra)
+Temperatures <- read_tab("Yakima/Temperatures.csv")
+```
+
+The compilation time increases with more data processing, especially with a large dataset (100 years of hourly weather data). Each hourly calculation requires extensive computations, and scenario analysis for climate change will add even more complexity. To handle this, saving results for faster reloading is essential.
+
+Saving and Loading Data R provides the save and load functions, but simpler formats like CSV are preferred for easy inspection. Here's how to save and load data using CSV:
+
+## Saving Data
+
+```{r}
+# Save Temperatures dataset as CSV
+write.csv(Temperatures, file = "Yakima/Temperatures.csv", row.names = FALSE)
+```
+
+## Loading Data
+
+```{r}
+# Load data using chillR's read_tab function for compatibility across regions
+Temperatures <- read_tab("Yakima/Temperatures.csv")
+```
+
+`read_tab` is preferred over `read.csv` because it automatically handles regional differences (e.g., commas vs. semicolons as delimiters).
+
+## **Saving and Loading Complex Data**
+
+For more complex objects (like lists of data frames), use `chillR` functions:
+
+```{r}
+# Save a list with multiple elements
+test_list <- list(Number = 1, 
+                  String = "Thanks for using chillR!", 
+                  DataFrame = data.frame(a = c(1, 2, 3)))
+
+save_temperature_scenarios(test_list, 
+                           path = "data", 
+                           prefix = "test_list")
+```
+
+This creates multiple files for each list element:
+
+-   `test_list_1_Number.csv`
+
+-   `test_list_2_String.csv`
+
+-   `test_list_3_DataFrame.csv`
+
+To reload the list:
+
+```{r}
+test_list <- load_temperature_scenarios(path = "data", prefix = "test_list")
+```
+
+## **Optimizing Markdown Document Execution**
+
+To avoid rerunning time-intensive calculations, save results and reload them during document knitting. Control code visibility and execution with these options:
+
+-   `echo = FALSE`: Hide code but run it.
+
+-   `eval = FALSE`: Show code but don’t run it.
+
+-   `include = FALSE`: Hide both code and output but run it.
+
+-   `message = FALSE`: Hide messages.
+
+-   `warning = FALSE`: Hide warnings.
+
+These options allow preloading necessary data for later code chunks without re-executing time-consuming tasks.

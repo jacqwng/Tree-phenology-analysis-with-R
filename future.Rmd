@@ -1,0 +1,54 @@
+---
+title: "Future temperature scenarios"
+output: distill::distill_article
+---
+
+Human-induced climate change is already causing significant impacts on the climate, ecosystems, and agriculture. The situation is expected to worsen, driven by high levels of greenhouse gases and ongoing emissions (about 40 Gt CO2-equivalents annually). Ecosystem degradation further weakens the planet's resilience. Future outcomes are uncertain, but climate change adaptation research aims to reduce uncertainties by focusing on exposure, sensitivity, and adaptive capacity.
+
+## Framework for Climate Vulnerability and Adaptation
+
+The conceptual framework for evaluating climate vulnerability and adaptation involves:
+
+1.  **Exposure**: The anticipated future climate conditions.
+
+2.  **Sensitivity**: How ecosystems or systems respond to those conditions.
+
+3.  **Adaptive Capacity**: The ability of systems to adapt to climate change.
+
+Combining exposure and sensitivity helps estimate potential impacts, while adaptation efforts work to reduce sensitivity (e.g., using resilient cultivars) or enhance adaptive capacity (e.g., flexible management strategies). Current research mainly focuses on exposure, particularly in areas like orchards. While some models account for tree sensitivity, these analyses are largely centered around exposure factors.
+
+## Future Climate Scenarios and Modeling
+
+Developing future climate scenarios requires precise climate model setups, including Global Climate Models (GCMs), Regional Climate Models (RCMs), and downscaling, with no single "correct" approach. The `chillR` package can use both high-quality and less accurate climate scenarios, facilitating access to reliable databases even for users without expert knowledge.
+
+## Background on Climate Models and Warming Pathways
+
+Up until November 2023, `ClimateWizard` was the best source for climate data in `chillR`, providing point-specific climate data from various models. `ClimateWizard` simplifies data retrieval for specific locations, bypassing large-scale datasets that could otherwise create bottlenecks. However, its data is based on older climate models (CMIP5) and outdated Representative Concentration Pathways (RCPs), which are becoming less reliable. The newer CMIP6 models and Shared Socioeconomic Pathways (SSPs), released in 2021, provide a more modern approach for accurate climate projections and are now the recommended scenarios for climate change modeling. While `ClimateWizard` still supports CMIP5 and RCP scenarios, transitioning to CMIP6 and SSP scenarios is crucial for the most up-to-date and accurate climate change projections.
+
+## `Exercises` on future temperature scenarios
+
+1)  Briefly describe the differences between the RCPs and the SSPs (you may have to follow some of the links provided above).
+
+The Representative Concentration Pathways (RCPs) and the Shared Socioeconomic Pathways (SSPs) are both scenario frameworks used for modeling future climate developments, but they differ in their methodology and focus.
+
+-   **RCPs (Representative Concentration Pathways)**:
+
+    -   Developed for the IPCC's 5th Assessment Report (AR5, published in 2014).
+
+    -   Describe different possible levels of radiative forcing (W/m²) by 2100, meaning the direct effect of greenhouse gas emissions on the climate.
+
+    -   Four main pathways: RCP2.6 (strong emissions reduction), RCP4.5 and RCP6.0 (moderate emissions), RCP8.5 (very high emissions, often referred to as "business as usual").
+
+    -   A purely climate-science-based approach without considering socioeconomic developments.
+
+-   **SSPs (Shared Socioeconomic Pathways)**:
+
+    -   Developed for the IPCC's 6th Assessment Report (AR6, published in 2021).
+
+    -   Combine socioeconomic developments with emission pathways to create different future scenarios.
+
+    -   Five main scenarios (SSP1 to SSP5), representing various societal, economic, and political trajectories, such as sustainable development (SSP1) or continued reliance on fossil fuels (SSP5).
+
+    -   Can be combined with different radiative forcing levels (e.g., SSP1-2.6 for sustainable development with low emissions or SSP5-8.5 for high emissions and fossil fuel dependence).
+
+    \

@@ -179,7 +179,7 @@ After a decade of exploration in other regions, the analysis turned back to Oman
 
 ## `Exercises` on past chill projections
 
-1.  *Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.*
+1.  Sketch out three data access and processing challenges that had to be overcome in order to produce chill projections with state-of-the-art methodology.
 
 -   **Accessing Climate Data for Specific Locations**:\
     Previous climate datasets like AFRICLIM and ClimateWizard only provided large-scale data. To get weather data for specific locations without downloading too much extra information, an API was created to quickly access data for single sites
@@ -190,7 +190,7 @@ After a decade of exploration in other regions, the analysis turned back to Oman
 -   **Handling Large Volumes of Climate Model Outputs**:\
     Studying different climate futures involves dealing with a lot of data from many climate models, which can be hard to manage. To handle this large amount of data effectively, workflows were streamlined and selective processing techniques were used
 
-2.  *Outline, in your understanding, the basic steps that are necessary to make such projections.*
+2.  Outline, in your understanding, the basic steps that are necessary to make such projections.
 
 To make climate-based chill projections for specific regions, here are the essential steps typically involved:
 

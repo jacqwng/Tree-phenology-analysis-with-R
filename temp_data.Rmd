@@ -1,0 +1,152 @@
+---
+title: "Getting temperature data"
+output: distill::distill_article
+---
+
+```{r, include=FALSE}
+library(chillR)
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+```
+
+```{r, echo=FALSE, message=FALSE}
+station_list <- read.csv("data/station_list.csv")
+weather <- list(`KOLN BONN`=read.csv("data/Bonn_weather.csv"))
+cleaned_weather <- list(`KOLN BONN`=read.csv("data/Bonn_chillR_weather.csv"))
+```
+
+Temperature data is crucial for phenology and chill models, as it serves as a key input for these calculations. However, accessing weather data is often challenging due to restrictions and high costs, even when the data is publicly funded.
+
+The `chillR` package facilitates access to global and California-specific weather databases, helping researchers obtain necessary temperature records.
+
+## Global Summary of the Day (GSOD)
+
+The [National Centers for Environmental Information (NCEI)](https://www.ncei.noaa.gov/) provides temperature data through the [GSOD database](https://www.ncei.noaa.gov/access/search/data-search/global-summary-of-the-day). While retrieving data manually can be cumbersome, `chillR` offers a streamlined solution with the function `handle_gsod()`.
+
+### Listing Weather Stations
+
+To retrieve a list of weather stations near a specific location, sorted by proximity, use:
+
+```{r, eval=FALSE}
+station_list <- handle_gsod(action = "list_stations", 
+                            location = c(7.10, 50.73), 
+                            time_interval = c(1990, 2020))
+```
+
+This function returns a table containing station codes, available data years, and the percentage of the selected time period covered.
+
+### Downloading Weather Data
+
+Once a suitable station is identified, its `chillR_code` can be used to download temperature records:
+
+```{r, eval=FALSE, message=FALSE}
+weather <- handle_gsod(action = "download_weather", 
+                       location = station_list$chillR_code[4], 
+                       time_interval = c(1990,2020))
+```
+
+This returns a list where `weather[[1]]` contains metadata, and `weather[[2]]` holds the actual temperature dataset.
+
+### Cleaning Weather Data
+
+Raw GSOD data contains unnecessary variables and is recorded in Fahrenheit. `chillR` provides a function to clean and convert these records:
+
+```{r, eval=FALSE}
+cleaned_weather <- handle_gsod(weather)
+```
+
+Temperature values are converted using the formula:
+
+$Temperature[°C]=(Temperature[°F]-32)\cdot\frac{5}{9}$
+
+This results in a more usable dataset suitable for further analysis.
+
+### Saving Data for Future Use
+
+```{r, eval=FALSE}
+write.csv(station_list, "data/station_list.csv", row.names=FALSE)
+write.csv(weather[[1]], "data/Bonn_raw_weather.csv", row.names=FALSE)
+write.csv(cleaned_weather[[1]], "data/Bonn_chillR_weather.csv", row.names=FALSE)
+```
+
+## `Exercises` on getting temperature data
+
+```{r, echo=FALSE, message=FALSE}
+station_list_Yakima <- read.csv("Yakima/station_list.csv") 
+weather_Yakima <- list(`YAKIMA AIR TERMINAL/MCALSR FIELD AP`=read.csv("Yakima/Yakima_weather.csv")) 
+cleaned_weather_Yakima <- list(`YAKIMA AIR TERMINAL/MCALSR FIELD AP`=read.csv("Yakima/Yakima_chillR_weather.csv"))
+```
+
+1)  Choose a location of interest and find the 25 closest weather stations using the `handle_gsod` function
+
+```{r}
+station_list_Yakima <- handle_gsod(action = "list_stations",
+                                   location = c(long = -120.50, lat = 46.60), 
+                                   time_interval = c(1990, 2020))
+```
+
+```{r , echo = FALSE}
+library(kableExtra)
+kable(station_list_Yakima, align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) %>% 
+  scroll_box(width = "100%",
+             height = "300px",
+             fixed_thead = TRUE)
+```
+
+2)  Download weather data for the most promising station on the list
+
+```{r, eval=FALSE}
+weather_Yakima <- handle_gsod(action = "download_weather",
+                              location = station_list_Yakima$chillR_code[1],
+                              time_interval = c(1990, 2020))
+```
+
+```{r, eval = FALSE}
+weather_Yakima[[1]][1:20,]
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(weather_Yakima[[1]][1:20,], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) %>% 
+   scroll_box(width = "100%", 
+              height = "300px",
+              fixed_thead = TRUE)
+              
+              
+
+```
+
+3)  Convert the weather data into `chillR` format
+
+```{r, eval=FALSE}
+cleaned_weather_Yakima <- handle_gsod(weather_Yakima) 
+```
+
+```{r, eval = FALSE}
+cleaned_weather_Yakima[[1]][1:20,]
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+kable(cleaned_weather_Yakima[[1]][1:20,], align = c("c")) %>%
+  kable_styling("striped", 
+                position = "center", 
+                font_size = 14) %>% 
+  scroll_box(height = "300px",
+             fixed_thead = TRUE)
+
+```
+
+```{r, warning = FALSE}
+dir.create("Yakima")
+write.csv(station_list_Yakima,"Yakima/station_list.csv", row.names = FALSE)
+write.csv(weather_Yakima[[1]],"Yakima/raw_weather.csv", row.names = FALSE)
+write.csv(cleaned_weather_Yakima[[1]],"Yakima/chillR_weather.csv", row.names = FALSE)
+```

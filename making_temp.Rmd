@@ -272,7 +272,9 @@ Based on idealized daily curves, the hourly dataset for Julian Day 6 (January 6t
 ```{r echo = FALSE}
 KA_hourly <- stack_hourly_temps(KA_weather, latitude = 50.4)
 
-kable(KA_hourly$hourtemps[121:144, ], row.names = FALSE, align = c("c"))  %>%  kable_styling("striped", position = "left", font_size = 14)
+kable(KA_hourly$hourtemps[121:144, ], row.names = FALSE, align = c("c"))  %>%  kable_styling("striped", position = "left", font_size = 14) %>% 
+  scroll_box(height = "300px",
+             width = "100%")
 ```
 
 3.  Produce empirical temperature curve parameters for the `Winters_hours_gaps` dataset, and use them to predict hourly values from daily temperatures (this is very similar to the example above, but please make sure you understand what’s going on).
