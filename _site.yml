@@ -36,6 +36,44 @@ navbar:
           href: historic.html
         - text: "Future temperature scenarios"
           href: future.html
+        - text: "Making CMIP6 scenarios"
+          href: cmip6.html
+        - text: "Making CMIP5 scenarios with the ClimateWizard"
+          href: cmip5.html
+        - text: "Plotting future scenarios"
+          href: plot.html
+        - text: "Chill model comparison"
+          href: chill_model.html
+        - text: "Simple phenology analysis"
+          href: simple_phenology.html
+        - text: "Delineating temperature response phases with PLS regression"
+          href: PLS_regression.html
+        - text: "Successes and limitations of PLS regression analysis"
+          href: successes_limitations.html
+        - text: "PLS regression with agroclimatic metrics"
+          href: agroclimatic.html
+        - text: "Examples of PLS regression with agroclimatic metrics"
+          href: examples.html
+        - text: "Why PLS doesn’t always work"
+          href: not_work.html
+        - text: "Evaluating PLS outputs"
+          href: outputs.html
+        - text: "The relative importance of chill and heat"
+          href: chill_heat.html
+        - text: "Experimentally enhanced PLS"
+          href: enhanced_PLS.html
+        - text: "Making valid tree phenology models"
+          href: valid_models.html
+        - text: "The PhenoFlex model"
+          href: phenoflex1.html
+        - text: "The PhenoFlex model - a second look"
+          href: phenoflex2.html
+        - text: "Can we improve the performance of PhenoFlex?"
+          href: improve.html
+        - text: "Frost risk analysis"
+          href: frost_risk.html
+        - text: "A robust method to estimate future frost risk"
+          href: estimate.html
         - text: "Major concepts"
           href: major_concepts.html
         

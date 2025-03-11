@@ -1,0 +1,346 @@
+---
+title: "Simple phenology analysis"
+output: distill::distill_article
+---
+
+```{r echo=FALSE, message=FALSE}
+require(chillR)
+require(ggplot2)
+library(tidyverse)
+require(kableExtra)
+```
+
+In this section the focus shifts to a detailed phenology analysis, using the bloom dates of the pear cultivar 'Alexander Lucas' as an example. This dataset was previously examined in the frost analysis and includes a time series (1958–2019) of first, full, and last bloom dates recorded at Campus Klein-Altendorf.
+
+For this analysis, only first bloom dates will be used. If working on a personal computer, the dataset can be downloaded from the provided link.
+
+## Data Reading and Preparation
+
+The first step is to load the dataset from a CSV file. The read_tab function is used to handle potential issues with delimiters (such as commas or semicolons).
+
+```{r}
+Alex <- read_tab("data/Alexander_Lucas_bloom_1958_2019.csv")
+```
+
+Once the data is loaded, it is prepared for analysis. The `pivot_longer` function transforms the data from wide to long format so that bloom stages are consolidated into a single column.
+
+```{r}
+Alex <- pivot_longer(Alex,
+                     cols = c(First_bloom:Last_bloom),
+                     names_to = "Stage",
+                     values_to = "YEARMODA")
+
+Alex_first <- Alex %>%
+  mutate(Year = as.numeric(substr(YEARMODA, 1, 4)),
+         Month = as.numeric(substr(YEARMODA, 5, 6)),
+         Day = as.numeric(substr(YEARMODA, 7, 8))) %>%
+  make_JDay() %>%
+  filter(Stage == "First_bloom")
+```
+
+This process extracts the year, month, and day from the YEARMODA column, converts them into a Julian day (JDay), and filters the data for the first bloom.
+
+## Time Series Analysis
+
+The first step in analyzing the phenology is visualizing the first bloom dates over the years to identify any trends or changes over time.
+
+## Visualization of First Bloom Dates
+
+A scatter plot is used to visualize the first bloom dates across years:
+
+```{r}
+ggplot(Alex_first,
+       aes(Pheno_year,
+           JDay)) +
+  geom_point() +
+  ylab("First bloom date (day of the year)") +
+  xlab ("Year") +
+  theme_bw(base_size = 15)
+```
+
+At first glance, the plot does not reveal a clear pattern or trend. To check for any underlying trend, the Kendall trend test is applied to statistically assess the presence of a trend.
+
+## Kendall Trend Test
+
+The Kendall test checks whether there is a statistically significant trend in the bloom dates over the years:
+
+```{r}
+library(Kendall)
+Kendall(x = Alex_first$Pheno_year,
+        y = Alex_first$JDay)
+```
+
+The p-value of 0.035 and the negative Tau value suggest that there is a significant trend toward earlier blooming. This indicates that the bloom dates have been shifting earlier over time.
+
+## Linear Regression for Trend Analysis
+
+To quantify the trend, a linear regression is fitted, and the trend is visualized with a regression line:
+
+```{r}
+x <- Alex_first$Pheno_year
+y <- Alex_first$JDay
+
+summary(lm(y ~ x))
+```
+
+```{r}
+ggplot(Alex_first,
+       aes(Year,
+           JDay)) +
+  geom_point() +
+  geom_smooth(method = 'lm',
+              formula = y ~ x) +
+  ylab("First bloom date (day of the year)") +
+  xlab ("Year") +
+  theme_bw(base_size = 15)
+```
+
+The estimated slope of -0.16 indicates that, on average, the bloom dates are occurring 0.16 days earlier each year.
+
+## Polynomial Regression for a Complex Model
+
+A linear regression is a simple approach, but in many cases, a more complex model might be necessary. Here, a 25th-degree polynomial is used to improve the model fit.
+
+```{r}
+summary(lm(y ~ poly(x, 25)))
+```
+
+```{r}
+ggplot(Alex_first,
+       aes(Year,
+           JDay)) +
+  geom_point() +
+  geom_smooth(method='lm',
+              formula = y ~ poly(x, 25)) +
+  ylab("First bloom date (day of the year)") +
+  xlab ("Year") +
+  theme_bw(base_size = 15)
+```
+
+The 25th-degree polynomial fits the data very well, but this is an example of overfitting, where the model becomes too complex and captures random fluctuations in the data instead of real underlying patterns.
+
+## Overfitting
+
+An overly complex model that fits the data too well can be problematic because it may capture random noise instead of genuine relationships. While a good model typically has low error, overfitting makes it difficult to generalize the model to new data.
+
+## p-Hacking
+
+p-hacking refers to the practice of searching through large datasets to find random correlations and then presenting them as statistically significant. This practice leads to false discoveries and is considered poor scientific practice.
+
+## Ecological Theory
+
+To understand phenomena like bloom dates better, it is crucial to consider the underlying ecological processes. A basic ecological theory suggests that temperature affects phenology.
+
+### Causal Diagram: Time → Temperature → Phenology
+
+The direct influence of time on phenology might be misleading, as it is not time itself that drives the bloom dates but rather changes in temperature, which are influenced by climate change:
+
+**Time → Greenhouse Gas Concentrations → Climate Forcing → Temperature**
+
+## Temperature Correlations
+
+To better understand the relationship between temperature and bloom dates, weather data is included. Annual average temperatures are calculated:
+
+```{r}
+temperature <- read_tab("data/TMaxTMin1958-2019_patched.csv")
+
+Tmin <- temperature %>%
+  group_by(Year) %>%
+  summarise(Tmin = mean(Tmin))
+
+Tmax <- temperature %>%
+  group_by(Year) %>% 
+  summarise(Tmax = mean(Tmax))
+
+Annual_means <- Tmin %>%
+  cbind(Tmax[,2]) %>%
+  mutate(Tmean = (Tmin + Tmax)/2)
+
+Annual_means <- merge(Annual_means,
+                      Alex_first)
+
+Annual_means_longer <- Annual_means[,c(1:4,10)] %>%
+  pivot_longer(cols = c(Tmin:Tmean),
+               names_to = "Variable",
+               values_to = "Temp")
+```
+
+These temperature data are then combined with bloom data to create a plot showing the relationship between temperature and first bloom dates.
+
+## Visualizing Temperature and Bloom Date
+
+```{r}
+ggplot(Annual_means_longer,
+       aes(x=Temp,
+           y=JDay)) + 
+  geom_point() +
+  geom_smooth(method="lm",
+              formula=y~x) + 
+  facet_wrap("Variable")
+```
+
+The linear regression indicates that there is a correlation between temperature and bloom date, though this correlation could be driven by climate change rather than just temperature itself.
+
+## Regression Analysis for Temperature
+
+To analyze the influence of different temperature variables (Tmin, Tmax, Tmean) on the bloom date, a linear regression is performed for each:
+
+```{r}
+summary(lm(Annual_means$JDay ~ Annual_means$Tmin))
+```
+
+```{r}
+summary(lm(Annual_means$JDay ~ Annual_means$Tmax))
+```
+
+```{r}
+summary(lm(Annual_means$JDay ~ Annual_means$Tmean))
+```
+
+## Function for Temperature and Bloom Date Correlations
+
+To better capture the effect of temperature on bloom dates, a function is developed to compute correlations over different periods.
+
+```{r}
+temps_JDays <-
+  make_JDay(temperature)
+
+corr_temp_pheno <- function(start_JDay, # the start JDay of the period
+                            end_JDay, # the start JDay of the period
+                            temps_JDay = temps_JDays, # the temperature dataset
+                            bloom = Alex_first) # a data.frame with bloom dates
+{
+  temps_JDay <- temps_JDay %>%
+    mutate(Season = Year)
+  
+  if(start_JDay > end_JDay)
+    temps_JDay$Season[temps_JDay$JDay >= start_JDay]<-
+      temps_JDay$Year[temps_JDay$JDay >= start_JDay]+1
+  
+  if(start_JDay > end_JDay)
+    sub_temps <- subset(temps_JDay,
+                        JDay <= end_JDay | JDay >= start_JDay)
+  
+  if(start_JDay <= end_JDay) 
+    sub_temps <- subset(temps_JDay,
+                        JDay <= end_JDay & JDay >= start_JDay)
+  
+  mean_temps <- sub_temps %>%
+    group_by(Season) %>%
+    summarise(Tmin = mean(Tmin),
+              Tmax = mean(Tmax)) %>%
+    mutate(Tmean = (Tmin + Tmax)/2)
+  
+  colnames(mean_temps)[1] <- c("Pheno_year")
+  
+  temps_bloom <- merge(mean_temps,
+                       bloom[c("Pheno_year",
+                               "JDay")])
+  
+  # Let's just extract the slopes of the regression model for now
+  slope_Tmin <- summary(lm(temps_bloom$JDay~temps_bloom$Tmin))$coefficients[2,1]
+  slope_Tmean <- summary(lm(temps_bloom$JDay~temps_bloom$Tmean))$coefficients[2,1]
+  slope_Tmax <- summary(lm(temps_bloom$JDay~temps_bloom$Tmax))$coefficients[2,1]
+  
+  c(start_JDay = start_JDay,
+    end_JDay = end_JDay,
+    length = length(unique(sub_temps$JDay)),
+    slope_Tmin = slope_Tmin,
+    slope_Tmean = slope_Tmean,
+    slope_Tmax = slope_Tmax)
+}
+```
+
+## Calculating Correlations for Specific Periods
+
+The function is applied to specific periods:
+
+```{r}
+corr_temp_pheno(start_JDay = 305,
+                end_JDay = 45,
+                temps_JDay = temps_JDays,
+                bloom = Alex_first)
+```
+
+```{r}
+corr_temp_pheno(start_JDay = 305,
+                end_JDay = 29,
+                temps_JDay = temps_JDays,
+                bloom = Alex_first)
+```
+
+The function can now be applied to various reasonable day ranges. Instead of testing all possible combinations, only every 5th start and end date will be used to balance computational efficiency with thorough analysis.
+
+```{r}
+library(colorRamps) 
+
+stJDs <- seq(from = 1,
+             to = 366,
+             by = 10)
+
+eJDs <- seq(from = 1,
+            to = 366,
+            by = 10)
+
+for(stJD in stJDs)
+  for(eJD in eJDs)
+    {correlations <- corr_temp_pheno(stJD,
+                                     eJD)
+    
+    if(stJD == 1 & eJD == 1)
+      corrs <- correlations else
+        corrs <- rbind(corrs, correlations)
+}
+
+
+slopes <- as.data.frame(corrs) %>%
+  rename(Tmin = slope_Tmin,
+         Tmax = slope_Tmax,
+         Tmean = slope_Tmean) %>%
+  pivot_longer(cols = c(Tmin : Tmax),
+               values_to = "Slope",
+               names_to = "Variable")
+```
+
+## Plotting Correlations
+
+The correlations between temperature and bloom dates for different periods are visualized:
+
+```{r}
+ggplot(data = slopes,
+       aes(x = start_JDay,
+           y = length,
+           fill = Slope)) +
+  geom_tile() +
+  facet_wrap(vars(Variable)) +
+  scale_fill_gradientn(colours = matlab.like(15)) +
+  ylab("Interval duration (days)") + 
+  xlab("Start date of temperature summary interval (Day of year)") +
+  theme_bw(base_size = 15)
+```
+
+## `Exercises` on simple phenology analysis
+
+1.  Provide a brief narrative describing what p-hacking is, and why this is a problematic approach to data analysis.
+
+P-hacking is the practice of manipulating data analysis to achieve statistically significant results, often by testing multiple hypotheses or adjusting methods until a low p-value appears. This increases the risk of false positives, leading to misleading conclusions and poor reproducibility. To avoid this, researchers should predefine hypotheses, apply proper statistical corrections, and ensure transparency.
+
+2.  Provide a sketch of your causal understanding of the relationship between temperature and bloom dates.
+
+A simplified causal diagram for the relationship between temperature and bloom dates is:
+
+**Temp_chilling → Chill accumulation → Temp_forcing → Heat accumulation → Bloom Date**
+
+-   **Temp_chilling**: Cold temperatures during winter contribute to chill accumulation.
+-   **Chill accumulation**: Trees require a certain amount of chilling to end dormancy.
+-   **Temp_forcing**: Warmer temperatures in spring promote heat accumulation.
+-   **Heat accumulation**: Once enough heat is accumulated, the tree initiates blooming.
+-   **Bloom Date**: The final outcome, determined by the balance of chilling and forcing.
+
+3.  What do we need to know to build a process-based model from this?
+
+A process-based model for bloom timing requires:
+
+-   **Chilling & Forcing**: Defining cold and warm periods, selecting appropriate models, and determining temperature thresholds.
+-   **Temperature Response**: Understanding how trees react to temperature changes and how chilling and forcing interact.
+-   **Data for Calibration**: Historical bloom records, temperature data, and experimental studies for validation. By parameterizing and testing, the model can be optimized for accurate predictions.
