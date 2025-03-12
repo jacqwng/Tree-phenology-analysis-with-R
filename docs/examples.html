@@ -2237,13 +2237,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   /* These properties only apply to Distill sites and blogs  */
 
   .distill-site-header {
-    --title-size:       24px;
+    --title-size:       20px;
     --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        24px;
+    --text-size:        20px;
     --hover-color:      white;
     --bkgd-color:       #C34A79;
   }
-
+  .dropdown
   .distill-site-footer {
     --text-color:       rgba(255, 255, 255, 0.8);
     --text-size:        15px;
@@ -2356,15 +2356,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   .nav-right {
     padding: 0.35em;
   }
-  /*-- Navbar Schriftgrößen-Anpassung --*/
-  .navbar {
-      font-size: 16px; /* Setze hier deine gewünschte Schriftgröße */
-  }
-
-  /* remove scroll bar on right hand side */
-  .d-flex{
-    overflow-y: hidden !important;
-  }
 
   .timeline-Widget{
     width: 40%;
@@ -2414,7 +2405,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   /*do not delete - this removes the scroll bar on the right hand side*/
   .vh-100 {
     height: 80vh!important;
-  }</style>
+  }
+  </style>
   <style type="text/css">
   /* base style */
 
@@ -2602,19 +2594,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
-<a href="getting_started.html">Getting Started</a>
+<a href="getting_started.html">Goals &amp; Tools</a>
 <div class="nav-dropdown">
 <button class="nav-dropbtn">
-Lessons
+Introduction
  
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="tree_dormancy.html">Tree dormancy</a>
+<a href="tree_dormancy.html">Tree Dormancy</a>
 <a href="climate_change.html">Climate change and impact projection</a>
 <a href="winter_chill.html">Winter chill projections</a>
-<a href="manual_chill.html">Manual chill</a>
+<a href="manual_chill.html">Manual chill analysis</a>
 <a href="chill.html">Chill models</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Temperature
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="making_temp.html">Making hourly temperatures</a>
 <a href="tools.html">Useful tools in R</a>
 <a href="temp_data.html">Getting temperature data</a>
@@ -2627,16 +2628,34 @@ Lessons
 <a href="cmip5.html">Making CMIP5 scenarios with the ClimateWizard</a>
 <a href="plot.html">Plotting future scenarios</a>
 <a href="chill_model.html">Chill model comparison</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+PLS
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="simple_phenology.html">Simple phenology analysis</a>
 <a href="PLS_regression.html">Delineating temperature response phases with PLS regression</a>
 <a href="successes_limitations.html">Successes and limitations of PLS regression analysis</a>
 <a href="agroclimatic.html">PLS regression with agroclimatic metrics</a>
 <a href="examples.html">Examples of PLS regression with agroclimatic metrics</a>
-<a href="not_work.html">Why PLS doesn’t always work</a>
+<a href="PLS_not_work.html">Why PLS doesn’t always work</a>
 <a href="outputs.html">Evaluating PLS outputs</a>
 <a href="chill_heat.html">The relative importance of chill and heat</a>
 <a href="enhanced_PLS.html">Experimentally enhanced PLS</a>
 <a href="valid_models.html">Making valid tree phenology models</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+PhenoFlex
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="phenoflex1.html">The PhenoFlex model</a>
 <a href="phenoflex2.html">The PhenoFlex model - a second look</a>
 <a href="improve.html">Can we improve the performance of PhenoFlex?</a>
@@ -2668,83 +2687,83 @@ Lessons
 <h3 id="chestnut-jujube-and-apricot-in-beijing">Chestnut, jujube and apricot in Beijing</h3>
 <p>One of the coldest locations where this approach was applied is Beijing, where research led by Guo Liang used bloom data for Chinese chestnut (<em>Castanea mollissima</em>) and jujube (<em>Ziziphus jujuba</em>) to define chilling and forcing periods (Guo Liang et al., 2014). Another study analyzed datasets for apricot (<em>Prunus armeniaca</em>) and mountain peach (<em>Prunus davidiana</em>), yielding the following results:</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_chestnut.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of Chinese chestnut (Castanea mollissima) in Beijing, China (Guo et al., 2014a)" />
+<img src="images/PLS_chill_force_chestnut.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of Chinese chestnut (Castanea mollissima) in Beijing, China (Guo et al., 2014a)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of Chinese chestnut (Castanea mollissima) in Beijing, China (Guo et al., 2014a)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_jujube.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of jujube (Ziziphus jujuba) in Beijing, China (Guo et al., 2014a)" />
+<img src="images/PLS_chill_force_jujube.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of jujube (Ziziphus jujuba) in Beijing, China (Guo et al., 2014a)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of jujube (Ziziphus jujuba) in Beijing, China (Guo et al., 2014a)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_mountain_peach_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)" />
+<img src="images/PLS_chill_force_mountain_peach_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_mountain_peach_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)" />
+<img src="images/PLS_chill_force_mountain_peach_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of mountain peach (Prunus davidiana) in Beijing, China (Guo et al., 2014b)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_apricot_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China (Guo et al., 2014b)" />
-<figcaption aria-hidden="true">Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China (Guo et al., 2014b)</figcaption>
+<img src="images/PLS_chill_force_apricot_Beijing.png" alt="Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China (Guo et al., 2014b)" />
+<figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill (quantified with the Dynamic Model) and heat (quantified with the GDH model) accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China (Guo et al., 2014b)</strong></figcaption>
 </figure>
 <p>For apricots, PLS regressions were conducted using multiple chill metrics, including Chilling Hours, the Utah Model (Chill Units), and the Dynamic Model (Chill Portions):</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_apricot_3chillmodels.png" alt="Results of a PLS analysis based on the relationship between daily chill and heat accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China. Coefficients for heat are not shown here (they are similar to what’s shown in the previous figure). Chill accumulation was quantified with the Chilling Hours Model (left), the Utah Model (middle) and the Dynamic Model (right) (Guo et al., 2015b)" />
+<img src="images/PLS_chill_force_apricot_3chillmodels.png" alt="Results of a PLS analysis based on the relationship between daily chill and heat accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China. Coefficients for heat are not shown here (they are similar to what’s shown in the previous figure). Chill accumulation was quantified with the Chilling Hours Model (left), the Utah Model (middle) and the Dynamic Model (right) (Guo et al., 2015b)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis based on the relationship between daily chill and heat accumulation and bloom of apricot (Prunus armeniaca) in Beijing, China. Coefficients for heat are not shown here (they are similar to what’s shown in the previous figure). Chill accumulation was quantified with the Chilling Hours Model (left), the Utah Model (middle) and the Dynamic Model (right) (Guo et al., 2015b)</strong></figcaption>
 </figure>
 <p>In all analyses of phenology records from Beijing, the forcing period was easy to delineate, but the chilling period was difficult to see.</p>
 <h3 id="apples-in-shaanxi-province-china">Apples in Shaanxi Province, China</h3>
 <p>Guo Liang also led a study on apple phenology in Shaanxi, one of China’s main apple growing provinces:</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_apple_China.png" alt="Results of a PLS analysis of the relationship between chill (in Chill Portions) and heat (in GDH) and bloom dates of apple in Shaanxi, China (Guo et al., 2019)" />
+<img src="images/PLS_chill_force_apple_China.png" alt="Results of a PLS analysis of the relationship between chill (in Chill Portions) and heat (in GDH) and bloom dates of apple in Shaanxi, China (Guo et al., 2019)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis of the relationship between chill (in Chill Portions) and heat (in GDH) and bloom dates of apple in Shaanxi, China (Guo et al., 2019)</strong></figcaption>
 </figure>
 <p>Also here the chilling phase was visible but difficult to delineate.</p>
 <h3 id="cherries-in-klein-altendorf">Cherries in Klein-Altendorf</h3>
 <p>Winters in Beijing and Shaanxi are quite cold. A slightly warmer location was analyzed by studying cherries in Klein-Altendorf.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_cherry_KA.png" alt="Results of a PLS analysis of bloom dates of cherries ‘Schneiders späte Knorpelkirsche’ in Klein-Altendorf, Germany, based on chill (in Chill Portions) and heat (in GDH) accumulation (Luedeling et al., 2013a)" />
+<img src="images/PLS_chill_force_cherry_KA.png" alt="Results of a PLS analysis of bloom dates of cherries ‘Schneiders späte Knorpelkirsche’ in Klein-Altendorf, Germany, based on chill (in Chill Portions) and heat (in GDH) accumulation (Luedeling et al., 2013a)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis of bloom dates of cherries ‘Schneiders späte Knorpelkirsche’ in Klein-Altendorf, Germany, based on chill (in Chill Portions) and heat (in GDH) accumulation (Luedeling et al., 2013a)</strong></figcaption>
 </figure>
 <p>Again, it’s pretty difficult to see the chilling period.</p>
 <h3 id="apricots-in-the-uk">Apricots in the UK</h3>
 <p>For apricots in the <a href="https://www.nationalfruitcollection.org.uk/">UK National Fruit Collection at Brogdale Farm</a>, Faversham, a clear chill response phase was observed in January and February. However, this period begins later than the typical expected start of chill accumulation.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_apricot_UK.png" alt="Results of a PLS analysis of apricot bloom in the southern UK, based on chill accumulation (in Chill Portions) and heat accumulation (in GDH) (Martı́nez-Lüscher et al., 2017)" />
+<img src="images/PLS_chill_force_apricot_UK.png" alt="Results of a PLS analysis of apricot bloom in the southern UK, based on chill accumulation (in Chill Portions) and heat accumulation (in GDH) (Martı́nez-Lüscher et al., 2017)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis of apricot bloom in the southern UK, based on chill accumulation (in Chill Portions) and heat accumulation (in GDH) (Martı́nez-Lüscher et al., 2017)</strong></figcaption>
 </figure>
 <h3 id="grapevine-in-croatia">Grapevine in Croatia</h3>
 <p>Grapes also have chilling requirements. Johann <a href="https://scholar.google.es/citations?user=kpIpSXkAAAAJ&amp;hl">Johann Martínez-Lüscher</a>, who led the UK apricot study, analyzed the temperature response of grapes grown in Croatia.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_grapevine_Croatia.png" alt="Results of a PLS analysis of flowering dates of grapevine (cv. ‘Riesling Italico’) in Mandicevac, Croatia. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Martı́nez-Lüscher et al., 2016)" />
+<img src="images/PLS_chill_force_grapevine_Croatia.png" alt="Results of a PLS analysis of flowering dates of grapevine (cv. ‘Riesling Italico’) in Mandicevac, Croatia. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Martı́nez-Lüscher et al., 2016)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis of flowering dates of grapevine (cv. ‘Riesling Italico’) in Mandicevac, Croatia. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Martı́nez-Lüscher et al., 2016)</strong></figcaption>
 </figure>
 <p>In Croatia, where winters are warmer and chill accumulation rates are more variable, the chilling period is more distinct. Bloom response to chill is particularly strong in December and January. With a broader interpretation, the chilling period could extend from late September to February.</p>
 <h3 id="walnuts-in-california">Walnuts in California</h3>
 <p>In California, where winters are even warmer, the chilling period for walnuts was evident both from raw temperature data and when using agroclimatic metrics.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_walnut_CA.png" alt="Results of a PLS analysis of leaf emergence dates of walnuts (cv. ‘Payne’) in Davis, California. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Luedeling et al., 2013a)" />
+<img src="images/PLS_chill_force_walnut_CA.png" alt="Results of a PLS analysis of leaf emergence dates of walnuts (cv. ‘Payne’) in Davis, California. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Luedeling et al., 2013a)" />
 <figcaption aria-hidden="true"><strong>Results of a PLS analysis of leaf emergence dates of walnuts (cv. ‘Payne’) in Davis, California. Chill was quantified with the Dynamic Model, heat with the Growing Degree Hours Model (Luedeling et al., 2013a)</strong></figcaption>
 </figure>
 <p>The analysis again reveals a distinct chilling period, seemingly divided into two phases. The reason for this split remains unclear and may be worth further investigation. However, a clear bloom response to high chill accumulation rates is observed between mid-October and late December.</p>
 <h3 id="almonds-in-tunisia">Almonds in Tunisia</h3>
 <p>Sfax, in central Tunisia, represents an even warmer climate near the cultivation limit for temperate nut trees. A study led by <a href="https://scholar.google.com/citations?user=DdV9jsAAAAAJ&amp;hl">Haïfa Benmoussa</a> analyzed bloom data from 37 almond cultivars, successfully identifying both the chilling and forcing periods in nearly all cases. The following figures illustrate these findings.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_almonds1_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 1 (Benmoussa et al., 2017a)" />
+<img src="images/PLS_chill_force_almonds1_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 1 (Benmoussa et al., 2017a)" />
 <figcaption aria-hidden="true"><strong>PLS results for almond cultivars near Sfax, Tunisia - part 1 (Benmoussa et al., 2017a)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_almonds2_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 2 (Benmoussa et al., 2017a)" />
+<img src="images/PLS_chill_force_almonds2_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 2 (Benmoussa et al., 2017a)" />
 <figcaption aria-hidden="true"><strong>PLS results for almond cultivars near Sfax, Tunisia - part 2 (Benmoussa et al., 2017a)</strong></figcaption>
 </figure>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_almonds3_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 3 (Benmoussa et al., 2017a)" />
+<img src="images/PLS_chill_force_almonds3_Tunisia.png" alt="PLS results for almond cultivars near Sfax, Tunisia - part 3 (Benmoussa et al., 2017a)" />
 <figcaption aria-hidden="true"><strong>PLS results for almond cultivars near Sfax, Tunisia - part 3 (Benmoussa et al., 2017a)</strong></figcaption>
 </figure>
 <h3 id="pistachios-in-tunisia">Pistachios in Tunisia</h3>
 <p>Pistachio data from the same experimental station in Sfax, Tunisia, was also analyzed. The results revealed a long chilling period with strong responses to chill accumulation rates. However, the forcing period was less distinct.</p>
 <figure>
-<img src="Tree-phenology-analysis-with-R/images/PLS_chill_force_pistachio_Tunisia.png" alt="PLS results for pistachios near Sfax, Tunisia (Benmoussa et al., 2017b)" />
+<img src="images/PLS_chill_force_pistachio_Tunisia.png" alt="PLS results for pistachios near Sfax, Tunisia (Benmoussa et al., 2017b)" />
 <figcaption aria-hidden="true"><strong>PLS results for pistachios near Sfax, Tunisia (Benmoussa et al., 2017b)</strong></figcaption>
 </figure>
 <h2 id="exercises-on-examples-of-pls-regression-with-agroclimatic-metrics"><code>Exercises</code> on examples of PLS regression with agroclimatic metrics</h2>

@@ -3,24 +3,26 @@ title: "Jacqueline Wingen"
 theme: my_theme.css
 output_dir: "docs"
 navbar:
-  right:
+  right: 
     - text: "Home"
       href: index.html
-    - text: "Getting Started"
+    - text: "Goals & Tools"
       href: getting_started.html
-    - text: "Lessons"
-      menu: 
-        - text: "Tree dormancy"
+    - text: "Introduction"
+      menu:
+        - text: "Tree Dormancy"
           href: tree_dormancy.html
         - text: "Climate change and impact projection"
           href: climate_change.html
         - text: "Winter chill projections"
           href: winter_chill.html
-        - text: "Manual chill"
+        - text: "Manual chill analysis"            
           href: manual_chill.html
         - text: "Chill models"
           href: chill.html
-        - text: "Making hourly temperatures"
+    - text: "Temperature"
+      menu: 
+        - text: "Making hourly temperatures"          
           href: making_temp.html
         - text: "Useful tools in R"          
           href: tools.html
@@ -44,6 +46,8 @@ navbar:
           href: plot.html
         - text: "Chill model comparison"
           href: chill_model.html
+    - text: "PLS"
+      menu:
         - text: "Simple phenology analysis"
           href: simple_phenology.html
         - text: "Delineating temperature response phases with PLS regression"
@@ -52,10 +56,10 @@ navbar:
           href: successes_limitations.html
         - text: "PLS regression with agroclimatic metrics"
           href: agroclimatic.html
-        - text: "Examples of PLS regression with agroclimatic metrics"
+        - text: "Examples of PLS regression with agroclimatic metrics"          
           href: examples.html
         - text: "Why PLS doesn’t always work"
-          href: not_work.html
+          href: PLS_not_work.html
         - text: "Evaluating PLS outputs"
           href: outputs.html
         - text: "The relative importance of chill and heat"
@@ -64,6 +68,8 @@ navbar:
           href: enhanced_PLS.html
         - text: "Making valid tree phenology models"
           href: valid_models.html
+    - text: "PhenoFlex"
+      menu:
         - text: "The PhenoFlex model"
           href: phenoflex1.html
         - text: "The PhenoFlex model - a second look"

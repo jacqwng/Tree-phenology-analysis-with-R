@@ -2240,13 +2240,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   /* These properties only apply to Distill sites and blogs  */
 
   .distill-site-header {
-    --title-size:       24px;
+    --title-size:       20px;
     --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        24px;
+    --text-size:        20px;
     --hover-color:      white;
     --bkgd-color:       #C34A79;
   }
-
+  .dropdown
   .distill-site-footer {
     --text-color:       rgba(255, 255, 255, 0.8);
     --text-size:        15px;
@@ -2359,15 +2359,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   .nav-right {
     padding: 0.35em;
   }
-  /*-- Navbar Schriftgrößen-Anpassung --*/
-  .navbar {
-      font-size: 16px; /* Setze hier deine gewünschte Schriftgröße */
-  }
-
-  /* remove scroll bar on right hand side */
-  .d-flex{
-    overflow-y: hidden !important;
-  }
 
   .timeline-Widget{
     width: 40%;
@@ -2417,7 +2408,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   /*do not delete - this removes the scroll bar on the right hand side*/
   .vh-100 {
     height: 80vh!important;
-  }</style>
+  }
+  </style>
   <style type="text/css">
   /* base style */
 
@@ -2605,19 +2597,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
-<a href="getting_started.html">Getting Started</a>
+<a href="getting_started.html">Goals &amp; Tools</a>
 <div class="nav-dropdown">
 <button class="nav-dropbtn">
-Lessons
+Introduction
  
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="tree_dormancy.html">Tree dormancy</a>
+<a href="tree_dormancy.html">Tree Dormancy</a>
 <a href="climate_change.html">Climate change and impact projection</a>
 <a href="winter_chill.html">Winter chill projections</a>
-<a href="manual_chill.html">Manual chill</a>
+<a href="manual_chill.html">Manual chill analysis</a>
 <a href="chill.html">Chill models</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Temperature
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="making_temp.html">Making hourly temperatures</a>
 <a href="tools.html">Useful tools in R</a>
 <a href="temp_data.html">Getting temperature data</a>
@@ -2630,16 +2631,34 @@ Lessons
 <a href="cmip5.html">Making CMIP5 scenarios with the ClimateWizard</a>
 <a href="plot.html">Plotting future scenarios</a>
 <a href="chill_model.html">Chill model comparison</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+PLS
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="simple_phenology.html">Simple phenology analysis</a>
 <a href="PLS_regression.html">Delineating temperature response phases with PLS regression</a>
 <a href="successes_limitations.html">Successes and limitations of PLS regression analysis</a>
 <a href="agroclimatic.html">PLS regression with agroclimatic metrics</a>
 <a href="examples.html">Examples of PLS regression with agroclimatic metrics</a>
-<a href="not_work.html">Why PLS doesn’t always work</a>
+<a href="PLS_not_work.html">Why PLS doesn’t always work</a>
 <a href="outputs.html">Evaluating PLS outputs</a>
 <a href="chill_heat.html">The relative importance of chill and heat</a>
 <a href="enhanced_PLS.html">Experimentally enhanced PLS</a>
 <a href="valid_models.html">Making valid tree phenology models</a>
+</div>
+</div>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+PhenoFlex
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
 <a href="phenoflex1.html">The PhenoFlex model</a>
 <a href="phenoflex2.html">The PhenoFlex model - a second look</a>
 <a href="improve.html">Can we improve the performance of PhenoFlex?</a>

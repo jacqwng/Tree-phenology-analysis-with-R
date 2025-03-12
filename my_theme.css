@@ -62,13 +62,13 @@ d-appendix {
 /* These properties only apply to Distill sites and blogs  */
 
 .distill-site-header {
-  --title-size:       24px;
+  --title-size:       20px;
   --text-color:       rgba(255, 255, 255, 0.8);
-  --text-size:        24px;
+  --text-size:        20px;
   --hover-color:      white;
   --bkgd-color:       #C34A79;
 }
-
+.dropdown
 .distill-site-footer {
   --text-color:       rgba(255, 255, 255, 0.8);
   --text-size:        15px;
@@ -181,15 +181,6 @@ d-article li {
 .nav-right {
   padding: 0.35em;
 }
-/*-- Navbar Schriftgrößen-Anpassung --*/
-.navbar {
-    font-size: 16px; /* Setze hier deine gewünschte Schriftgröße */
-}
-
-/* remove scroll bar on right hand side */
-.d-flex{
-  overflow-y: hidden !important;
-}
 
 .timeline-Widget{
   width: 40%;
@@ -240,3 +231,4 @@ d-article a {
 .vh-100 {
   height: 80vh!important;
 }
+
