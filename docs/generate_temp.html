@@ -2639,7 +2639,7 @@ PLS
 <div class="nav-dropdown-content">
 <a href="simple_phenology.html">Simple phenology analysis</a>
 <a href="PLS_regression.html">Delineating temperature response phases with PLS regression</a>
-<a href="successes_limitations.html">Successes and limitations of PLS regression analysis</a>
+<a href="successes_and_limitations.html">Successes and limitations of PLS regression analysis</a>
 <a href="agroclimatic.html">PLS regression with agroclimatic metrics</a>
 <a href="examples.html">Examples of PLS regression with agroclimatic metrics</a>
 <a href="PLS_not_work.html">Why PLS doesn’t always work</a>
@@ -2698,14 +2698,14 @@ PhenoFlex
 <span>                         sim_years <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2001</span>, <span class='fl'>2100</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>Temperatures</span> <span class='op'>&lt;-</span> <span class='va'>KA_weather</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fl'>1998</span><span class='op'>:</span><span class='fl'>2009</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span></span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span></span>
 <span>    <span class='va'>Temp</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>Year</span>,</span>
 <span>                           <span class='va'>Month</span>,</span>
 <span>                           <span class='va'>Day</span>,</span>
 <span>                           <span class='va'>Tmin</span>,</span>
 <span>                           <span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>      <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span></span>
+<span>      <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span></span>
 <span>  <span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ISOdatetime.html'>ISOdate</a></span><span class='op'>(</span><span class='fl'>2000</span>,</span>
 <span>                                <span class='va'>Month</span>,</span>
@@ -2755,9 +2755,9 @@ PhenoFlex
 <span>           End_JDay <span class='op'>=</span> <span class='fl'>59</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_comparison</span> <span class='op'>&lt;-</span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
 <span>        Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
 <span>              Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
@@ -2828,10 +2828,10 @@ PhenoFlex
 <span><span class='va'>Temperatures</span> <span class='op'>&lt;-</span> <span class='va'>Yakima</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>Year</span>, <span class='va'>Month</span>, <span class='va'>Day</span>, <span class='va'>Tmin</span>, <span class='va'>Tmax</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>  </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fl'>1998</span><span class='op'>:</span><span class='fl'>2009</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span></span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span></span>
 <span>    <span class='va'>Temp</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>Year</span>, <span class='va'>Month</span>, <span class='va'>Day</span>, <span class='va'>Tmin</span>, <span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>      <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span></span>
+<span>      <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span>Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span></span>
 <span>  <span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ISOdatetime.html'>ISOdate</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='va'>Month</span>, <span class='va'>Day</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2883,9 +2883,9 @@ PhenoFlex
 <span>           End_JDay <span class='op'>=</span> <span class='fl'>59</span><span class='op'>)</span></span>
 <span>  </span>
 <span><span class='va'>chill_comparison</span> <span class='op'>&lt;-</span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
 <span>        Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
 <span>              Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_comparison_full_seasons</span> <span class='op'>&lt;-</span> </span>
@@ -2956,9 +2956,9 @@ PhenoFlex
 <span>                           GDH <span class='op'>=</span> <span class='va'>GDH</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_comparison</span> <span class='op'>&lt;-</span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_observed</span>,</span>
 <span>        Data_source <span class='op'>=</span> <span class='st'>"observed"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
+<span>  <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>chill_simulated</span>,</span>
 <span>              Data_source <span class='op'>=</span> <span class='st'>"simulated"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_comparison_full_seasons</span> <span class='op'>&lt;-</span></span>

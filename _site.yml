@@ -53,7 +53,7 @@ navbar:
         - text: "Delineating temperature response phases with PLS regression"
           href: PLS_regression.html
         - text: "Successes and limitations of PLS regression analysis"
-          href: successes_limitations.html
+          href: successes_and_limitations.html
         - text: "PLS regression with agroclimatic metrics"
           href: agroclimatic.html
         - text: "Examples of PLS regression with agroclimatic metrics"          

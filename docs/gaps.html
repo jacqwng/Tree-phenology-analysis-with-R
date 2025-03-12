@@ -2643,7 +2643,7 @@ PLS
 <div class="nav-dropdown-content">
 <a href="simple_phenology.html">Simple phenology analysis</a>
 <a href="PLS_regression.html">Delineating temperature response phases with PLS regression</a>
-<a href="successes_limitations.html">Successes and limitations of PLS regression analysis</a>
+<a href="successes_and_limitations.html">Successes and limitations of PLS regression analysis</a>
 <a href="agroclimatic.html">PLS regression with agroclimatic metrics</a>
 <a href="examples.html">Examples of PLS regression with agroclimatic metrics</a>
 <a href="PLS_not_work.html">Why PLS doesn’t always work</a>
@@ -2699,7 +2699,7 @@ PhenoFlex
 <span><span class='va'>Tmax_int</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/interpolate_gaps.html'>interpolate_gaps</a></span><span class='op'>(</span><span class='va'>weather</span><span class='op'>[</span>,<span class='st'>"Tmax"</span><span class='op'>]</span><span class='op'>)</span></span>
 <span><span class='va'>weather</span> <span class='op'>&lt;-</span> <span class='va'>weather</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Tmax <span class='op'>=</span> <span class='va'>Tmax_int</span><span class='op'>$</span><span class='va'>interp</span>, Tmax_interpolated <span class='op'>=</span> <span class='va'>Tmax_int</span><span class='op'>$</span><span class='va'>missing</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>KA_weather_gap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>KA_weather</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Year <span class='op'>=</span> <span class='fl'>2011</span>,</span>
+<span><span class='va'>KA_weather_gap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>KA_weather</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>Year <span class='op'>=</span> <span class='fl'>2011</span>,</span>
 <span>                                      Month <span class='op'>=</span> <span class='fl'>3</span>,</span>
 <span>                                      Day <span class='op'>=</span> <span class='fl'>3</span>,</span>
 <span>                                      Tmax <span class='op'>=</span> <span class='fl'>26</span>,</span>
