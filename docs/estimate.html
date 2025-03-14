@@ -2682,6 +2682,896 @@ PhenoFlex
 
 
 <div class="d-article">
+<h2 id="frost-risk-in-future-scenarios">Frost Risk in Future Scenarios</h2>
+<p>Assessing spring frost risk in temperate fruit trees is crucial but insufficient for planning future adaptation. A comprehensive approach must estimate both the probability and severity of future frost events under climate change.</p>
+<p>Spring frost risk depends on temperature thresholds affecting plant tissues and the temperature-driven progression of tree phenology. Sensitivity increases as trees develop, with timing varying by species, cultivar, and location. Reliable analysis requires robust temperature projections and accurate bloom date modeling. Advances like future temperature scenarios and the PhenoFlex model enhance predictions.</p>
+<p>Historical data from Campus Klein-Altendorf is combined with simulated conditions to assess relevance for future climates. The following plot illustrates this approach:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Import the past weather dataset to build the hull plots for model validity domains</span></span>
+<span><span class='co'># Note: data from 01.01.1958 to 20.06.2019. Not complete season for bloom in 1958 (missing Oct-Dec 1957). Barely passing the threshold for bloom in 2019 (need to set mrange to c(9, 5) in genSeasonList for PhenoFlex calibration)</span></span>
+<span><span class='va'>past_weather</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/TMaxTMin1958-2019_patched.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Add the column SSP_Time for further discrimination with future scenarios</span></span>
+<span><span class='va'>past_weather</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>&lt;-</span> <span class='st'>"Past"</span></span>
+<span></span>
+<span><span class='co'># Summarize the data by month. Compute the mean of Tmin and Tmax by RCP_Time, Year, and Month</span></span>
+<span><span class='va'>past_months</span> <span class='op'>&lt;-</span> <span class='va'>past_weather</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, <span class='va'>Year</span>, <span class='va'>Month</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>Tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmin</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>            Tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmax</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='va'>unstructured_future_temps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/load_temperature_scenarios.html'>load_temperature_scenarios</a></span><span class='op'>(</span><span class='st'>"data/future_climate"</span>,</span>
+<span>                                                        <span class='st'>"Bonn_futuretemps"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind_rows.html'>bind_rows</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>unstructured_future_temps</span>, <span class='va'>bind_rows</span><span class='op'>)</span>,</span>
+<span>                       .id <span class='op'>=</span> <span class='st'>"List"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span> <span class='op'>&lt;-</span> <span class='va'>future_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>GCM <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span><span class='op'>(</span><span class='va'>List</span>, <span class='st'>'\\.'</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>         SSP <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span><span class='op'>(</span><span class='va'>List</span>, <span class='st'>'\\.'</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>         Time <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span><span class='op'>(</span><span class='va'>List</span>, <span class='st'>'\\.'</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>           <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>DATE</span>, <span class='va'>Year</span>, <span class='va'>Month</span>, <span class='va'>Day</span>, <span class='va'>Tmin</span>, <span class='va'>Tmax</span>, <span class='va'>SSP</span>, <span class='va'>Time</span>, <span class='va'>GCM</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp126"</span>,<span class='st'>"SSP_Time"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"SSP1"</span>, <span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp126"</span>,<span class='st'>"Time"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp245"</span>,<span class='st'>"SSP_Time"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"SSP2"</span>, <span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp245"</span>,<span class='st'>"Time"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp370"</span>,<span class='st'>"SSP_Time"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"SSP3"</span>, <span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp370"</span>,<span class='st'>"Time"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp585"</span>,<span class='st'>"SSP_Time"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"SSP5"</span>, <span class='va'>future_temps</span><span class='op'>[</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP</span> <span class='op'>==</span> <span class='st'>"ssp585"</span>,<span class='st'>"Time"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Summarize the data by month. Compute the mean of Tmin and Tmax by RCP_Time, Year, and Month</span></span>
+<span><span class='va'>future_months</span> <span class='op'>&lt;-</span> <span class='va'>future_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, <span class='va'>Year</span>, <span class='va'>Month</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>Tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmin</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>            Tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmax</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span></span>
+<span><span class='co'># Merge the past and future months to plot them together</span></span>
+<span><span class='va'>all_months</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>past_months</span>,</span>
+<span>                    <span class='va'>future_months</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Add a column for the name of the month </span></span>
+<span><span class='va'>all_months</span><span class='op'>$</span><span class='va'>month_name</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>all_months</span><span class='op'>$</span><span class='va'>Month</span>,</span>
+<span>                                levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span> <span class='op'>:</span> <span class='fl'>12</span>, <span class='fl'>1</span> <span class='op'>:</span> <span class='fl'>5</span><span class='op'>)</span>, </span>
+<span>                                labels <span class='op'>=</span> <span class='va'>month.name</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span> <span class='op'>:</span> <span class='fl'>12</span>, <span class='fl'>1</span> <span class='op'>:</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Calculate the hulls for each group</span></span>
+<span><span class='va'>hull_temps</span> <span class='op'>&lt;-</span> <span class='va'>all_months</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, <span class='va'>month_name</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span><span class='op'>(</span><span class='va'>Tmin</span>, <span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Load the weather data from the experimental seasons to generate an "Enhanced" temps category</span></span>
+<span><span class='va'>enhanced</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/final_weather_data_S1_S2_pear_hourly.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Summarize the data. Compute the minimum and maximum records in a daily basis</span></span>
+<span><span class='va'>enhanced</span> <span class='op'>&lt;-</span> <span class='va'>enhanced</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>YEARMODA</span>, <span class='va'>Treatment</span>, <span class='va'>Year</span>, <span class='va'>Month</span> <span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>Tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>Temp</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>            Tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Temp</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Summarize the data by month now. Compute mean across minimum and maximum records</span></span>
+<span><span class='va'>enhanced</span> <span class='op'>&lt;-</span> <span class='va'>enhanced</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Treatment</span>, <span class='va'>Month</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>Tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmin</span><span class='op'>)</span>,</span>
+<span>                                                                  Tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Re-format the column Year and add the column RCP_Time</span></span>
+<span><span class='va'>enhanced</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>&lt;-</span> <span class='va'>enhanced</span><span class='op'>$</span><span class='va'>Treatment</span></span>
+<span><span class='va'>enhanced</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>&lt;-</span> <span class='st'>"Past_enhanced"</span></span>
+<span></span>
+<span><span class='co'># Combining the past and the enhanced temps</span></span>
+<span><span class='va'>past_months</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>&lt;-</span> <span class='st'>"Past combined"</span></span>
+<span><span class='va'>enhanced</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>&lt;-</span> <span class='st'>"Past combined"</span></span>
+<span></span>
+<span><span class='co'># Merge all the data. Simulated scenarios, observed scenarios, and enhanced temps</span></span>
+<span><span class='va'>all_months_both</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://www.math.uzh.ch/pages/spam/reference/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>enhanced</span>, <span class='va'>past_months</span>, <span class='va'>future_months</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Add the labels for the month no</span></span>
+<span><span class='va'>all_months_both</span><span class='op'>$</span><span class='va'>month_name</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>all_months_both</span><span class='op'>$</span><span class='va'>Month</span>, levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span> <span class='op'>:</span> <span class='fl'>12</span>, <span class='fl'>1</span> <span class='op'>:</span> <span class='fl'>5</span><span class='op'>)</span>, labels <span class='op'>=</span> <span class='va'>month.name</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span> <span class='op'>:</span> <span class='fl'>12</span>, <span class='fl'>1</span> <span class='op'>:</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create the hull</span></span>
+<span><span class='va'>hull_temps_both</span> <span class='op'>&lt;-</span> <span class='va'>all_months_both</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, <span class='va'>month_name</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span><span class='op'>(</span><span class='va'>Tmin</span>, <span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Remove the temperature for the treatments excluded from the analysis. These treatments may be a bit unrealistic and therefore</span></span>
+<span><span class='co'># difficult to be explained by the model</span></span>
+<span><span class='va'>all_months_both_conference</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>all_months_both</span>, <span class='op'>!</span><span class='op'>(</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>12</span>, <span class='fl'>13</span>, <span class='fl'>14</span>, <span class='fl'>15</span>, <span class='fl'>19</span>,</span>
+<span>                                                                    <span class='fl'>23</span>, <span class='fl'>25</span>, <span class='fl'>26</span>, <span class='fl'>27</span>, <span class='fl'>28</span>, <span class='fl'>29</span>, <span class='fl'>32</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='co'># Create the hull again</span></span>
+<span><span class='va'>hull_temps_both_conference</span> <span class='op'>&lt;-</span> <span class='va'>all_months_both_conference</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>,<span class='va'>month_name</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span><span class='op'>(</span><span class='va'>Tmin</span>, <span class='va'>Tmax</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>hull_temps_both</span>,<span class='st'>"data/hull_temps_both.csv"</span>,row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>hull_temps_both_conference</span>, <span class='st'>"data/hull_temps_both_conference.csv"</span>,row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>hull_temps_both</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/hull_temps_both.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>hull_temps_both</span><span class='op'>$</span><span class='va'>month_name</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>hull_temps_both</span><span class='op'>$</span><span class='va'>Month</span>,</span>
+<span>         levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>,</span>
+<span>         labels <span class='op'>=</span> <span class='va'>month.name</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Implement the plot showing the overlap among conditions</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>hull_temps_both</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>hull_temps_both</span><span class='op'>$</span><span class='va'>Month</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>11</span>,<span class='fl'>12</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>,<span class='op'>]</span>,</span>
+<span>       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>Tmin</span>, <span class='va'>Tmax</span>, fill <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>SSP_Time</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_polygon.html'>geom_polygon</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/vars.html'>vars</a></span><span class='op'>(</span><span class='va'>month_name</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_fill_manual</a></span><span class='op'>(</span>name<span class='op'>=</span><span class='st'>"Scenario"</span>,</span>
+<span>                    breaks<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Past combined"</span>,</span>
+<span>                             <span class='st'>"SSP1 2050"</span>,</span>
+<span>                             <span class='st'>"SSP1 2085"</span>,</span>
+<span>                             <span class='st'>"SSP2 2050"</span>,</span>
+<span>                             <span class='st'>"SSP2 2085"</span>,</span>
+<span>                             <span class='st'>"SSP3 2050"</span>,</span>
+<span>                             <span class='st'>"SSP3 2085"</span>,</span>
+<span>                             <span class='st'>"SSP5 2050"</span>,</span>
+<span>                             <span class='st'>"SSP5 2085"</span><span class='op'>)</span>,</span>
+<span>                    values<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"black"</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"light green"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"dark green"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"coral"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"dark red"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"yellow"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"orange"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,                 </span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"light blue"</span>,<span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>                             <span class='fu'><a href='https://scales.r-lib.org/reference/alpha.html'>alpha</a></span><span class='op'>(</span><span class='st'>"dark blue"</span>,<span class='fl'>0.4</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span><span class='op'>(</span><span class='st'>"Mean daily minimum temperature (°C)"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ylab</a></span><span class='op'>(</span><span class='st'>"Mean daily maximum temperature (°C)"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span>base_size <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="estimate_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<p>This convex-hull plot shows the temperature coverage at CKA from 1958 to 2019, alongside all experimental seasons analyzed in the Experimentally Enhanced PLS chapter.</p>
+<p>To integrate historical and experimental data into phenology modeling, records from the same species and cultivar (pear cultivar ‘Conference’) are required. Historical full bloom records for this cultivar exist from 1958 to 2019. However, to avoid distortions from extreme warming treatments, the experimental data used in the convex-hull plot may need refinement by excluding unusually warm seasons.</p>
+<p>The following plot presents an updated version without these extreme conditions:</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="estimate_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
+</div>
+<p>The coverage remains incomplete, as data for October and November is missing. Filling this gap is challenging since warmer conditions were not included in the experiments during these months.</p>
+<p>The analysis will continue with the available data, anticipating that future identification of ‘normal seasons’ in the experimental dataset will improve the modeling domain’s validity.</p>
+<p>Next, the <code>PhenoFlex</code> dormancy modeling framework will be implemented by integrating historical and experimental records. The following code chunk imports and formats the data for model calibration.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Import the phenology data for the historical period 1958-2019</span></span>
+<span><span class='co'># Note that we are selecting only the Year and full bloom columns</span></span>
+<span><span class='va'>historic_pheno_conference</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/Pheno_pear_conference_1958_2019.csv"</span><span class='op'>)</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Year"</span>,</span>
+<span>                                         <span class='st'>"Full_bloom"</span><span class='op'>)</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Remove missing years</span></span>
+<span><span class='va'>historic_pheno_conference</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='va'>historic_pheno_conference</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='op'>!</span><span class='va'>historic_pheno_conference</span><span class='op'>$</span><span class='va'>Full_bloom</span><span class='op'>==</span><span class='st'>""</span><span class='op'>)</span>,<span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Add a column for the JDay</span></span>
+<span><span class='va'>historic_pheno_conference</span><span class='op'>$</span><span class='va'>Full_bloom</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/date_to_JDay.html'>date_to_JDay</a></span><span class='op'>(</span>date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>historic_pheno_conference</span><span class='op'>$</span><span class='va'>Full_bloom</span>,</span>
+<span>                                         format <span class='op'>=</span> <span class='st'>"%d.%m.%Y"</span><span class='op'>)</span>,</span>
+<span>                          format <span class='op'>=</span> <span class='st'>"%Y-%m-%d"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Rename the columns</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>historic_pheno_conference</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Year"</span>, <span class='st'>"pheno"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Do the same for the weather data</span></span>
+<span><span class='va'>past_weather</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/TMaxTMin1958-2019_patched.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create hourly temps for compatibility with the experimental data set</span></span>
+<span><span class='va'>past_weather</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/stack_hourly_temps.html'>stack_hourly_temps</a></span><span class='op'>(</span>weather <span class='op'>=</span> <span class='va'>past_weather</span>, </span>
+<span>                                   latitude <span class='op'>=</span> <span class='fl'>50.4</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"hourtemps"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Load the experimental data</span></span>
+<span><span class='co'># Load the data from the folder</span></span>
+<span><span class='va'>exp_weather</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/final_weather_data_S1_S2_pear_hourly.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Generate a new column (Year_2) to simulate the year and comply with the format of PhenoFlex functions</span></span>
+<span><span class='va'>exp_weather</span><span class='op'>[</span><span class='st'>"Year_2"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>exp_weather</span><span class='op'>$</span><span class='va'>Treatment</span> <span class='op'>+</span> <span class='va'>exp_weather</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>+</span> <span class='fl'>3</span></span>
+<span></span>
+<span><span class='co'># Since this experiment was conducted during two consecutive seasons, the next step will fix a small continuity issue</span></span>
+<span><span class='co'># generated during the season 2</span></span>
+<span><span class='va'>exp_weather</span><span class='op'>[</span><span class='va'>exp_weather</span><span class='op'>$</span><span class='va'>Treatment</span> <span class='op'>&gt;=</span> <span class='fl'>17</span>, <span class='st'>"Year_2"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='va'>exp_weather</span><span class='op'>[</span><span class='va'>exp_weather</span><span class='op'>$</span><span class='va'>Treatment</span> <span class='op'>&gt;=</span> <span class='fl'>17</span>, <span class='st'>"Year_2"</span><span class='op'>]</span> <span class='op'>-</span> <span class='fl'>1</span></span>
+<span></span>
+<span><span class='co'># For further compatibility, I will now select the columns needed and will drop "Year" (the original one)</span></span>
+<span><span class='va'>exp_weather</span> <span class='op'>&lt;-</span> <span class='va'>exp_weather</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"YEARMODA"</span>,</span>
+<span>                             <span class='st'>"Year_2"</span>, </span>
+<span>                             <span class='st'>"Month"</span>, </span>
+<span>                             <span class='st'>"Day"</span>,</span>
+<span>                             <span class='st'>"Hour"</span>, </span>
+<span>                             <span class='st'>"JDay"</span>, </span>
+<span>                             <span class='st'>"Temp"</span><span class='op'>)</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># To replace the missing "Year" column, I will now change the name of the column</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>exp_weather</span><span class='op'>)</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>exp_weather</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"Year_2"</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"Year"</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Import the phenology data from the repository</span></span>
+<span><span class='va'>exp_pheno</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/final_bio_data_S1_S2_pear.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>exp_pheno</span><span class='op'>[</span><span class='st'>"Treatment"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>exp_pheno</span><span class='op'>$</span><span class='va'>Treatment</span> <span class='op'>+</span> <span class='fl'>2019</span> <span class='op'>+</span> <span class='fl'>3</span></span>
+<span></span>
+<span><span class='co'># Remove conflictive treatments</span></span>
+<span><span class='va'>exp_pheno</span> <span class='op'>&lt;-</span> <span class='va'>exp_pheno</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='va'>exp_pheno</span><span class='op'>$</span><span class='va'>Treatment</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2025</span>, <span class='fl'>2030</span>, <span class='fl'>2031</span>, <span class='fl'>2034</span>, <span class='fl'>2035</span>, <span class='fl'>2036</span>, <span class='fl'>2037</span>, <span class='fl'>2041</span>,</span>
+<span>                                                    <span class='fl'>2045</span>, <span class='fl'>2047</span>, <span class='fl'>2048</span>, <span class='fl'>2049</span>, <span class='fl'>2050</span>, <span class='fl'>2051</span>, <span class='fl'>2054</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>                       <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Treatment"</span>, <span class='st'>"pheno"</span><span class='op'>)</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Rename the columns to match the names of the historical dataset</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>exp_pheno</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Year"</span>, <span class='st'>"pheno"</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Merge the historical and experimental phenology data</span></span>
+<span><span class='va'>pheno_merged</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind_rows.html'>bind_rows</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>historic_pheno_conference</span>, <span class='va'>Year</span> <span class='op'>!=</span> <span class='fl'>1958</span><span class='op'>)</span>,</span>
+<span>                          <span class='va'>exp_pheno</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Merge the historical and experimental phenology data</span></span>
+<span><span class='va'>weather_merged</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind_rows.html'>bind_rows</a></span><span class='op'>(</span><span class='va'>past_weather</span><span class='op'>[</span>, <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>past_weather</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>exp_weather</span><span class='op'>)</span><span class='op'>]</span>,</span>
+<span>                            <span class='va'>exp_weather</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>The historical and experimental data for phenology and weather records are now combined into a single dataset. The same procedure used in the chapter <em>Can we improve the performance of PhenoFlex?</em> can be applied to fit the <code>PhenoFlex</code> parameters to the data.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Define the season used for calibration and validation in the PhenoFlex modelling approach</span></span>
+<span><span class='va'>calibration_seasons</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>pheno_merged</span><span class='op'>$</span><span class='va'>Year</span>, <span class='fl'>50</span>, replace <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>validation_seasons</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>pheno_merged</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='va'>pheno_merged</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>calibration_seasons</span><span class='op'>)</span>, <span class='st'>"Year"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define the list of seasons (weather data)</span></span>
+<span><span class='va'>weather_season_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/genSeasonList.html'>genSeasonList</a></span><span class='op'>(</span><span class='va'>weather_merged</span>, mrange <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span>, <span class='fl'>5</span><span class='op'>)</span>, years <span class='op'>=</span> <span class='va'>calibration_seasons</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>The <code>PhenoFlex</code> model fitting procedure can now be applied, following the approach outlined in <em>The PhenoFlex Model</em> chapter. Initially, wide parameter ranges—particularly for <em>yc</em> and <em>zc</em>—are used to let the model determine optimal estimates. The fitted parameters and predicted bloom dates are then saved in the <code>data</code> folder.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Set the initial parameters (wide ranges)</span></span>
+<span><span class='co'>#          yc,  zc,  s1, Tu,     E0,      E1,     A0,          A1,   Tf, Tc, Tb, slope</span></span>
+<span><span class='va'>lower</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>100</span>, <span class='fl'>0.1</span>,  <span class='fl'>0</span>, <span class='fl'>3000.0</span>,  <span class='fl'>9000.0</span>, <span class='fl'>6000.0</span>,       <span class='fl'>5.e13</span>,    <span class='fl'>0</span>,  <span class='fl'>0</span>,  <span class='fl'>0</span>,  <span class='fl'>0.05</span><span class='op'>)</span></span>
+<span><span class='va'>par</span>   <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>40</span>, <span class='fl'>190</span>, <span class='fl'>0.5</span>, <span class='fl'>25</span>, <span class='fl'>3372.8</span>,  <span class='fl'>9900.3</span>, <span class='fl'>6319.5</span>, <span class='fl'>5.939917e13</span>,    <span class='fl'>4</span>, <span class='fl'>36</span>,  <span class='fl'>4</span>,  <span class='fl'>1.60</span><span class='op'>)</span></span>
+<span><span class='va'>upper</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>80</span>, <span class='fl'>500</span>, <span class='fl'>1.0</span>, <span class='fl'>30</span>, <span class='fl'>4000.0</span>, <span class='fl'>10000.0</span>, <span class='fl'>7000.0</span>,       <span class='fl'>6.e13</span>,   <span class='fl'>10</span>, <span class='fl'>40</span>, <span class='fl'>10</span>, <span class='fl'>50.00</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Run the fitter</span></span>
+<span><span class='va'>pheno_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/phenologyFitter.html'>phenologyFitter</a></span><span class='op'>(</span>par.guess <span class='op'>=</span> <span class='va'>par</span>,</span>
+<span>                             modelfn <span class='op'>=</span> <span class='va'>PhenoFlex_GDHwrapper</span>,</span>
+<span>                             bloomJDays <span class='op'>=</span> <span class='va'>pheno_merged</span><span class='op'>[</span><span class='va'>pheno_merged</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span></span>
+<span>                                                         <span class='va'>calibration_seasons</span>, <span class='st'>"pheno"</span><span class='op'>]</span>,</span>
+<span>                             SeasonList <span class='op'>=</span> <span class='va'>weather_season_list</span>,</span>
+<span>                             lower <span class='op'>=</span> <span class='va'>lower</span>,</span>
+<span>                             upper <span class='op'>=</span> <span class='va'>upper</span>,</span>
+<span>                             control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>smooth <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>                                            verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>                                            maxit <span class='op'>=</span> <span class='fl'>2000</span>,</span>
+<span>                                            nb.stop.improvement <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Save the resulting parameters to folder (to avoid having to run the phenology fitter again)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>pheno_fit</span><span class='op'>$</span><span class='va'>par</span>, <span class='st'>"data/PhenoFlex_hist_exp_pear.csv"</span>, row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Save the results of the predicted phenology for the calibration seasons</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>pheno_merged</span><span class='op'>[</span><span class='va'>pheno_merged</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>calibration_seasons</span>, <span class='op'>]</span>,</span>
+<span>                     <span class='st'>"Predicted"</span> <span class='op'>=</span> <span class='va'>pheno_fit</span><span class='op'>$</span><span class='va'>pbloomJDays</span><span class='op'>)</span>, <span class='st'>"data/PhenoFlex_hist_exp_predicted_bloom_pear.csv"</span>,</span>
+<span>          row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>The results of the fitting procedure can now be examined. By using the fitted parameters in the model, the prediction error can be assessed by comparing the predicted bloom dates with the observed ones.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Read the parameters</span></span>
+<span><span class='va'>params</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/PhenoFlex_hist_exp_pear.csv"</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Generate a data set to collect the outputs of the fitting for the calibration data </span></span>
+<span><span class='va'>out_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/read_tab.html'>read_tab</a></span><span class='op'>(</span><span class='st'>"data/PhenoFlex_hist_exp_predicted_bloom_pear.csv"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Compute the error (observed - predicted)</span></span>
+<span><span class='va'>out_df</span><span class='op'>[[</span><span class='st'>"Error"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>out_df</span><span class='op'>$</span><span class='va'>pheno</span> <span class='op'>-</span> <span class='va'>out_df</span><span class='op'>$</span><span class='va'>Predicted</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>Model performance metrics can now be computed based on the estimated prediction errors. While not crucial during calibration, these metrics provide insight into the success of the calibration attempt.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>Although there is room for improvement—considering that only 10 iterations of the fitting procedure were used—the calibration still results in a relatively small RMSEP. A plot of the results will help visualize the overall performance.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plot the results to see the overall fitting</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>out_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>pheno</span>, <span class='va'>Predicted</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_abline</a></span><span class='op'>(</span>intercept <span class='op'>=</span> <span class='fl'>0</span>, slope <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Observed"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="estimate_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<p>This is a good initial calibration, but it may be worthwhile to test different <code>par.guess</code> values and adjust other arguments within <code>phenologyFitter()</code> to improve the model calibration.</p>
+<h2 id="validation">Validation</h2>
+<p>Next, the model’s ability to predict bloom dates for seasons outside the calibration dataset should be evaluated. This requires extracting the model parameters and using the <code>PhenoFlex_GDHwrapper()</code> function to perform the predictions.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Generate a validation data set with phenology data</span></span>
+<span><span class='va'>valid_df</span> <span class='op'>&lt;-</span> <span class='va'>pheno_merged</span><span class='op'>[</span><span class='va'>pheno_merged</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>validation_seasons</span>, <span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Generate a list of seasons with weather data for the validation procedure</span></span>
+<span><span class='va'>valid_season_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/genSeasonList.html'>genSeasonList</a></span><span class='op'>(</span><span class='va'>weather_merged</span>, mrange <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span>, <span class='fl'>7</span><span class='op'>)</span>, </span>
+<span>                                   years <span class='op'>=</span> <span class='va'>validation_seasons</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Estimate the bloom dates with PhenoFlexGDHwrapper</span></span>
+<span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span> <span class='op'>:</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>valid_df</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='va'>valid_df</span><span class='op'>[</span><span class='va'>i</span>, <span class='st'>"Predicted"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/PhenoFlex_GDHwrapper.html'>PhenoFlex_GDHwrapper</a></span><span class='op'>(</span><span class='va'>valid_season_list</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span>                                                   <span class='va'>params</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='co'># Compute the error (observed - predicted)</span></span>
+<span><span class='va'>valid_df</span><span class='op'>[[</span><span class='st'>"Error"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>valid_df</span><span class='op'>$</span><span class='va'>pheno</span> <span class='op'>-</span> <span class='va'>valid_df</span><span class='op'>$</span><span class='va'>Predicted</span></span></code></pre>
+</div>
+</div>
+<p>Since the prediction error (the difference between observed and predicted values) in the validation dataset is known, model performance metrics such as RMSEP and RPIQ can be estimated. The <code>RMSEP()</code> and <code>RPIQ()</code> functions from the <code>chillR</code> package can be used for this purpose.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: right;">Calibration</th>
+<th style="text-align: right;">Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">RMSEP</td>
+<td style="text-align: right;">4.72</td>
+<td style="text-align: right;">5.34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RPIQ</td>
+<td style="text-align: right;">4.50</td>
+<td style="text-align: right;">4.12</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The table results suggest that the <code>PhenoFlex</code> model performs well in predicting pear tree bloom dates under future conditions. To enhance robustness, multiple <code>PhenoFlex</code> fittings should be conducted to lower RMSEP values. Additionally, reducing the number of experimental seasons may help minimize the influence of extreme values and narrow the range of observed conditions in the warmer part of the model’s validity domain.</p>
+<p>Further errors may stem from merging datasets collected using different methodologies, such as mature orchard trees versus young potted trees, or variations in observers across experiments. The fitting outcomes are analyzed below, with labels marking seasons where the prediction error exceeds 10 days.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plot the validation and calibration results (highlight seasons with 10 or more days of error)</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>out_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>pheno</span>, <span class='va'>Predicted</span>, color <span class='op'>=</span> <span class='st'>"Calibration"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>valid_df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>pheno</span>, <span class='va'>Predicted</span>, color <span class='op'>=</span> <span class='st'>"Validation"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://ggrepel.slowkow.com/reference/geom_text_repel.html'>geom_label_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>pheno</span>, <span class='va'>Predicted</span>, label <span class='op'>=</span> <span class='va'>Year</span><span class='op'>)</span>,</span>
+<span>                            data <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>out_df</span>, <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='va'>Error</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>10</span><span class='op'>)</span>, nudge_y <span class='op'>=</span> <span class='fl'>2</span>, nudge_x <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>ggrepel</span><span class='fu'>::</span><span class='fu'><a href='https://ggrepel.slowkow.com/reference/geom_text_repel.html'>geom_label_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>pheno</span>, <span class='va'>Predicted</span>, label <span class='op'>=</span> <span class='va'>Year</span><span class='op'>)</span>,</span>
+<span>                            data <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>valid_df</span>, <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='va'>Error</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>10</span><span class='op'>)</span>, nudge_y <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, nudge_x <span class='op'>=</span> <span class='fl'>9</span>, force <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_color_manual</a></span><span class='op'>(</span>values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"cadetblue"</span>, <span class='st'>"firebrick"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_abline</a></span><span class='op'>(</span>intercept <span class='op'>=</span> <span class='fl'>0</span>, slope <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Observed"</span>,</span>
+<span>       color <span class='op'>=</span> <span class='st'>"Dataset"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="estimate_files/figure-html5/unnamed-chunk-16-1.png" width="624" /></p>
+</div>
+<p>If the validation approach is deemed satisfactory, the fitted parameters from previous model runs can be used to predict bloom dates under future scenarios. This involves utilizing the data from the <em>Future Temperature Scenarios</em> chapter, which has already been loaded into R for generating the convex-hull plots.</p>
+<p>The function <code>PhenoFlex_GDHwrapper()</code> will be applied to estimate bloom dates under future conditions. The initial steps within the <em>for</em> loop ensure proper data formatting by deriving hourly temperature records with <code>stack_hourly_temps()</code> and defining the seasons using <code>genSeasonList()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Create a primer data frame to allocate the results for future bloom</span></span>
+<span><span class='va'>future_bloom</span> <span class='op'>&lt;-</span> <span class='va'>future_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, </span>
+<span>           <span class='va'>GCM</span>, </span>
+<span>           <span class='va'>Year</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>Pheno <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define the scenarios to be used in the for loop</span></span>
+<span><span class='va'>scenarios</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>SSP_Time</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define the climate models to be used in the for loop</span></span>
+<span><span class='va'>climate_models</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>future_temps</span><span class='op'>$</span><span class='va'>GCM</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Implement the for loop</span></span>
+<span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>scenario</span> <span class='kw'>in</span> <span class='va'>scenarios</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='va'>scen_file</span> <span class='op'>&lt;-</span> <span class='va'>future_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>SSP_Time</span> <span class='op'>==</span> <span class='va'>scenario</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>climate_models</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>scen_file</span><span class='op'>$</span><span class='va'>GCM</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'>for</span> <span class='op'>(</span><span class='va'>climate_model</span> <span class='kw'>in</span> <span class='va'>climate_models</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='co'># Subset a temporary data frame according to scenario and climate model</span></span>
+<span>    <span class='co'># and generate hourly temperatures</span></span>
+<span>    <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>scen_file</span>,</span>
+<span>                      <span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>      <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/stack_hourly_temps.html'>stack_hourly_temps</a></span><span class='op'>(</span>latitude <span class='op'>=</span> <span class='fl'>50.4</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='co'># Define the saeasons to be used for predicting the phenology</span></span>
+<span>    <span class='va'>temp_seasons_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/genSeasonList.html'>genSeasonList</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>$</span><span class='va'>hourtemps</span>, </span>
+<span>                                       mrange <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span>, <span class='fl'>7</span><span class='op'>)</span>,</span>
+<span>                                       years <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2101</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='co'># Change the names of the list of seasons to be used as index in the next for loop</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2101</span></span>
+<span>    </span>
+<span>    <span class='co'># Implement a for loop that runs over the list of seasons to estimate the bloom date using the parameters fitted by the</span></span>
+<span>    <span class='co'># model</span></span>
+<span>    <span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span> <span class='op'>:</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>      </span>
+<span>      <span class='co'># Add the bloom date to the primer data set</span></span>
+<span>      <span class='va'>future_bloom</span><span class='op'>[</span><span class='va'>future_bloom</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>==</span> <span class='va'>scenario</span> <span class='op'>&amp;</span> </span>
+<span>                     <span class='va'>future_bloom</span><span class='op'>$</span><span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span> </span>
+<span>                     <span class='va'>future_bloom</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, </span>
+<span>                   <span class='st'>"Pheno"</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>        <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/PhenoFlex_GDHwrapper.html'>PhenoFlex_GDHwrapper</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span>                             <span class='va'>params</span><span class='op'>)</span></span>
+<span>    <span class='op'>}</span></span>
+<span>  <span class='op'>}</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>The same procedure can now be applied to estimate bloom dates for historically simulated scenarios.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Bloom for past simulated scenarios ####</span></span>
+<span><span class='co'># Load the historical simulated scenarios</span></span>
+<span><span class='va'>temps_past_scenarios</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/load_temperature_scenarios.html'>load_temperature_scenarios</a></span><span class='op'>(</span><span class='st'>"data"</span>,</span>
+<span>                                    <span class='st'>"Bonn_hist_scenarios"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create a single dataset for all the simulated years</span></span>
+<span><span class='va'>temps_past_scenarios</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind_rows.html'>bind_rows</a></span><span class='op'>(</span><span class='va'>temps_past_scenarios</span>,</span>
+<span>                                  .id <span class='op'>=</span> <span class='st'>"Scen_year"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Make a primer dataset to allocate the results of the bloom projection</span></span>
+<span><span class='va'>simulated_bloom</span> <span class='op'>&lt;-</span> <span class='va'>temps_past_scenarios</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Scen_year</span>, <span class='va'>Year</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>Pheno <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define the scenario years to be used in the loop</span></span>
+<span><span class='va'>scen_years</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>simulated_bloom</span><span class='op'>$</span><span class='va'>Scen_year</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Implement the for loop</span></span>
+<span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>scen_year</span> <span class='kw'>in</span> <span class='va'>scen_years</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Subset a temporary data frame according to scenario and climate model</span></span>
+<span>  <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>temps_past_scenarios</span>, </span>
+<span>                    <span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Generate hourly temperatures in the temporary data frame</span></span>
+<span>  <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/stack_hourly_temps.html'>stack_hourly_temps</a></span><span class='op'>(</span><span class='va'>temp_df</span>,</span>
+<span>                                latitude <span class='op'>=</span> <span class='fl'>50.4</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Define the saeasons to be used for predicting the phenology</span></span>
+<span>  <span class='va'>temp_seasons_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/genSeasonList.html'>genSeasonList</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>$</span><span class='va'>hourtemps</span>, </span>
+<span>                                     mrange <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>9</span>, <span class='fl'>7</span><span class='op'>)</span>, </span>
+<span>                                     years <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2101</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Change the names of the list of seasons to be used as index in the next for loop</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2101</span></span>
+<span>  </span>
+<span>  <span class='co'># Implement a for loop that runs over the list of seasons to estimate the bloom date using the parameters fitted by the</span></span>
+<span>  <span class='co'># model</span></span>
+<span>  <span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span> <span class='op'>:</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='co'># Add the bloom date to the primer data set</span></span>
+<span>    <span class='va'>simulated_bloom</span><span class='op'>[</span><span class='va'>simulated_bloom</span><span class='op'>$</span><span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span> <span class='op'>&amp;</span> </span>
+<span>                      <span class='va'>simulated_bloom</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>)</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, </span>
+<span>                    <span class='st'>"Pheno"</span><span class='op'>]</span> <span class='op'>&lt;-</span> </span>
+<span>      <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/PhenoFlex_GDHwrapper.html'>PhenoFlex_GDHwrapper</a></span><span class='op'>(</span><span class='va'>temp_seasons_list</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span>                                                                                                            <span class='va'>params</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>simulated_bloom</span>, <span class='st'>"data/frost_simulated_bloom.csv"</span>, row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>A plot will now be created to illustrate likely bloom dates for historical and future scenarios, incorporating calibration data for the <code>PhenoFlex</code> model. Since the two datasets have different axes, the plotting process is complex and follows these steps:</p>
+<ol type="1">
+<li><p>Generate a violin plot for simulated bloom data from past scenarios.</p></li>
+<li><p>Extract x and y axis limits using <code>layer_scales()</code>.</p></li>
+<li><p>Create a density plot of calibration data (distinguishing between historical and experimental data) and extract its data using <code>ggplot_build()</code>.</p></li>
+<li><p>Convert the extracted density data into numeric values that align with the year axis from the first plot.</p></li>
+<li><p>Add this density data to the initial plot using <code>geom_ribbon()</code>.</p></li>
+<li><p>Plot future bloom data separately.</p></li>
+<li><p>Merge both plots using the <code>patchwork</code> package.</p></li>
+<li><p>Save the final plot as an image with <code>ggsave()</code>.</p></li>
+</ol>
+<p>Despite necessary adjustments and challenges in aligning both datasets, the resulting visualization effectively presents the intended comparison.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plot all bloom prediction results</span></span>
+<span></span>
+<span><span class='co'># Plot showing the violins for historical simulated scenarios</span></span>
+<span><span class='va'>past_simulated_plot</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>simulated_bloom</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_violin.html'>geom_violin</a></span><span class='op'>(</span></span>
+<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Scen_year</span>,</span>
+<span>        group <span class='op'>=</span> <span class='va'>Scen_year</span>, </span>
+<span>        y <span class='op'>=</span> <span class='va'>Pheno</span><span class='op'>)</span>,</span>
+<span>    linewidth <span class='op'>=</span> <span class='fl'>0.35</span>,</span>
+<span>    draw_quantiles <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span><span class='op'>)</span>,</span>
+<span>    alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span><span class='op'>~</span> <span class='st'>"Historical"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title.x<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        axis.title.y<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        plot.background <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_rect</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span>,</span>
+<span>        panel.background <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        panel.grid <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        aspect.ratio <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>past_xlim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot_build.html'>layer_scales</a></span><span class='op'>(</span><span class='va'>past_simulated_plot</span><span class='op'>)</span><span class='op'>$</span><span class='va'>x</span><span class='op'>$</span><span class='va'>range</span><span class='op'>$</span><span class='va'>range</span></span>
+<span><span class='va'>past_ylim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot_build.html'>layer_scales</a></span><span class='op'>(</span><span class='va'>past_simulated_plot</span><span class='op'>)</span><span class='op'>$</span><span class='va'>y</span><span class='op'>$</span><span class='va'>range</span><span class='op'>$</span><span class='va'>range</span></span>
+<span></span>
+<span><span class='co'># Make a density plot to show the distribution of the seasons used for calibration of the PhenoFlex modelling framework</span></span>
+<span><span class='co'># Create a dataframe with columns to be used in the plot</span></span>
+<span><span class='va'>observed_bloom_calibration</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>out_df</span>,</span>
+<span>             Facet <span class='op'>=</span> <span class='st'>"Past scenarios"</span>,</span>
+<span>             Dataset <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>out_df</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>&gt;</span> <span class='fl'>2010</span>, </span>
+<span>                               <span class='st'>"Experimental"</span>, </span>
+<span>                               <span class='st'>"Historical"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Make a density plot of the bloom dates included in the calibration dataset</span></span>
+<span><span class='va'>gg_density_plot</span> <span class='op'>&lt;-</span>   </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_density.html'>geom_density</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>observed_bloom_calibration</span>,</span>
+<span>               <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>pheno</span>, </span>
+<span>                   fill <span class='op'>=</span> <span class='va'>Dataset</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Extract data from the plot</span></span>
+<span><span class='va'>density_data</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='va'>gg_density_plot</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot_build.html'>ggplot_build</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://purrr.tidyverse.org/reference/pluck.html'>pluck</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>:</span><span class='va'>y</span>,<span class='va'>group</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Scale data so that they can be plotted on the Year axis</span></span>
+<span><span class='va'>density_data</span><span class='op'>[</span><span class='va'>density_data</span><span class='op'>$</span><span class='va'>group</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Dataset"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"Experimental"</span></span>
+<span><span class='va'>density_data</span><span class='op'>[</span><span class='va'>density_data</span><span class='op'>$</span><span class='va'>group</span> <span class='op'>==</span> <span class='fl'>2</span>, <span class='st'>"Dataset"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"Historical"</span></span>
+<span><span class='va'>density_data</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='va'>density_data</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>density_scaled <span class='op'>=</span> <span class='va'>x</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,</span>
+<span>         density_scaled <span class='op'>=</span> <span class='va'>density_scaled</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>past_xlim</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span> <span class='op'>-</span> </span>
+<span>                                              <span class='va'>past_xlim</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>*</span> <span class='fl'>0.9</span> <span class='op'>+</span> <span class='va'>past_xlim</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># merge the two plots (and plot the violin plot again, so that it's placed</span></span>
+<span><span class='co'># on top)</span></span>
+<span></span>
+<span><span class='va'>past_observed_plot</span> <span class='op'>&lt;-</span> </span>
+<span>  <span class='va'>past_simulated_plot</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_ribbon.html'>geom_ribbon</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>density_data</span>,</span>
+<span>            stat <span class='op'>=</span> <span class='st'>"identity"</span>,</span>
+<span>            position <span class='op'>=</span> <span class='st'>"identity"</span>,</span>
+<span>            <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>xmin <span class='op'>=</span> <span class='va'>past_xlim</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
+<span>                xmax <span class='op'>=</span> <span class='va'>density_scaled</span>,</span>
+<span>                y <span class='op'>=</span> <span class='va'>y</span>,</span>
+<span>                fill <span class='op'>=</span> <span class='va'>Dataset</span><span class='op'>)</span>,</span>
+<span>         alpha <span class='op'>=</span> <span class='fl'>0.75</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_violin.html'>geom_violin</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>simulated_bloom</span>,</span>
+<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Scen_year</span>,</span>
+<span>        group <span class='op'>=</span> <span class='va'>Scen_year</span>, </span>
+<span>        y <span class='op'>=</span> <span class='va'>Pheno</span><span class='op'>)</span>,</span>
+<span>    size <span class='op'>=</span> <span class='fl'>0.35</span>,</span>
+<span>    draw_quantiles <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span><span class='op'>)</span>,</span>
+<span>    alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>160</span><span class='op'>)</span>,</span>
+<span>                     labels <span class='op'>=</span> <span class='kw'>function</span> <span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> </span>
+<span>                       <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/JDay_to_date.html'>JDay_to_date</a></span><span class='op'>(</span><span class='va'>x</span>, </span>
+<span>                                                      <span class='fl'>2001</span>,</span>
+<span>                                                      na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,</span>
+<span>                              <span class='st'>"%b %d"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>0.1</span><span class='op'>)</span>,</span>
+<span>        axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>8</span>, </span>
+<span>                                   angle <span class='op'>=</span> <span class='fl'>45</span>,</span>
+<span>                                   vjust <span class='op'>=</span> <span class='fl'>.4</span>, </span>
+<span>                                   hjust <span class='op'>=</span> <span class='fl'>.6</span><span class='op'>)</span>,</span>
+<span>        legend.text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>,</span>
+<span>        legend.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Create a violin plot to show future bloom dates</span></span>
+<span><span class='va'>future_bloom_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>future_bloom</span><span class='op'>)</span>,</span>
+<span>                            <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>GCM</span>, <span class='va'>Pheno</span>, fill <span class='op'>=</span> <span class='va'>GCM</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_violin.html'>geom_violin</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>0.35</span>,</span>
+<span>              draw_quantiles <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='fl'>0.75</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/stat_summary.html'>stat_summary</a></span><span class='op'>(</span>fun <span class='op'>=</span> <span class='st'>"median"</span>, </span>
+<span>               geom <span class='op'>=</span> <span class='st'>"point"</span>,</span>
+<span>               shape <span class='op'>=</span> <span class='fl'>4</span>,</span>
+<span>               size <span class='op'>=</span> <span class='fl'>0.8</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>160</span><span class='op'>)</span>,</span>
+<span>                     labels <span class='op'>=</span> <span class='kw'>function</span> <span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span>
+<span>                       <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/JDay_to_date.html'>JDay_to_date</a></span><span class='op'>(</span><span class='va'>x</span>,</span>
+<span>                                                      <span class='fl'>2001</span>,</span>
+<span>                                                      na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, </span>
+<span>                              <span class='st'>"%b %d"</span><span class='op'>)</span><span class='op'>)</span>  <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>SSP_Time</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"bottom"</span>,</span>
+<span>        legend.key.size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>0.4</span>, <span class='st'>"cm"</span><span class='op'>)</span>,</span>
+<span>        legend.text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>7</span><span class='op'>)</span>,</span>
+<span>        axis.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        axis.text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        axis.ticks <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span>       <span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Combine plots</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://patchwork.data-imaginist.com'>patchwork</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>past_observed_plot</span> <span class='op'>+</span></span>
+<span>             <span class='va'>future_bloom_plot</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Save the plot to the folder</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggsave.html'>ggsave</a></span><span class='op'>(</span><span class='st'>"images/future_pheno_pear.png"</span>, </span>
+<span>       device <span class='op'>=</span> <span class='st'>"png"</span>, </span>
+<span>       width <span class='op'>=</span> <span class='fl'>19</span>, </span>
+<span>       height <span class='op'>=</span> <span class='fl'>15</span>,</span>
+<span>       units <span class='op'>=</span> <span class='st'>"cm"</span>, </span>
+<span>       dpi <span class='op'>=</span> <span class='fl'>600</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p><img src="images/future_pheno_pear.png" /></p>
+<p>The results indicate that bloom in pear cultivar ‘Conference’ is expected to occur slightly earlier under future climate scenarios. The next step is to assess the probability of frost events during the flowering period. To do this, a bloom period of 10 days around the predicted full bloom date for each simulated year will be considered, and temperature data during this period will be analyzed.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Frost risk part ####</span></span>
+<span><span class='co'># Add the "buffer" around the estimated bloom dates to compute the number of hours below 0 °C in this period. Hypothetically, this represents the</span></span>
+<span><span class='co'># period of bloom in all scenarios</span></span>
+<span></span>
+<span><span class='co'># Define the buffer only once</span></span>
+<span><span class='va'>bloom_buffer</span> <span class='op'>&lt;-</span> <span class='fl'>5</span></span>
+<span></span>
+<span><span class='co'># Mutate the future bloom dataset to add the beggining and end for bloom</span></span>
+<span><span class='va'>future_bloom</span> <span class='op'>&lt;-</span> <span class='va'>future_bloom</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Beginning <span class='op'>=</span> <span class='va'>Pheno</span> <span class='op'>-</span> <span class='va'>bloom_buffer</span>,</span>
+<span>         End <span class='op'>=</span> <span class='va'>Pheno</span> <span class='op'>+</span> <span class='va'>bloom_buffer</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Do the same with the observed bloom dataset (i.e. calibration)</span></span>
+<span><span class='va'>observed_bloom_calibration</span> <span class='op'>&lt;-</span> <span class='va'>observed_bloom_calibration</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Beginning <span class='op'>=</span> <span class='va'>pheno</span> <span class='op'>-</span> <span class='va'>bloom_buffer</span>,</span>
+<span>         End <span class='op'>=</span> <span class='va'>pheno</span> <span class='op'>+</span> <span class='va'>bloom_buffer</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Same with the past simulated data from historical scenarios</span></span>
+<span><span class='va'>simulated_bloom</span> <span class='op'>&lt;-</span> <span class='va'>simulated_bloom</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Beginning <span class='op'>=</span> <span class='va'>Pheno</span> <span class='op'>-</span> <span class='va'>bloom_buffer</span>,</span>
+<span>         End <span class='op'>=</span> <span class='va'>Pheno</span> <span class='op'>+</span> <span class='va'>bloom_buffer</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>The number of frost hours expected under future and historical simulated scenarios will now be computed using multiple for loops. This approach will allow for a detailed assessment of frost risk during the bloom period across different climate conditions.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span> <span class='op'>:</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>observed_bloom_calibration</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Extract the beginning and end date for observed bloom</span></span>
+<span>  <span class='va'>beg_bloom</span> <span class='op'>&lt;-</span> <span class='va'>observed_bloom_calibration</span><span class='op'>[</span><span class='va'>i</span>, <span class='st'>"Beginning"</span><span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='va'>end_bloom</span> <span class='op'>&lt;-</span> <span class='va'>observed_bloom_calibration</span><span class='op'>[</span><span class='va'>i</span>, <span class='st'>"End"</span><span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># Subset a temporary dataframe of weather records for the year of interest</span></span>
+<span>  <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>weather_merged</span>, </span>
+<span>                    <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>observed_bloom_calibration</span><span class='op'>[</span><span class='va'>i</span>, <span class='st'>"Year"</span><span class='op'>]</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Add the Julian date</span></span>
+<span>  <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/make_JDay.html'>make_JDay</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Filter only the period for bloom</span></span>
+<span>  <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>temp_df</span>,</span>
+<span>                    <span class='va'>JDay</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>beg_bloom</span> <span class='op'>:</span> <span class='va'>end_bloom</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Calculate the number of hours below 0 °C</span></span>
+<span>  <span class='va'>frost_hours</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/frost_risk.html'>frost_risk</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>$</span><span class='va'>Temp</span>, </span>
+<span>                                           threshold <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Add the number of hours to the original dataframe</span></span>
+<span>  <span class='va'>observed_bloom_calibration</span><span class='op'>[</span><span class='va'>i</span>, <span class='st'>"Frost"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>frost_hours</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>The same procedure is applied to both past simulated and future scenarios.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Make a primer dataset to allocate the results of the frost projections</span></span>
+<span><span class='va'>simulated_frost</span> <span class='op'>&lt;-</span> <span class='va'>temps_past_scenarios</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Scen_year</span>, <span class='va'>Year</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>Frost <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Implement the loop over scenario years and simulated years </span></span>
+<span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>scen_year</span> <span class='kw'>in</span> <span class='va'>scen_years</span><span class='op'>)</span></span>
+<span>  <span class='kw'>for</span> <span class='op'>(</span><span class='va'>year</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2100</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>simulated_bloom</span>, </span>
+<span>                     <span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span> <span class='op'>&amp;</span> </span>
+<span>                     <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"Pheno"</span><span class='op'>]</span><span class='op'>]</span>   <span class='op'>)</span><span class='op'>)</span></span>
+<span>      <span class='op'>{</span></span>
+<span>      </span>
+<span>      <span class='co'># Extract the beginning and end of the blooming period</span></span>
+<span>      <span class='va'>beg_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>simulated_bloom</span><span class='op'>)</span>, </span>
+<span>                          <span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span> <span class='op'>&amp;</span> </span>
+<span>                            <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"Beginning"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>      </span>
+<span>      <span class='va'>beg_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>trunc</a></span><span class='op'>(</span><span class='va'>beg_bloom</span><span class='op'>)</span></span>
+<span>      </span>
+<span>      <span class='va'>end_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>simulated_bloom</span><span class='op'>)</span>, </span>
+<span>                          <span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span>, </span>
+<span>                          <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"End"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>      </span>
+<span>      <span class='va'>end_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>trunc</a></span><span class='op'>(</span><span class='va'>end_bloom</span><span class='op'>)</span></span>
+<span>      </span>
+<span>      <span class='co'># Filter the weather data according to the relevant scenario year and simulated year</span></span>
+<span>      </span>
+<span>      <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>temps_past_scenarios</span>, </span>
+<span>                        <span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span> <span class='op'>&amp;</span></span>
+<span>                          <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span></span>
+<span>      </span>
+<span>      <span class='co'># Derive hourly temperatures based on the latitude of Campus Klein-Altendorf</span></span>
+<span>      <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/stack_hourly_temps.html'>stack_hourly_temps</a></span><span class='op'>(</span><span class='va'>temp_df</span>,</span>
+<span>                                    latitude <span class='op'>=</span> <span class='fl'>50.4</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"hourtemps"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>      </span>
+<span>      <span class='co'># Filter the relevant period when bloom is likely to occurs</span></span>
+<span>      </span>
+<span>      <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>temp_df</span>, </span>
+<span>                        <span class='va'>JDay</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>beg_bloom</span> <span class='op'>:</span> <span class='va'>end_bloom</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>      </span>
+<span>      <span class='co'># Compute the number of frost hours</span></span>
+<span>      <span class='va'>frost_hours</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/frost_risk.html'>frost_risk</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>$</span><span class='va'>Temp</span>, </span>
+<span>                                               threshold <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>      <span class='op'>}</span> <span class='kw'>else</span> <span class='va'>frost_hours</span> <span class='op'>&lt;-</span> <span class='fl'>0</span></span>
+<span>      </span>
+<span>      <span class='co'># Add the number of frost events to the primer dataset</span></span>
+<span>      </span>
+<span>      <span class='va'>simulated_frost</span><span class='op'>[</span><span class='va'>simulated_frost</span><span class='op'>$</span><span class='va'>Scen_year</span> <span class='op'>==</span> <span class='va'>scen_year</span> <span class='op'>&amp;</span> </span>
+<span>                      <span class='va'>simulated_frost</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span>, <span class='st'>"Frost"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>frost_hours</span></span>
+<span></span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='co'># Remove NA cells since the first year has no bloom</span></span>
+<span><span class='va'>simulated_frost</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>simulated_frost</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>Next, the future scenarios are processed using the same methodology.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Create a primer data frame to allocate the results for future bloom</span></span>
+<span><span class='va'>future_frost</span> <span class='op'>&lt;-</span> <span class='va'>future_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>SSP_Time</span>, <span class='va'>GCM</span>, <span class='va'>Year</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>Frost <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Implement the for loop</span></span>
+<span><span class='kw'>for</span> <span class='op'>(</span><span class='va'>scenario</span> <span class='kw'>in</span> <span class='va'>scenarios</span><span class='op'>)</span></span>
+<span>    <span class='op'>{</span><span class='va'>scen_file</span> <span class='op'>&lt;-</span> <span class='va'>future_bloom</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>      <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>SSP_Time</span> <span class='op'>==</span> <span class='va'>scenario</span><span class='op'>)</span></span>
+<span>    <span class='va'>climate_models</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>scen_file</span><span class='op'>$</span><span class='va'>GCM</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='kw'>for</span> <span class='op'>(</span><span class='va'>climate_model</span> <span class='kw'>in</span> <span class='va'>climate_models</span><span class='op'>)</span></span>
+<span>      <span class='kw'>for</span> <span class='op'>(</span><span class='va'>year</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2002</span> <span class='op'>:</span> <span class='fl'>2100</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>      </span>
+<span>        <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>scen_file</span>,</span>
+<span>                         <span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span> </span>
+<span>                         <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"Pheno"</span><span class='op'>]</span><span class='op'>]</span>   <span class='op'>)</span><span class='op'>)</span></span>
+<span>        <span class='op'>{</span></span>
+<span>          <span class='va'>beg_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>scen_file</span><span class='op'>)</span>,</span>
+<span>                              <span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span></span>
+<span>                                <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"Beginning"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>          </span>
+<span>          <span class='va'>beg_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>trunc</a></span><span class='op'>(</span><span class='va'>beg_bloom</span><span class='op'>)</span></span>
+<span>          </span>
+<span>          <span class='va'>end_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>scen_file</span><span class='op'>)</span>,</span>
+<span>                              <span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span></span>
+<span>                                <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"End"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>          </span>
+<span>          <span class='va'>end_bloom</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>trunc</a></span><span class='op'>(</span><span class='va'>end_bloom</span><span class='op'>)</span></span>
+<span>          </span>
+<span>          <span class='co'># Derive hourly temperatures based on the latitude of Campus Klein-Altendorf</span></span>
+<span>          </span>
+<span>          <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>future_temps</span>,</span>
+<span>                            <span class='va'>SSP_Time</span> <span class='op'>==</span> <span class='va'>scenario</span> <span class='op'>&amp;</span> </span>
+<span>                              <span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span></span>
+<span>                              <span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span><span class='op'>)</span></span>
+<span>          </span>
+<span>          <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/stack_hourly_temps.html'>stack_hourly_temps</a></span><span class='op'>(</span><span class='va'>temp_df</span>,</span>
+<span>                                        latitude <span class='op'>=</span> <span class='fl'>50.4</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"hourtemps"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>          </span>
+<span>          <span class='va'>temp_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>temp_df</span>,</span>
+<span>                            <span class='va'>JDay</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>beg_bloom</span> <span class='op'>:</span> <span class='va'>end_bloom</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>          </span>
+<span>          <span class='va'>frost_hours</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='fu'>dormancyR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dormancyR/man/frost_risk.html'>frost_risk</a></span><span class='op'>(</span><span class='va'>temp_df</span><span class='op'>$</span><span class='va'>Temp</span>,</span>
+<span>                                                   threshold <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>          <span class='op'>}</span> <span class='kw'>else</span> <span class='va'>frost_hours</span> <span class='op'>&lt;-</span> <span class='fl'>0</span></span>
+<span>          </span>
+<span>          <span class='va'>future_frost</span><span class='op'>[</span><span class='va'>future_frost</span><span class='op'>$</span><span class='va'>SSP_Time</span> <span class='op'>==</span> <span class='va'>scenario</span> <span class='op'>&amp;</span> </span>
+<span>                         <span class='va'>future_frost</span><span class='op'>$</span><span class='va'>GCM</span> <span class='op'>==</span> <span class='va'>climate_model</span> <span class='op'>&amp;</span></span>
+<span>                         <span class='va'>future_frost</span><span class='op'>$</span><span class='va'>Year</span> <span class='op'>==</span> <span class='va'>year</span>, <span class='st'>"Frost"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>frost_hours</span></span>
+<span>      <span class='op'>}</span></span>
+<span>    <span class='op'>}</span></span>
+<span><span class='co'># Remove NA cells since the first year has no bloom</span></span>
+<span><span class='va'>future_frost</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>future_frost</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>Now, the results are visualized using a standard approach for displaying agro-climatic projections. Two separate plots are generated—one for past simulated scenarios and one for future projections—and then combined using the patchwork package to provide a comprehensive overview of frost risk trends.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plots</span></span>
+<span><span class='va'>past_frost_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>simulated_frost</span>,</span>
+<span>                          <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>Scen_year</span>, </span>
+<span>                              <span class='va'>Frost</span>,</span>
+<span>                              group <span class='op'>=</span> <span class='va'>Scen_year</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_boxplot.html'>geom_boxplot</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"cadetblue"</span>,</span>
+<span>               outlier.size <span class='op'>=</span> <span class='fl'>0.8</span>, </span>
+<span>               outlier.alpha <span class='op'>=</span> <span class='fl'>0.5</span>, </span>
+<span>               outlier.shape <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='co'>#geom_point(data = observed_bloom_calibration, aes(as.character(Year), Frost)) +</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>90</span><span class='op'>)</span>, </span>
+<span>                     expand <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expansion.html'>expansion</a></span><span class='op'>(</span>mult <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Year"</span>,</span>
+<span>       y <span class='op'>=</span> <span class='st'>"Spring frost (hours &lt;0 °C)"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span><span class='op'>~</span> <span class='st'>"Historical"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>7</span>, </span>
+<span>                                   angle <span class='op'>=</span> <span class='fl'>60</span>, </span>
+<span>                                   hjust <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>future_frost_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>future_frost</span>,</span>
+<span>                            <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>GCM</span>, </span>
+<span>                                <span class='va'>Frost</span>, </span>
+<span>                                fill <span class='op'>=</span> <span class='va'>GCM</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_boxplot.html'>geom_boxplot</a></span><span class='op'>(</span>outlier.size <span class='op'>=</span> <span class='fl'>0.8</span>, </span>
+<span>               outlier.alpha <span class='op'>=</span> <span class='fl'>0.5</span>, </span>
+<span>               outlier.shape <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>90</span><span class='op'>)</span>,</span>
+<span>                     expand <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expansion.html'>expansion</a></span><span class='op'>(</span>mult <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>SSP_Time</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        axis.text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        axis.ticks <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        legend.position <span class='op'>=</span> <span class='st'>"bottom"</span>,</span>
+<span>        legend.text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>7.5</span><span class='op'>)</span>,</span>
+<span>        legend.key.size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>0.3</span>, <span class='st'>"cm"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>past_frost_plot</span> <span class='op'>+</span> </span>
+<span>  <span class='va'>future_frost_plot</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://patchwork.data-imaginist.com/reference/plot_layout.html'>plot_layout</a></span><span class='op'>(</span>widths <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="estimate_files/figure-html5/unnamed-chunk-30-1.png" width="624" /></p>
+</div>
+<p>An interesting observation is the high number of outliers present in each simulated scenario. Despite projections indicating an earlier bloom period for pear cv. Conference under future climate scenarios, the overall trend suggests a slight decline in the risk of spring frost events.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

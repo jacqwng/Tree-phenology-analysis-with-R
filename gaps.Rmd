@@ -150,7 +150,7 @@ kable(patched$statistics[[1]], align = c("c")) %>%
                 font_size = 14) 
 ```
 
-```{r}
+```{r, eval=FALSE}
 patched$statistics[[2]]
 ```
 
@@ -161,7 +161,7 @@ kable(patched$statistics[[2]], align = c("c")) %>%
                 font_size = 14) 
 ```
 
-```{r}
+```{r, eval=FALSE}
 patched$statistics[[3]]
 ```
 
@@ -284,7 +284,7 @@ kable(patched$statistics[[1]], align = c("c")) %>%
                  font_size = 14) 
 ```
 
-```{r}
+```{r, eval=FALSE}
 # Patch statistics for HANFORD AIRPORT
 patched$statistics[[2]]
 ```
@@ -296,7 +296,7 @@ kable(patched$statistics[[2]], align = c("c")) %>%
                 font_size = 14) 
 ```
 
-```{r}
+```{r, eval=FALSE}
 # Patch statistics for BOWERS FIELD AIRPORT
 patched$statistics[[3]]
 ```

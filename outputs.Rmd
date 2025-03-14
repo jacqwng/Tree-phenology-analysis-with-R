@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Evaluating PLS outputs"
 output: distill::distill_article
 ---
 
@@ -743,7 +743,7 @@ The color pattern in this analysis reveals clearer insights. Early leaf emergenc
 
 1.  Reproduce the analysis for the ‘Roter Boskoop’ dataset.
 
-```{r}
+```{r warning=FALSE}
 # Load weather data for Klein-Altendorf and Roter Boskoop dataset
 KA_temps <- read_tab("data/TMaxTMin1958-2019_patched.csv")
 Apple_pheno <- read_tab("data/Roter_Boskoop_bloom_1958_2019.csv") %>%

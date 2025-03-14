@@ -2728,8 +2728,8 @@ PhenoFlex
 <p>Since the observed weather data require a median year adjustment to 1996, a correction is applied:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>scenario_1990</span> <span class='op'>&lt;-</span> <span class='va'>Bonn_temps</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1990</span><span class='op'>)</span></span>
-<span><span class='va'>scenario_1996</span> <span class='op'>&lt;-</span> <span class='va'>Bonn_temps</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1996</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>scenario_1990</span> <span class='op'>&lt;-</span> <span class='va'>Bonn_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1990</span><span class='op'>)</span></span>
+<span><span class='va'>scenario_1996</span> <span class='op'>&lt;-</span> <span class='va'>Bonn_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1996</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>adjustment_scenario</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_baseline_adjustment.html'>temperature_scenario_baseline_adjustment</a></span><span class='op'>(</span></span>
 <span>  <span class='va'>scenario_1996</span>, </span>
@@ -2839,7 +2839,7 @@ PhenoFlex
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>RCP</span> <span class='op'>==</span> <span class='st'>"rcp85"</span><span class='op'>)</span> <span class='va'>RCPcaption</span> <span class='op'>&lt;-</span> <span class='st'>"RCP8.5"</span></span>
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>Time</span> <span class='op'>==</span> <span class='st'>"2050"</span><span class='op'>)</span> <span class='va'>Time_caption</span> <span class='op'>&lt;-</span> <span class='st'>"2050"</span></span>
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>Time</span> <span class='op'>==</span> <span class='st'>"2085"</span><span class='op'>)</span> <span class='va'>Time_caption</span> <span class='op'>&lt;-</span> <span class='st'>"2085"</span></span>
-<span>    <span class='va'>chills</span> <span class='op'>&lt;-</span> <span class='va'>chill</span> <span class='op'>%&gt;%</span> </span>
+<span>    <span class='va'>chills</span> <span class='op'>&lt;-</span> <span class='va'>chill</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>      <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/make_climate_scenario.html'>make_climate_scenario</a></span><span class='op'>(</span></span>
 <span>        caption <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>RCPcaption</span>,</span>
 <span>                    <span class='va'>Time_caption</span><span class='op'>)</span>,</span>
@@ -2911,9 +2911,9 @@ PhenoFlex
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Baseline adjustment</span></span>
-<span><span class='va'>scenario_1990</span> <span class='op'>&lt;-</span> <span class='va'>Yakima_temps</span> <span class='op'>%&gt;%</span></span>
+<span><span class='va'>scenario_1990</span> <span class='op'>&lt;-</span> <span class='va'>Yakima_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1990</span><span class='op'>)</span></span>
-<span><span class='va'>scenario_1998</span> <span class='op'>&lt;-</span> <span class='va'>Yakima_temps</span> <span class='op'>%&gt;%</span></span>
+<span><span class='va'>scenario_1998</span> <span class='op'>&lt;-</span> <span class='va'>Yakima_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_from_records.html'>temperature_scenario_from_records</a></span><span class='op'>(</span><span class='fl'>1998</span><span class='op'>)</span></span>
 <span><span class='va'>adjustment_scenario</span> <span class='op'>&lt;-</span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/temperature_scenario_baseline_adjustment.html'>temperature_scenario_baseline_adjustment</a></span><span class='op'>(</span><span class='va'>scenario_1998</span>,</span>
@@ -3010,7 +3010,7 @@ PhenoFlex
 <span>                                    <span class='st'>"Yakima_historic"</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_past_scenarios</span> <span class='op'>&lt;-</span></span>
-<span>  <span class='va'>Temps</span> <span class='op'>%&gt;%</span></span>
+<span>  <span class='va'>Temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/tempResponse_daily_list.html'>tempResponse_daily_list</a></span><span class='op'>(</span></span>
 <span>    latitude <span class='op'>=</span> <span class='fl'>46.569</span>,</span>
 <span>    Start_JDay <span class='op'>=</span> <span class='fl'>305</span>,</span>
@@ -3019,7 +3019,7 @@ PhenoFlex
 <span>    misstolerance <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>chill_observed</span> <span class='op'>&lt;-</span> </span>
-<span>  <span class='va'>Yakima_temps</span> <span class='op'>%&gt;%</span></span>
+<span>  <span class='va'>Yakima_temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/tempResponse_daily_list.html'>tempResponse_daily_list</a></span><span class='op'>(</span></span>
 <span>    latitude <span class='op'>=</span> <span class='fl'>46.569</span>,</span>
 <span>    Start_JDay <span class='op'>=</span> <span class='fl'>305</span>,</span>
@@ -3072,7 +3072,7 @@ PhenoFlex
 <span>             <span class='va'>Time</span>,</span>
 <span>             <span class='st'>"_"</span>,</span>
 <span>             <span class='va'>RCP</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>    <span class='va'>chill</span> <span class='op'>&lt;-</span> <span class='va'>Temps</span> <span class='op'>%&gt;%</span> </span>
+<span>    <span class='va'>chill</span> <span class='op'>&lt;-</span> <span class='va'>Temps</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>      <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/tempResponse_daily_list.html'>tempResponse_daily_list</a></span><span class='op'>(</span></span>
 <span>        latitude <span class='op'>=</span> <span class='fl'>46.569</span>,</span>
 <span>        Start_JDay <span class='op'>=</span> <span class='fl'>305</span>,</span>
@@ -3104,7 +3104,7 @@ PhenoFlex
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>RCP</span> <span class='op'>==</span> <span class='st'>"rcp85"</span><span class='op'>)</span> <span class='va'>RCPcaption</span> <span class='op'>&lt;-</span> <span class='st'>"RCP8.5"</span></span>
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>Time</span> <span class='op'>==</span> <span class='st'>"2050"</span><span class='op'>)</span> <span class='va'>Time_caption</span> <span class='op'>&lt;-</span> <span class='st'>"2050"</span></span>
 <span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>Time</span> <span class='op'>==</span> <span class='st'>"2085"</span><span class='op'>)</span> <span class='va'>Time_caption</span> <span class='op'>&lt;-</span> <span class='st'>"2085"</span></span>
-<span>    <span class='va'>chills</span> <span class='op'>&lt;-</span> <span class='va'>chill</span> <span class='op'>%&gt;%</span> </span>
+<span>    <span class='va'>chills</span> <span class='op'>&lt;-</span> <span class='va'>chill</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>      <span class='fu'><a href='https://rdrr.io/pkg/chillR/man/make_climate_scenario.html'>make_climate_scenario</a></span><span class='op'>(</span></span>
 <span>        caption <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>RCPcaption</span>,</span>
 <span>                    <span class='va'>Time_caption</span><span class='op'>)</span>,</span>
