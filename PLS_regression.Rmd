@@ -69,7 +69,7 @@ PLS_results <- PLS_pheno(KA_temps,
 
 The `PLS_results` element can be visualized using the `plot_PLS` function, which generates a plot of the results:
 
-![Temperature response pattern of ‘Alexander Lucas’ pears in Klein-Altendorf, as determined by PLS regression and plotted with the standard function in chillR](images/PLS_out.png)
+![**Temperature response pattern of ‘Alexander Lucas’ pears in Klein-Altendorf, as determined by PLS regression and plotted with the standard function in chillR**](images/PLS_out.png)
 
 The plot produced by the `PLS_pheno` function includes several elements:
 

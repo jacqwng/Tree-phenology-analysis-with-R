@@ -1,4 +1,6 @@
 ---
+
+---
 title: "Evaluating PLS outputs"
 output: distill::distill_article
 ---
@@ -788,7 +790,7 @@ plot_PLS_chill_force(plscf,
                      heat_phase = c(3, 105.5))
 ```
 
-```{r message=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 # Plot phenology trend plot for apples 'Roter Boskoop' in Klein-Altendorf
 pheno_trend_ggplot(temps = KA_temps,
                    pheno = Apple_pheno,

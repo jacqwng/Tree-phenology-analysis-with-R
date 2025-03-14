@@ -474,7 +474,7 @@ chill_change_plot
 
 As the final step, the plot will be converted into a moving picture using the `transition_reveal` function from the `gganimate` package. The resulting animation will then be saved.
 
-```{r}
+```{r,eval=FALSE}
 ccp <-chill_change_plot +
   transition_reveal(Year)
 
@@ -483,6 +483,8 @@ animate(ccp, fps = 10)
 anim_save("data/chill_comparison_animation.gif",
           animation = last_animation())
 ```
+
+![](data/chill_comparison_animation.gif)
 
 The animation illustrates the development of chill over time, relative to the 1980 baseline, and evaluated using 13 chill models.
 
