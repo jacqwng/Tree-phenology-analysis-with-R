@@ -17,4 +17,4 @@ Hi, my name is Jacqueline. I’m a master’s student in Crop Sciences at the [U
 
 It is designed for those who may not yet be familiar with phenology or how to analyze climate change effects, but it also aims to offer new insights for those with existing knowledge in these areas. Initially developed for M.Sc. students in Crop Science and Agricultural Science and Resource Management in the Tropics and Subtropics (ARTS) at the University of Bonn, the material is accessible to anyone interested.
 
-For more information, feel free to visit the GitHub page of the [HortiBonn](https://github.com/hortibonn) research group at the University of Bonn, as well as the website of the [Tree Phenology Analysis with R](https://hortibonn.github.io/Tree-Phenology/) course.
+For more information, feel free to visit the GitHub page of the [HortiBonn](https://github.com/hortibonn) research group at the University of Bonn, as well as the website of the [Tree Phenology Analysis with R](https://hortibonn.github.io/Tree-Phenology/) course, where all the information for this learning logbook come from.
