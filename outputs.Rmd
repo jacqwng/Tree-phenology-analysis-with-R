@@ -1,6 +1,4 @@
 ---
-
----
 title: "Evaluating PLS outputs"
 output: distill::distill_article
 ---
